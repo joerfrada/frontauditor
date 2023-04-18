@@ -10,6 +10,8 @@ import { ApiService } from '../api.service';
 export class UserService {
 
   private apiGetUsers = this.api.getBaseUrl + "admin/usuarios";
+  private apiCreateUsuario = this.api.getBaseUrl + "admin/usuario/crearUsuario";
+  private apiUpdateUsuario = this.api.getBaseUrl + "admin/usuario/actualizarUsuario";
   private apiGetUsuariosRolesById = this.api.getBaseUrl + "admin/usuario/getUsuariosRolesById";
   private apiCreateUsuarioRol = this.api.getBaseUrl + "admin/usuario/crearUsuarioRol";
   private apiUpdateUsuarioRol = this.api.getBaseUrl + "admin/usuario/actualizarUsuarioRol";
@@ -19,8 +21,18 @@ export class UserService {
 
   constructor(private http: HttpClient, private api: ApiService) { }
 
-  public getUsers(): Observable<any> {
+  public getUsuarios(): Observable<any> {
     return this.http.get<any>(this.apiGetUsers, this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  public createUsuario(data: any): Observable<any> {
+    return this.http.post<any>(this.apiCreateUsuario, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  public updateUsuario(data: any): Observable<any> {
+    return this.http.post<any>(this.apiUpdateUsuario, JSON.stringify(data), this.api.getHttpOptions('g'))
     .pipe(retry(1), catchError(this.api.errorHandle));
   }
 

@@ -14,6 +14,9 @@ import { CardComponent } from '../views/card/card.component';
 import { ModalComponent } from '../views/modal/modal.component';
 import { SelectModalComponent } from '../views/select-modal/select-modal.component';
 import { SelectRolModalComponent } from '../views/select-rol-modal/select-rol-modal.component';
+import { CriterioComponent } from '../modulos/param/criterio/criterio.component';
+import { ProcesoComponent } from '../modulos/param/proceso/proceso.component';
+import { TipoauditoriaComponent } from '../modulos/param/tipoauditoria/tipoauditoria.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +28,10 @@ import { SelectRolModalComponent } from '../views/select-rol-modal/select-rol-mo
     CardComponent,
     ModalComponent,
     SelectModalComponent,
-    SelectRolModalComponent    
+    SelectRolModalComponent,
+    CriterioComponent,
+    ProcesoComponent,
+    TipoauditoriaComponent    
   ],
   imports: [
     CommonModule,

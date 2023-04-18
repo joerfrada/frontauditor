@@ -6,13 +6,19 @@ import { LoginComponent } from '../auth/login/login.component';
 import { HomeComponent } from '../modulos/home/home.component';
 import { UsuariosComponent } from '../modulos/admin/usuarios/usuarios.component';
 import { RolesComponent } from '../modulos/admin/roles/roles.component';
+import { CriterioComponent } from '../modulos/param/criterio/criterio.component';
+import { ProcesoComponent } from '../modulos/param/proceso/proceso.component';
+import { TipoauditoriaComponent } from '../modulos/param/tipoauditoria/tipoauditoria.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'auditor', component: PlatformComponent, children: [
     { path: 'home', component: HomeComponent },
     { path: 'admin/usuarios', component: UsuariosComponent },
-    { path: 'admin/roles', component: RolesComponent }
+    { path: 'admin/roles', component: RolesComponent },
+    { path: 'param/criterios', component: CriterioComponent },
+    { path: 'param/procesos', component: ProcesoComponent },
+    { path: 'param/tipo-inspeccion', component: TipoauditoriaComponent }
   ]}
 ];
 

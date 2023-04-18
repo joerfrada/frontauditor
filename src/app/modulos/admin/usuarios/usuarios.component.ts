@@ -55,7 +55,7 @@ export class UsuariosComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getUsers();
+    this.getUsuarios();
     this.getRolPrivilegios();
   }
 
@@ -88,8 +88,8 @@ export class UsuariosComponent implements OnInit {
     }
   }
 
-  getUsers() {
-    this.usuario.getUsers().subscribe(data => {
+  getUsuarios() {
+    this.usuario.getUsuarios().subscribe(data => {
       let response: any = this.api.ProcesarRespuesta(data);
       if (response.tipo == 0) {
         this.varhistorial = response.result;
