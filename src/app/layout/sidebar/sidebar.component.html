@@ -1,0 +1,30 @@
+<div id="menubar" class="menubar-inverse">
+    <div class="menubar-scroll-panel">
+        <ul id="main-menu" class="gui-controls">
+			<ng-container *ngFor="let menu of menus">
+				<li *ngIf="menu.submenus.length == 0" routerLinkActive="active">
+					<a routerLink="/auditor/{{ menu.link }}" routerLinkActive="active">
+						<div class="gui-icon"><i class="{{ menu.icono }}"></i></div>
+						<span class="title">{{ menu.titulo }}</span>
+					</a>
+				</li>
+				<li *ngIf="menu.submenus.length != 0" class="gui-folder gui-folder-{{ menu.menu_id }}" (click)="toggleExpanded(menu.menu_id)">
+					<a href="javascript:void(0)">
+						<div class="gui-icon"><i class="{{ menu.icono }}"></i></div>
+						<span class="title">{{ menu.titulo }}</span>
+					</a>
+					<ul>
+						<ng-container *ngFor="let submenu of menu.submenus">
+							<li *ngIf="submenu.submenus.length == 0">
+								<a routerLink="/auditor/{{ submenu.link }}"><span class="title">{{ submenu.titulo }}</span></a>
+							</li>
+							<li *ngIf="submenu.submenus.length != 0" class="gui-folder gui-subfolder-{{ submenu.menu_id }}" (click)="toggleSubExpanded(submenu.menu_id)">
+								<a routerLink="javascript:void(0)"><span class="title">{{ submenu.titulo }}</span></a>
+							</li>
+						</ng-container>
+					</ul>
+				</li>
+			</ng-container>
+        </ul>
+    </div>
+</div>

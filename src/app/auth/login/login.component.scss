@@ -1,0 +1,97 @@
+.login-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #d2f1f7 url("../../../assets/img/header-top.png") repeat-x 0 0;
+    font-family: "Roboto", sans-serif, Helvetica, Arial, sans-serif;
+    align-items: center;
+    color: #636b6f;
+}
+
+.login-header {
+    width: 100%;
+    height: 64px;
+    background-color: rgb(15, 31, 49);
+    border-color: rgb(15, 31, 49);
+    margin-bottom: 22px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-title {
+    font-family: "Eras Demi ITC";
+    font-size: 24px;
+    font-weight: 400;
+    color: white;
+}
+
+.login-brand {
+    font-size: 16.25px;
+    font-weight: 700;
+    color: #ccc;
+    position: absolute;
+    left: 50px;
+}
+
+.login-default {
+    border-color: #d3e0e9;
+}
+
+.login-form {
+    background-color: #fff;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+    display: flex;
+    flex-direction: column;
+    width: 430px;
+
+    label {
+        margin-bottom: 5px;
+        font-size: 14px;
+        font-weight: 700;
+        opacity: unset;
+    }
+}
+
+.panel-login > .login-heading {
+    color: #333;
+    background-color: #fff;
+    border-color: #d3e0e9;
+}
+
+.login-heading {
+    padding: 5px 15px;
+    border-bottom: 1px solid transparent;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+    background-color: rgb(15, 31, 49);
+    color: rgb(204, 204, 204);
+    text-align: center;
+}
+
+.login-form-title {
+    font-size: 16px;
+    color: #ccc;
+}
+
+.login-body {
+    padding: 15px;
+}
+
+a {
+    color: #3097d1;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.form-group:last-child {
+    margin-bottom: 0;
+}
