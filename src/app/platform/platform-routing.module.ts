@@ -9,6 +9,7 @@ import { RolesComponent } from '../modulos/admin/roles/roles.component';
 import { CriterioComponent } from '../modulos/param/criterio/criterio.component';
 import { ProcesoComponent } from '../modulos/param/proceso/proceso.component';
 import { TipoauditoriaComponent } from '../modulos/param/tipoauditoria/tipoauditoria.component';
+import { ListasDinamicasComponent } from '../modulos/param/listas-dinamicas/listas-dinamicas.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -16,6 +17,7 @@ const routes: Routes = [
     { path: 'home', component: HomeComponent },
     { path: 'admin/usuarios', component: UsuariosComponent },
     { path: 'admin/roles', component: RolesComponent },
+    { path: 'param/listas',component:ListasDinamicasComponent},
     { path: 'param/criterios', component: CriterioComponent },
     { path: 'param/procesos', component: ProcesoComponent },
     { path: 'param/tipo-inspeccion', component: TipoauditoriaComponent }

@@ -17,6 +17,7 @@ import { SelectRolModalComponent } from '../views/select-rol-modal/select-rol-mo
 import { CriterioComponent } from '../modulos/param/criterio/criterio.component';
 import { ProcesoComponent } from '../modulos/param/proceso/proceso.component';
 import { TipoauditoriaComponent } from '../modulos/param/tipoauditoria/tipoauditoria.component';
+import { ListasDinamicasComponent } from '../modulos/param/listas-dinamicas/listas-dinamicas.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { TipoauditoriaComponent } from '../modulos/param/tipoauditoria/tipoaudit
     SelectRolModalComponent,
     CriterioComponent,
     ProcesoComponent,
-    TipoauditoriaComponent    
+    TipoauditoriaComponent,
+    ListasDinamicasComponent    
   ],
   imports: [
     CommonModule,
