@@ -1,0 +1,16 @@
+<div class="modal fade in" *ngIf="show">
+    <div class="modal-inner">
+        <div class="modal-content {{ size }}">
+            <div class="modal-header">
+                <h3 class="modal-title">{{ title }}</h3>
+                <span class="close-modal" (click)="closeModal()"><i class="fa fa-times-circle"></i></span>
+            </div>
+            <div class="modal-body">
+                <ng-content select="div[role=body]"></ng-content>
+            </div>
+            <div class="modal-footer">
+                <ng-content select="div[role=footer]"></ng-content>
+            </div>
+        </div>
+    </div>
+</div>

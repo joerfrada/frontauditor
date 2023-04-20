@@ -1,0 +1,149 @@
+#header {
+    position: fixed;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 64px;
+    z-index: 1005;
+    background: #0f1f31;
+    color: #cccccc;
+    -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#header .logo-name {
+    font-size: 18px;
+    font-weight: 400;
+    padding: 0 30px;
+}
+
+.logo-fac {
+    height: 64px;
+    display: flex;
+    flex-direction: row;
+    font-family: 'Eras Demi ITC';
+    color: #fff;
+}
+
+.logo-fac img {
+    height: 64px;
+    padding: 0 15px;
+}
+
+.title-fac {
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .title-head-fac {
+        font-size: 24px;
+    }
+
+    .title-subhead-fac {
+        font-size: 16px;
+    }
+}
+
+.header-nav {
+    margin: 0 12px;
+    padding-left: 0;
+    list-style: none;
+}
+
+.header-nav>li {
+    position: relative;
+    display: block;
+    padding: 14px 0 14px 12px;
+    float: left;
+}
+
+.header-nav>li:first-child {
+    padding-left: 0;
+}
+
+.header-nav>li>div {
+    position: relative;
+    display: block;
+}
+
+.header-nav-profile .dropdown {
+    padding: 0;
+    cursor: pointer;
+}
+
+.header-nav-profile .dropdown .profile {
+    position: relative;
+    min-height: 64px;
+    min-width: 210px;
+    padding: 12px;
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
+}
+
+.header-nav-profile .dropdown .profile:after {
+    content: "\f107";
+    position: absolute;
+    *margin-right: .3em;
+    right: 10px;
+    top: 22px;
+    font-family: FontAwesome;
+    font-weight: normal;
+    font-style: normal;
+    text-decoration: inherit;
+    -webkit-font-smoothing: antialiased;
+}
+
+.header-nav-profile .dropdown img {
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+}
+
+.header-nav-profile .dropdown .profile-info {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0 20px 0 10px;
+    line-height: 15px;
+}
+
+.header-nav-profile .dropdown .profile-info small {
+    display: block;
+    opacity: 0.5;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 68px;
+    right: 2px;
+    width: 230px;
+    padding: 10px;
+    background-color: white;
+    color: rgba(0, 0, 0, 0.808);
+    display: none;
+    transition: opacity 0.5s cubic-bezier(0.15, 0.99, 0.18, 1.01);
+    box-shadow: 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%), 0 3px 1px -2px rgb(0 0 0 / 20%);
+}
+
+.dropdown-menu > span, .dropdown-menu > div {
+    margin-bottom: 10px;
+}
+
+.dropdown-menu > div:last-child {
+    margin-bottom: 0;
+}
+
+.dropdown-menu .btn {
+    font-size: 13px;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+}
+
+.dropdown-open {
+    display: block;
+}

@@ -1,0 +1,31 @@
+<header id="header">
+    <span class="logo-name">Auditor Plus</span>
+    <div class="logo-fac">
+        <img src="../../../assets/img/logo_fac.png">
+        <div class="title-fac">
+            <span class="title-head-fac">FUERZA AÉREA COLOMBIANA</span>
+            <span class="title-subhead-fac">Inspección General Fuerza Aérea Colombiana - IGEFA</span>
+        </div>
+        <img src="../../../assets/img/logo_secad.png">
+    </div>
+    <div class="header-profile">
+        <ul class="header-nav header-nav-profile">
+            <li class="dropdown" (click)="toggleDropdown()">
+                <div class="profile">
+                    <span class="profile-info">                        
+                        {{currentUser.name}}
+                        <small *ngIf="currentUser.es_empresa == 1">Empresa</small>
+                        <small *ngIf="currentUser.es_empresa == 0">SECAD-FAC</small>
+                    </span>
+                </div>            
+            </li>
+            <div class="dropdown-menu">
+                <div>Configuración</div>
+                <div style="cursor: pointer;">Mi Perfil</div>
+                <div class="panel-footer">
+                    <button class="btn btn-danger btn-block" (click)="logout()">Cerrar sessión</button>                            
+                </div>
+            </div>
+        </ul>        
+    </div>
+</header>

@@ -1,0 +1,480 @@
+#menubar {
+    position: fixed;    
+    top: 64px;
+    left: 0;
+    width: 64px;
+    height: 100%;
+    z-index: 1004;
+    background: #0f1f31;
+    color: #cccccc;
+    -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
+    -webkit-transition: width 0.5s cubic-bezier(0.15, 0.99, 0.18, 1.01);
+    -o-transition: width 0.5s cubic-bezier(0.15, 0.99, 0.18, 1.01);
+    transition: width 0.5s cubic-bezier(0.15, 0.99, 0.18, 1.01);
+}
+
+.menubar-visible {
+    width: 280px !important;
+}
+
+#menubar .menubar-scroll-panel {
+    position: relative;
+    padding-top: 16px;
+    z-index: 2;
+    min-height: 100%;
+}
+
+.gui-controls {
+    font-size: 12px;
+    padding: 0;
+    margin-bottom: 30px;
+}
+
+.gui-controls small {
+    display: block;
+    margin: 30px 12px 12px 12px;
+    font-size: 10px;
+    font-weight: 500;
+    opacity: 0.7;
+}
+
+.menubar-visible .gui-controls small,
+.menubar-pin .gui-controls small {
+    color: rgba(12, 12, 12, 0.85);
+}
+
+.gui-controls li:first-child>small {
+    margin-top: 0;
+}
+
+.gui-controls .badge {
+    position: absolute;
+    top: 1px;
+    margin-left: 8px;
+    border-radius: 2px;
+    padding: 2px 4px;
+    font-size: 10px;
+}
+
+.gui-controls li {
+    list-style: none;
+}
+
+.gui-controls li.gui-folder>a {
+    cursor: pointer;
+}
+
+.gui-controls>li {
+    position: relative;
+    margin-bottom: 12px;
+}
+
+.gui-controls>li>a {
+    position: relative;
+    display: block;
+    text-decoration: none;
+    padding: 12px 0px;
+    font-size: 12px;
+    line-height: normal;
+    border-radius: 0;
+    padding-left: 0;
+    min-height: 40px;
+    min-width: 64px;
+    z-index: 1;
+}
+
+.gui-controls>li>a:focus {
+    outline: none;
+}
+
+.gui-controls>li ul>li>a {
+    position: relative;
+    display: block;
+    text-decoration: none;
+    padding: 7px 17px;
+    font-size: 12px;
+    line-height: normal;
+    border-radius: 0;
+    padding-left: 57px;
+}
+
+.gui-controls>li ul>li>a:active,
+.gui-controls>li ul>li>a.active {
+    background-color: #fff;
+}
+
+.gui-controls>li ul>li>a:hover,
+.gui-controls>li ul>li>a:focus {
+    background-color: rgba(12, 12, 12, 0.07);
+}
+
+.menubar-visible .gui-controls>li:not(.gui-folder)>a:hover {
+    background-color: rgba(12, 12, 12, 0.07);
+}
+
+.menubar-visible .gui-controls>li.active:not(.gui-folder)>a {
+    background-color: #ffffff;
+    -webkit-transition: background 0.3s linear;
+    -o-transition: background 0.3s linear;
+    transition: background 0.3s linear;
+}
+
+.menubar-visible .menubar-inverse .gui-controls>li:not(.gui-folder)>a:hover {
+    background-color: #313942;
+}
+
+.menubar-visible .menubar-inverse .gui-controls>li.active:not(.gui-folder)>a {
+    background-color: #3482c7;
+}
+
+.gui-controls li ul {
+    padding: 0;
+    display: none;
+}
+
+.gui-controls li.expanded>ul {
+    display: block;
+}
+
+.gui-controls>li>ul>li>ul li:before {
+    left: 51px;
+}
+
+.gui-controls>li>ul>li>ul a {
+    padding-left: 78px;
+}
+
+.gui-controls>li>ul>li>ul a:before {
+    left: 51px;
+}
+
+.gui-controls>li>ul>li>ul>li>ul li:before {
+    left: 72px;
+}
+
+.gui-controls>li>ul>li>ul>li>ul a {
+    padding-left: 99px;
+}
+
+.gui-controls>li>ul>li>ul>li>ul a:before {
+    left: 72px;
+}
+
+.gui-controls>li>ul>li>ul>li>ul>li>ul li:before {
+    left: 93px;
+}
+
+.gui-controls>li>ul>li>ul>li>ul>li>ul a {
+    padding-left: 120px;
+}
+
+.gui-controls>li>ul>li>ul>li>ul>li>ul a:before {
+    left: 93px;
+}
+
+.gui-controls>li>ul>li>ul>li>ul>li>ul>li>ul li:before {
+    left: 114px;
+}
+
+.gui-controls>li>ul>li>ul>li>ul>li>ul>li>ul a {
+    padding-left: 141px;
+}
+
+.gui-controls>li>ul>li>ul>li>ul>li>ul>li>ul a:before {
+    left: 114px;
+}
+
+.gui-controls>li ul>li {
+    position: relative;
+}
+
+.gui-controls>li ul>li:before {
+    content: "";
+    left: 30px;
+    top: 15px;
+    bottom: -15px;
+    position: absolute;
+    display: block;
+    width: 1px;
+    border-left: 1px dashed rgba(12, 12, 12, 0.3);
+    z-index: 1;
+}
+
+.gui-controls>li ul>li:first-child:before {
+    top: 0;
+}
+
+.gui-controls>li ul>li:last-child:before,
+.gui-controls>li ul>li.last-child:before {
+    display: none;
+}
+
+.gui-controls>li ul>li>a:before {
+    content: "";
+    left: 30px;
+    top: 15px;
+    position: absolute;
+    display: block;
+    width: 21px;
+    border-bottom: 1px dashed rgba(12, 12, 12, 0.3);
+    z-index: 1;
+}
+
+.gui-controls li .title {
+    position: relative;
+    left: -10px;
+    display: block;
+    padding-left: 6px;
+    color: rgba(12, 12, 12, 0.85);
+    white-space: nowrap;
+    overflow: hidden;
+    opacity: 0;
+    text-shadow: none;
+    -webkit-transition: all 0.5s cubic-bezier(0.15, 0.99, 0.18, 1.01);
+    -o-transition: all 0.5s cubic-bezier(0.15, 0.99, 0.18, 1.01);
+    transition: all 0.5s cubic-bezier(0.15, 0.99, 0.18, 1.01);
+}
+
+.gui-controls li>a:hover .title {
+    color: #0c0c0c;
+}
+
+.gui-controls li.active>a .title {
+    color: #0aa89e;
+    font-weight: 500;
+}
+
+.gui-controls li.gui-folder>a .title {
+    font-style: italic;
+    color: rgba(12, 12, 12, 0.75);
+}
+
+.gui-controls li.gui-folder.expanded>a .title,
+.gui-controls li.gui-folder.active>a .title {
+    color: rgba(12, 12, 12, 0.85);
+}
+
+.gui-controls>li>a .title {
+    margin-left: 57px;
+}
+
+.menubar-visible .gui-controls li .title {
+    left: 0;
+    opacity: 1;
+}
+
+.gui-folder>a:after {
+    content: "+";
+    position: absolute;
+    top: 7px;
+    display: inline-block;
+    margin-left: -12px;
+    color: rgba(12, 12, 12, 0.5);
+    font-size: 12px;
+    font-weight: inherit;
+    opacity: 0;
+    -webkit-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+    -webkit-transition: all 0.15s linear;
+    -o-transition: all 0.15s linear;
+    transition: all 0.15s linear;
+}
+
+.gui-folder.expanding>a:after,
+.gui-folder.expanded>a:after {
+    font-size: 16px;
+    font-weight: 400;
+    margin-top: -2px;
+    margin-left: -12px;
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    -webkit-transition: all 0.1s linear;
+    -o-transition: all 0.1s linear;
+    transition: all 0.1s linear;
+}
+
+.gui-controls>.gui-folder>a:after {
+    top: 12px;
+    margin-left: 2px;
+}
+
+.gui-controls>.gui-folder.expanding>a:after,
+.gui-controls>.gui-folder.expanded>a:after {
+    color: rgba(12, 12, 12, 0.4);
+    margin-left: 0;
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+
+.menubar-visible .gui-folder>a:after {
+    opacity: 1;
+}
+
+.gui-icon {
+    position: absolute;
+    left: 12px;
+    top: 0;
+    width: 40px;
+    height: 40px;
+    color: #535858;
+    font-size: 18px;
+    overflow: hidden;
+    border-radius: 999px;
+    -webkit-transition: all 0.15s linear;
+    -o-transition: all 0.15s linear;
+    transition: all 0.15s linear;
+}
+
+.gui-icon .fa:first-child,
+.gui-icon .md:first-child,
+.gui-icon .glyphicon:first-child {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    line-height: 40px;
+    width: 1em;
+}
+
+.gui-icon:hover {
+    background-color: rgba(12, 12, 12, 0.07);
+    color: #313534;
+}
+
+.gui-controls a.expanded .gui-icon,
+.gui-controls li.active .gui-icon,
+.gui-controls li.active .gui-icon:hover {
+    background-color: #ffffff;
+    border-color: #ffffff;
+    color: #0aa89e;
+}
+
+.menubar-visible .gui-folder:hover:not(.active) .gui-icon {
+    background-color: rgba(12, 12, 12, 0.07);
+    color: #313534;
+}
+
+.menubar-visible .gui-controls>li:not(.gui-folder) .gui-icon:hover {
+    background: inherit;
+}
+
+.menubar-visible .gui-icon:hover {
+    background: inherit;
+}
+
+.menubar-visible .menubar-inverse .gui-folder:hover:not(.active) .gui-icon {
+    background-color: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+}
+
+.menubar-visible .menubar-inverse .gui-controls>li:not(.gui-folder) .gui-icon:hover {
+    background: inherit;
+}
+
+.menubar-visible .menubar-inverse .gui-icon:hover {
+    background: inherit;
+}
+
+.menubar-inverse .gui-controls>li ul>li>a:active,
+.menubar-inverse .gui-controls>li ul>li>a.active {
+    background-color: #20252b;
+}
+
+.menubar-inverse .gui-controls>li ul>li>a:hover,
+.menubar-inverse .gui-controls>li ul>li>a:focus {
+    background-color: #3482c7;
+}
+
+.menubar-visible .gui-controls>li:not(.gui-folder)>a:hover {
+    // background-color: rgba(12, 12, 12, 0.07);
+    background-color: #3482c7;
+}
+
+.menubar-visible .gui-controls>li.active:not(.gui-folder)>a {
+    // background-color: #ffffff;
+    background-color: #3482c7;
+    -webkit-transition: background 0.3s linear;
+    -o-transition: background 0.3s linear;
+    transition: background 0.3s linear;
+}
+
+.menubar-visible .menubar-inverse .gui-controls>li:not(.gui-folder)>a:hover {
+    background-color: #313942;
+}
+
+.menubar-visible .menubar-inverse .gui-controls>li.active:not(.gui-folder)>a {
+    background-color: #3482c7;
+}
+
+.menubar-inverse .gui-controls>li ul>li:before {
+    border-left: 1px dashed rgba(255, 255, 255, 0.3);
+}
+
+.menubar-inverse .gui-controls>li ul>li>a:before {
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.3);
+}
+
+.menubar-inverse .gui-controls li .title {
+    color: rgba(255, 255, 255, 0.55);
+    text-shadow: 0 1px 2px #000000;
+}
+
+.menubar-inverse .gui-controls li>a:hover .title {
+    color: #ffffff;
+}
+
+.menubar-inverse .gui-controls li.active>a .title {
+    color: #ffffff;
+}
+
+.menubar-inverse .gui-controls li.gui-folder>a .title {
+    color: #ffffff;
+}
+
+.menubar-inverse .gui-controls li.gui-folder.expanded>a .title,
+.menubar-inverse .gui-controls li.gui-folder.active>a .title {
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.menubar-inverse .gui-folder>a:after {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.menubar-inverse .gui-controls>.gui-folder.expanding>a:after,
+.menubar-inverse .gui-controls>.gui-folder.expanded>a:after {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.menubar-inverse .gui-icon {
+    color: #ffffff;
+}
+
+.menubar-inverse .gui-icon:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+}
+
+.menubar-inverse .gui-controls a.expanded .gui-icon,
+.menubar-inverse .gui-controls li.active .gui-icon,
+.menubar-inverse .gui-controls li.active .gui-icon {
+    background-color: #ffffff;
+    border-color: #ffffff;
+    color: #3482c7;
+}
+
+.menubar-inverse .gui-controls a.expanded .gui-icon,
+.menubar-inverse .gui-controls li.active .gui-icon:hover {
+    background-color: #ffffff;
+    border-color: #ffffff;
+    color: #ffffff;
+}
+

@@ -1,0 +1,17 @@
+<div class="card">
+    <div class="card-header">
+        <ul class="app-breadcrumb breadcrumb" *ngIf="lstItems.length > 0">
+            <li class="breadcrumb-item">
+                <a routerLink="/auditor/home"><i class="fa fa-home fa-lg"></i></a>                
+            </li>
+            <li class="breadcrumb-item" *ngFor="let item of lstItems">
+                <span>{{item}}</span>
+            </li>
+        </ul>
+        <div class="card-title" *ngIf="lstItems.length == 0">Bienvenidos !</div>
+        <ng-content select="div[role=button]"></ng-content>
+    </div>
+    <div class="card-body">
+        <ng-content select="div[role=body]"></ng-content>
+    </div>
+</div>
