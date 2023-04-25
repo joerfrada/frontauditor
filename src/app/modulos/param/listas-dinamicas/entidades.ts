@@ -1,17 +1,13 @@
 export class Model{
-    varhistorial:any;
-    modal:boolean = false;
-    varLista:any = {
-        nombre_lista: ""
+    varhistorial: any = [];
+    varhistorialTemp: any = [];
+    modal: any;
+    title = "";
+    isCrear: any;
+
+    varLista: any = {
+        nombre_lista: "",
+        activo: 1,
+        usuario: ""
     }
-    isLectura:boolean = false;
-    title:String = "";
-    Listas:boolean = false;
-    varListas:any;
-    modalCrear:boolean = false;
-    varList:any = {
-        lista_dinamica: ""
-    }
-    isCrear:boolean = false;
-    nombre_lista_id:number = 0;
 }

@@ -9,12 +9,12 @@ import { ApiService } from '../api.service';
 })
 export class ListasService {
 
-  private apiGetListasDinamicas = this.api.getBaseUrl + "param/listasdinamicas ";
-  private apiCrearLista = this.api.getBaseUrl + "param/ld/crearLD";
-  private apiActualizarLista = this.api.getBaseUrl + "param/ld/actualizarLD";
-  private apiObtenerListas = this.api.getBaseUrl + "param/ld/getListasById";
-  private apiCrearListah = this.api.getBaseUrl + "param/ld/crearLDh";
-  private apiActualizarListah = this.api.getBaseUrl + "param/ld/actualizarLDh";
+  private apiGetListasDinamicas = this.api.getBaseUrl + "param/listas";
+  private apiCrearLista = this.api.getBaseUrl + "param/lista/crearLista";
+  private apiActualizarLista = this.api.getBaseUrl + "param/lista/actualizarLista";
+  private apiObtenerListas = this.api.getBaseUrl + "param/lista/getListasById";
+  private apiCrearListaDetalle = this.api.getBaseUrl + "param/lista/crearListaDetalle";
+  private apiActualizarListaDetalle = this.api.getBaseUrl + "param/lista/actualizarListaDetalle";
 
   constructor(private http: HttpClient, private api: ApiService) { }
 
@@ -36,19 +36,19 @@ export class ListasService {
         );
   }
 
-  public ObtenerListas(data: any): Observable<any> {
+  public ObtenerListasDetalles(data: any): Observable<any> {
     return this.http.post<any>(this.apiObtenerListas, JSON.stringify(data), this.api.getHttpOptions('g'))
     .pipe(retry(1), catchError(this.api.errorHandle));
   }
 
-  public crearListah(data:any): Observable<any> {
-    return this.http.post<any>(this.apiCrearListah,data,
+  public crearListaDetalle(data:any): Observable<any> {
+    return this.http.post<any>(this.apiCrearListaDetalle,data,
        this.api.getHttpOptions('g'))
     .pipe(retry(1), catchError(this.api.errorHandle));
   }
 
-  public actualizarListah(data: any): Observable<any> {
-    return this.http.post<any>(this.apiActualizarListah, data,
+  public actualizarListaDetalle(data: any): Observable<any> {
+    return this.http.post<any>(this.apiActualizarListaDetalle, data,
       this.api.getHttpOptions('g')).pipe(
         retry(1), catchError(this.api.errorHandle)
         );

@@ -1,5 +1,5 @@
 <card [items]="'Administración,Roles'">
-    <div role="button" class="card-button">
+    <div role="button" class="card-button" *ngIf="permiso.crear == 1">
         <button type="button" class="btn btn-primary" (click)="openCrearModal()"><i class="fa fa-plus"></i></button>
     </div>
     <div role="body">
@@ -11,15 +11,25 @@
                 <thead>
                     <tr>
                         <th>Rol</th>
-                        <th>Acciones</th>
+                        <th>Estado</th>
+                        <th *ngIf="permiso.consultar == 1">Detalle</th>
+                        <th *ngIf="permiso.crear == 1 || permiso.actualizar || permiso.eliminar == 1">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="scroll">
                     <tr *ngFor="let item of varhistorial; let i = index">
                         <td>{{ item.name }}</td>
-                        <td class="buttons">
-                            <button type="button" class="btn btn-info" (click)="editRol(item)"><i class="fa fa-pencil"></i></button>
-                            <button type="button" class="btn btn-primary" (click)="openRolPrivilegios(item)"><i class="fa fa-shield"></i></button>
+                        <td>
+                            <i class="fa fa-1m5x fa-check-circle" *ngIf="item.activo == 1"></i>
+                            <i class="fa fa-1m5x fa-times-circle" *ngIf="item.activo == 0"></i>
+                        </td>
+                        <td class="buttons" *ngIf="permiso.consultar == 1">
+                            <button type="button" class="btn btn-secondary" (click)="openRolDetalle(item)"><i class="fa fa-eye"></i> Rol</button>
+                            <button type="button" class="btn btn-secondary" (click)="openPrivilegioDetalle(item)"><i class="fa fa-eye"></i> Privilegios</button>
+                        </td>
+                        <td class="buttons" *ngIf="permiso.crear == 1 || permiso.actualizar || permiso.eliminar == 1">
+                            <button type="button" class="btn btn-info" (click)="editRol(item)" *ngIf="permiso.actualizar == 1"><i class="fa fa-pencil"> Editar</i></button>
+                            <button type="button" class="btn btn-primary" (click)="openRolPrivilegios(item)" *ngIf="permiso.crear == 1 || permiso.actualizar || permiso.eliminar == 1"><i class="fa fa-shield"></i> Privilegios</button>   
                         </td>
                     </tr>
                     <tr *ngIf="varhistorial?.length == 0">
@@ -31,21 +41,27 @@
     </div>
 </card>
 
-<app-modal [title]="model.title" [show]="rolModal" [size]="'modal-md'" (close)="closeCrearModal($event)">
+<app-modal [title]="model.title" [show]="rolModal" [size]="'modal-lg'" (close)="closeCrearModal($event)">
     <div role="body">
         <div class="form-body">
             <div class="row">
                 <div class="input-group">
                     <label>Rol:</label>
-                    <input type="text" class="form-control" [(ngModel)]="model.varRol.name">
+                    <input type="text" class="form-control" [(ngModel)]="model.varRol.name" [disabled]="model.IsLectura">
+                </div>
+                <div class="input-group">
+                    <label style="text-align: center;">Activo:</label>
+                    <input type="checkbox" checked="checked" [(ngModel)]="model.varRol.activo" [disabled]="model.IsLectura">
                 </div>
             </div>            
         </div>
     </div>
     <div role="footer">
         <button type="button" class="btn btn-danger" (click)="closeCrearModal(false)">Cerrar</button>
-        <button type="button" class="btn btn-primary" (click)="saveRol()" *ngIf="model.isEdit == false">Guardar</button>
-        <button type="button" class="btn btn-primary" (click)="updateRol()" *ngIf="model.isEdit == true">Actualizar</button>
+        <ng-container *ngIf="model.IsLectura == false">
+            <button type="button" class="btn btn-primary" (click)="saveRol()" *ngIf="model.isEdit == false">Guardar</button>
+            <button type="button" class="btn btn-primary" (click)="updateRol()" *ngIf="model.isEdit == true">Actualizar</button>
+        </ng-container>
     </div>
 </app-modal>
 
@@ -66,55 +82,78 @@
                         <th>Actualizar</th>
                         <th>Eliminar</th>
                         <th>Estado</th>
-                        <th>Acciones</th>
+                        <th *ngIf="model.IsLectura == false">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="scroll">
                     <tr *ngFor="let item of varprivilegio; let i = index">
                         <td>{{i+1}}</td>
-                        <td><input type="text" placeholder="Selecciona..." [(ngModel)]="varprivilegio[i].modulo" (click)="saveModulo(i)"></td>
-                        <td><input disabled type="text" [(ngModel)]="varprivilegio[i].nombre_pantalla"></td>
+                        <td><input type="text" placeholder="Selecciona..." [(ngModel)]="varprivilegio[i].modulo" (click)="saveModulo(i)" [disabled]="model.IsLectura"></td>
+                        <td><input type="text" [(ngModel)]="varprivilegio[i].nombre_pantalla" disabled></td>
                         <td>
-                            <div class="table-checkbox-component">
+                            <div class="table-checkbox-component" *ngIf="model.IsLectura == false">
                                 <label>
                                     <input type="checkbox" checked="checked" [(ngModel)]="varprivilegio[i].consultar">
                                 </label>
                             </div>
+                            <ng-container *ngIf="model.IsLectura == true">
+                                <i class="fa fa-1m5x fa-check-circle" *ngIf="item.consultar == 1"></i>
+                                <i class="fa fa-1m5x fa-times-circle" *ngIf="item.consultar == 0"></i>
+                            </ng-container>
                         <td>
-                            <div class="table-checkbox-component">
+                            <div class="table-checkbox-component" *ngIf="model.IsLectura == false">
                                 <label>
                                     <input type="checkbox" checked="checked" [(ngModel)]="varprivilegio[i].crear">
                                 </label>
                             </div>
+                            <ng-container *ngIf="model.IsLectura == true">
+                                <i class="fa fa-1m5x fa-check-circle" *ngIf="item.crear == 1"></i>
+                                <i class="fa fa-1m5x fa-times-circle" *ngIf="item.crear == 0"></i>
+                            </ng-container>
                         </td>
                         <td>
-                            <div class="table-checkbox-component">
+                            <div class="table-checkbox-component" *ngIf="model.IsLectura == false">
                                 <label>
                                     <input type="checkbox" checked="checked" [(ngModel)]="varprivilegio[i].actualizar">
                                 </label>
                             </div>
+                            <ng-container *ngIf="model.IsLectura == true">
+                                <i class="fa fa-1m5x fa-check-circle" *ngIf="item.actualizar == 1"></i>
+                                <i class="fa fa-1m5x fa-times-circle" *ngIf="item.actualizar == 0"></i>
+                            </ng-container>
                         </td>
                         <td>
-                            <div class="table-checkbox-component">
+                            <div class="table-checkbox-component" *ngIf="model.IsLectura == false">
                                 <label>
                                     <input type="checkbox" checked="checked" [(ngModel)]="varprivilegio[i].eliminar">
                                 </label>
                             </div>
+                            <ng-container *ngIf="model.IsLectura == true">
+                                <i class="fa fa-1m5x fa-check-circle" *ngIf="item.eliminar == 1"></i>
+                                <i class="fa fa-1m5x fa-times-circle" *ngIf="item.eliminar == 0"></i>
+                            </ng-container>
                         </td>
                         <td>
-                            <div class="table-checkbox-component">
+                            <div class="table-checkbox-component" *ngIf="model.IsLectura == false">
                                 <label>
                                     <input type="checkbox" checked="checked" [(ngModel)]="varprivilegio[i].activo">
                                 </label>
                             </div>
+                            <ng-container *ngIf="model.IsLectura == true">
+                                <i class="fa fa-1m5x fa-check-circle" *ngIf="item.activo == 1"></i>
+                                <i class="fa fa-1m5x fa-times-circle" *ngIf="item.activo == 0"></i>
+                            </ng-container>
                         </td>
-                        <td>
+                        <td *ngIf="model.IsLectura == false">
                             <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="varprivilegio[i].NuevoRegistro" (click)="deletePrivilegio(i)"></i>
                             <i class="fa fa-1m5x fa-trash pointer noselect" style="color: red !important;" *ngIf="varprivilegio[i].EliminarRegistro" (click)="eliminarRegistro(item, i)"></i>
                         </td>
                     </tr>
-                    <tr class="add_row_full">
+                    <tr class="add_row_full" *ngIf="model.IsLectura == false">
                         <button type="button" class="btn btn-primary button" (click)="addPrivilegio()">Agregar</button>
+                    </tr>
+                    <tr *ngIf="varprivilegio?.length == 0 && model.IsLectura == true">
+                        <div class="dbempty">No hay registros.</div>
                     </tr>
                 </tbody>
             </table>
@@ -122,7 +161,7 @@
     </div>
     <div role="footer">
         <button type="button" class="btn btn-danger" (click)="closeRolPrivilegioModal(false)">Cerrar</button>
-        <button type="button" class="btn btn-primary" (click)="savePrivilegios()">Guardar</button>
+        <button type="button" class="btn btn-primary" (click)="savePrivilegios()" *ngIf="model.IsLectura == false">Guardar</button>
     </div>
 </app-modal>
 

@@ -9,8 +9,10 @@ declare var Swal:any;
 })
 export class ApiService {
 
-  // private baseurl = "http://localhost/apiauditor/api/";
-  private baseurl = "http://192.168.1.22/apiauditor/api/";
+  private url = "http://localhost/";
+  // private url = "https://auditorigefa.fac.mil.co:6443/";
+  private baseurl = this.url + "apiauditor/api/";
+  public url_image = this.url + "apiauditor/public/secad/Personal/Fotos/";
 
   constructor() { }
 
@@ -30,6 +32,14 @@ export class ApiService {
           'Data-Type': 'json',
           // 'Accept': 'json',
           // 'Authorization': 'Bearer ' + localStorage.getItem('auth-token')
+        })
+      };
+    }
+    else if (tipo == 'f') {
+      return {
+        headers: new HttpHeaders({
+          'Content-Type': 'multipart/form-data',
+          'Accept': 'json',
         })
       };
     }
@@ -55,7 +65,10 @@ export class ApiService {
       errorMessage = error.error.Message;
       Swal.fire({
         icon: 'error',
-        text: errorMessage
+        text: errorMessage,
+        allowOutsideClick: false,
+        showConfirmButton: true,
+        confirmButtonText: 'Aceptar'
       });
     }
     else {
@@ -77,7 +90,10 @@ export class ApiService {
         Swal.fire({
           title: 'ERROR',
           icon: 'error',
-          text: errorMessage
+          text: errorMessage,
+          allowOutsideClick: false,
+          showConfirmButton: true,
+          confirmButtonText: 'Aceptar'
         });
       }
     }
@@ -92,7 +108,8 @@ export class ApiService {
         text: request.mensaje,
         allowOutsideClick: false,
         showConfirmButton: true,
-        icon: 'error'
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
       })
     }
     if (request != undefined && request.tipo == -1) {
@@ -101,7 +118,8 @@ export class ApiService {
         text: request.mensaje,
         allowOutsideClick: false,
         showConfirmButton: true,
-        icon: 'warning'
+        icon: 'warning',
+        confirmButtonText: 'Aceptar'
       })
     }
     if (request != undefined && request.tipo == -1 && request.codigo == 2) {

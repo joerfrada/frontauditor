@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Observable, Observer, from } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, Observer } from 'rxjs';
+import { ApiService } from '../api.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ImageService {
 
-  constructor() { }
+  constructor(private http: HttpClient, private api: ApiService) { }
 
   compressImage(image: File, maxSize: number): Observable<Blob> {
     return new Observable((observer: Observer<Blob>) => {
@@ -28,7 +30,8 @@ export class ImageService {
               height *= maxSize / width;
               width = maxSize;
             }
-          } else {
+          } 
+          else {
             if (height > maxSize) {
               width *= maxSize / height;
               height = maxSize;
@@ -44,7 +47,8 @@ export class ImageService {
           canvas.toBlob((blob: Blob | null) => {
             if (blob !== null) {
               observer.next(blob);
-            } else {
+            } 
+            else {
               observer.error(new Error('Failed to compress image'));
             }
           }, image.type, 1);
@@ -54,6 +58,4 @@ export class ImageService {
       reader.readAsDataURL(image);
     });
   }
-
-
 }

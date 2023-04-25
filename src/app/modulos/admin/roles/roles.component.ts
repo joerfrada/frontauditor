@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from '../../../services/api.service';
 import { RolService } from 'src/app/services/admin/rol.service';
+import { UserService } from '../../../services/admin/user.service';
+import { Permiso } from 'src/app/modelos/permiso.model';
 
 declare var Swal:any;
 
@@ -13,6 +15,8 @@ export class Model {
     id: 0,
     name: ""
   }
+
+  IsLectura: any;
 }
 
 @Component({
@@ -23,6 +27,7 @@ export class Model {
 export class RolesComponent implements OnInit {
 
   model = new Model();
+  permiso = new Permiso();
 
   varhistorial: any = [];
   varhistorialTemp: any = [];
@@ -45,11 +50,12 @@ export class RolesComponent implements OnInit {
 
   currentUser: any;
 
-  constructor(private router: Router, private api: ApiService, private rol: RolService) {
+  constructor(private router: Router, private api: ApiService, private rol: RolService, private usuario: UserService) {
     this.currentUser = JSON.parse(localStorage.getItem("currentUser") as any);
   }
 
   ngOnInit(): void {
+    this.getPermisos();
     this.getRoles();
     this.getModulos();
   }
@@ -134,6 +140,7 @@ export class RolesComponent implements OnInit {
     this.model.title = 'Crear Rol';
     this.model.isEdit = false;
     this.model.varRol = new Model().varRol;
+    this.model.IsLectura = false;
   }
 
   closeCrearModal(bol: any) {
@@ -209,6 +216,7 @@ export class RolesComponent implements OnInit {
   openRolPrivilegios(dato: any) {
     this.rolPrivilegioModal = true;
     this.model.title = "Roles Privilegios - " + dato.name;
+    this.model.IsLectura = false;
 
     this.rol_id = dato.rol_id;
 
@@ -217,6 +225,24 @@ export class RolesComponent implements OnInit {
 
   closeSelectModal(bol: any) {
     this.selectModal = bol;
+  }
+
+  openRolDetalle(data: any) {
+    this.rolModal = true;
+    this.model.title = 'Detalle Rol';
+    this.model.IsLectura = true;
+
+    this.model.varRol.id = data.id;
+    this.model.varRol.name = data.name;
+    this.model.varRol.activo = data.activo == 1 ? true : false;
+  }
+
+  openPrivilegioDetalle(data: any) {
+    this.rolPrivilegioModal = true;
+    this.model.title = "Roles Privilegios - " + data.name;
+    this.model.IsLectura = true;
+
+    this.openRolPrivilegiosById(data.rol_id);
   }
 
   saveModulo(index: number) {
@@ -269,11 +295,13 @@ export class RolesComponent implements OnInit {
       this.varprivilegio.forEach((x: any) => {
         x.rol_id = this.rol_id;
         if (x.NuevoRegistro == true) {
+          x.usuario = this.currentUser.usuario;
           this.rol.createRolPrivilegios(x).subscribe(data => {
             this.api.ProcesarRespuesta(data);
           });
         }
         else {
+          x.usuario = this.currentUser.usuario;
           this.rol.updateRolPrivilegios(x).subscribe(data => {
             this.api.ProcesarRespuesta(data);
           });
@@ -308,6 +336,24 @@ export class RolesComponent implements OnInit {
         this.varprivilegio[this.index].eliminar = true;
       }
     }
+  }
+
+  getPermisos() {
+    let json = {
+      usuario: this.currentUser.email,
+      cod_modulo: 'AD'
+    }
+    this.usuario.getPermisos(json).subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        this.permiso.consultar = response.result.consultar;
+        this.permiso.crear = response.result.crear;
+        this.permiso.actualizar = response.result.actualizar;
+        this.permiso.eliminar = response.result.eliminar;
+
+        console.log(this.permiso);
+      }
+    })
   }
 
 }

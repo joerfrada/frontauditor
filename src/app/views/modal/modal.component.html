@@ -5,7 +5,7 @@
                 <h3 class="modal-title">{{ title }}</h3>
                 <span class="close-modal" (click)="closeModal()"><i class="fa fa-times-circle"></i></span>
             </div>
-            <div class="modal-body">
+            <div class="modal-body {{ scroll }}">
                 <ng-content select="div[role=body]"></ng-content>
             </div>
             <div class="modal-footer">
