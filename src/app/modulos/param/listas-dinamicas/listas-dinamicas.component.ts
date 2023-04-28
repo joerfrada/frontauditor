@@ -45,7 +45,6 @@ export class ListasDinamicasComponent {
   }
 
   guardarListaPadre(data:any,num:Number){
-    console.log(data);
     if(num == 1){
       let json = {
         nombre_lista: data.nombre_lista,
@@ -104,7 +103,6 @@ export class ListasDinamicasComponent {
   clearSearch(dato:any){}
 
   openLd(item:any){
-    console.log(item);
     this.model.Listas = true;
     this.model.nombre_lista_id = item.nombre_lista_id;
     this.model.varLista.nombre_lista = item.nombre_lista;
@@ -123,7 +121,6 @@ export class ListasDinamicasComponent {
           }
         });
         this.model.varListas = response.result;
-        console.log(response.result);
       }
     })
   }
@@ -134,7 +131,6 @@ export class ListasDinamicasComponent {
   crearLista(data=null, num = 1){
     if(num == 2){
       this.model.varList = data;
-      console.log('data',data)
       this.model.isCrear = false;
     }else{
       this.model.isCrear = true;
@@ -191,7 +187,6 @@ export class ListasDinamicasComponent {
   }
 
   checkbox(num:Number,data:any,check:boolean){
-    debugger
     if(num == 1){
       let json = {
         nombre_lista_id: data.nombre_lista_id,

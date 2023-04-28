@@ -9,7 +9,7 @@ declare var Swal:any;
 })
 export class ApiService {
 
-  private baseurl = "http://localhost/apiauditor/api/";
+  private baseurl = "http://localhost:8000/api/";
 
   constructor() { }
 

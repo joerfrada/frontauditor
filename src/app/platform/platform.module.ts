@@ -18,6 +18,7 @@ import { CriterioComponent } from '../modulos/param/criterio/criterio.component'
 import { ProcesoComponent } from '../modulos/param/proceso/proceso.component';
 import { TipoauditoriaComponent } from '../modulos/param/tipoauditoria/tipoauditoria.component';
 import { ListasDinamicasComponent } from '../modulos/param/listas-dinamicas/listas-dinamicas.component';
+import { UnidadesComponent } from '../modulos/admin/unidades/unidades.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { ListasDinamicasComponent } from '../modulos/param/listas-dinamicas/list
     CriterioComponent,
     ProcesoComponent,
     TipoauditoriaComponent,
-    ListasDinamicasComponent    
+    ListasDinamicasComponent,
+    UnidadesComponent
   ],
   imports: [
     CommonModule,
