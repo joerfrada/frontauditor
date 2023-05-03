@@ -5,6 +5,7 @@ import { UserService } from '../../../services/admin/user.service';
 import { EmpresaService } from 'src/app/services/unidad/empresa.service';
 import { ImageService } from 'src/app/services/image/image.service';
 import { Permiso } from 'src/app/modelos/permiso.model';
+import { PerfilService } from 'src/app/services/config/perfil.service';
 
 declare var $:any;
 declare var Swal:any;
@@ -93,10 +94,10 @@ export class Model {
 })
 export class UsuariosComponent implements AfterViewInit {
 
-  @ViewChild('myCanvas', {static: false})
-  canvas?: ElementRef<HTMLCanvasElement>;
+  // @ViewChild('myCanvas', {static: false})
+  // canvas?: ElementRef<HTMLCanvasElement>;
 
-  ctx?: CanvasRenderingContext2D;
+  // ctx?: CanvasRenderingContext2D;
 
   model = new Model();
   permiso = new Permiso();
@@ -157,40 +158,48 @@ export class UsuariosComponent implements AfterViewInit {
 
   isDisabled = false;
 
-  constructor(private router: Router, private api: ApiService, private usuario: UserService, private empresa: EmpresaService, private image: ImageService) {
+  constructor(private router: Router, private api: ApiService, private usuario: UserService, private empresa: EmpresaService, private perfil: PerfilService) {
     this.currentUser = JSON.parse(localStorage.getItem("currentUser") as any);
     this.user_id = this.currentUser.user_id;
   }
 
   ngAfterViewInit(): void {
-    let context = this.canvas?.nativeElement.getContext('2d');
-    if (context) {
-      this.ctx = context;
+    // let context = this.canvas?.nativeElement.getContext('2d');
+    // if (context) {
+    //   this.ctx = context;
 
-      this.loadImage(this.ctx, this.model.filename);
-    }
+    //   this.loadImage(this.ctx, this.model.filename);
+    // }
 
     this.getPermisos();
 
-    this.getPersonas();
-    this.getPersonasActivos();
-    this.getRolPrivilegios();
-    this.getTipoDocumentos();
-    this.getAreas();
-    this.getCarrerasPro();
-    this.getCargos();
-    this.getCuerpos();
-    this.getEmpresas();
-    this.getEscuadrones();
-    this.getEspecialidadCert();
-    this.getEspecialidades();
-    this.getFuerzas();
-    this.getGrados();
-    this.getGrupos();
-    this.getNivelComp();
-    this.getProcesos();
-    this.getTalleres();
-    this.getUnidades();
+    setTimeout(() => {
+      this.getPersonas();
+    }, 500);
+    // setTimeout(() => {
+    //   this.getPersonasActivos();
+    // }, 500);
+    setTimeout(() => {
+      this.getRolPrivilegios();
+    }, 500);
+    setTimeout(() => {
+      this.getTipoDocumentos();
+    }, 500);
+    // this.getAreas();
+    // this.getCarrerasPro();
+    // this.getCargos();
+    // this.getCuerpos();
+    // this.getEmpresas();
+    // this.getEscuadrones();
+    // this.getEspecialidadCert();
+    // this.getEspecialidades();
+    // this.getFuerzas();
+    // this.getGrados();
+    // this.getGrupos();
+    // this.getNivelComp();
+    // this.getProcesos();
+    // this.getTalleres();
+    // this.getUnidades();
   }
 
   reload() {
@@ -280,200 +289,200 @@ export class UsuariosComponent implements AfterViewInit {
     });
   }
 
-  getAreas() {
-    this.usuario.getAreas().subscribe(data => {
-      let response: any = this.api.ProcesarRespuesta(data);
-      if (response.tipo == 0) {
-        // response.result.forEach((x: any) => {
-        //   x.item1 = x.NombreEmpresa;
-        //   x.item2 = x.SiglasNombreClave;
-        // });
-        this.lstAreas = response.result;
-      }
-    });
-  }
+  // getAreas() {
+  //   this.usuario.getAreas().subscribe(data => {
+  //     let response: any = this.api.ProcesarRespuesta(data);
+  //     if (response.tipo == 0) {
+  //       // response.result.forEach((x: any) => {
+  //       //   x.item1 = x.NombreEmpresa;
+  //       //   x.item2 = x.SiglasNombreClave;
+  //       // });
+  //       this.lstAreas = response.result;
+  //     }
+  //   });
+  // }
 
-  getCarrerasPro() {
-    this.usuario.getCarrerasPro().subscribe(data => {
-      let response: any = this.api.ProcesarRespuesta(data);
-      if (response.tipo == 0) {
-        // response.result.forEach((x: any) => {
-        //   x.item1 = x.NombreEmpresa;
-        //   x.item2 = x.SiglasNombreClave;
-        // });
-        this.lstCarrerasPro = response.result;
-      }
-    });
-  }
+  // getCarrerasPro() {
+  //   this.usuario.getCarrerasPro().subscribe(data => {
+  //     let response: any = this.api.ProcesarRespuesta(data);
+  //     if (response.tipo == 0) {
+  //       // response.result.forEach((x: any) => {
+  //       //   x.item1 = x.NombreEmpresa;
+  //       //   x.item2 = x.SiglasNombreClave;
+  //       // });
+  //       this.lstCarrerasPro = response.result;
+  //     }
+  //   });
+  // }
 
-  getCargos() {
-    this.usuario.getCargos().subscribe(data => {
-      let response: any = this.api.ProcesarRespuesta(data);
-      if (response.tipo == 0) {
-        // response.result.forEach((x: any) => {
-        //   x.item1 = x.NombreEmpresa;
-        //   x.item2 = x.SiglasNombreClave;
-        // });
-        this.lstCargos = response.result;
-      }
-    });
-  }
+  // getCargos() {
+  //   this.usuario.getCargos().subscribe(data => {
+  //     let response: any = this.api.ProcesarRespuesta(data);
+  //     if (response.tipo == 0) {
+  //       // response.result.forEach((x: any) => {
+  //       //   x.item1 = x.NombreEmpresa;
+  //       //   x.item2 = x.SiglasNombreClave;
+  //       // });
+  //       this.lstCargos = response.result;
+  //     }
+  //   });
+  // }
 
-  getCuerpos() {
-    this.usuario.getCuerpos().subscribe(data => {
-      let response: any = this.api.ProcesarRespuesta(data);
-      if (response.tipo == 0) {
-        // response.result.forEach((x: any) => {
-        //   x.item1 = x.NombreEmpresa;
-        //   x.item2 = x.SiglasNombreClave;
-        // });
-        this.lstCuerpos = response.result;
-      }
-    });
-  }
+  // getCuerpos() {
+  //   this.usuario.getCuerpos().subscribe(data => {
+  //     let response: any = this.api.ProcesarRespuesta(data);
+  //     if (response.tipo == 0) {
+  //       // response.result.forEach((x: any) => {
+  //       //   x.item1 = x.NombreEmpresa;
+  //       //   x.item2 = x.SiglasNombreClave;
+  //       // });
+  //       this.lstCuerpos = response.result;
+  //     }
+  //   });
+  // }
 
-  getEmpresas() {
-    this.usuario.getEmpresas().subscribe(data => {
-      let response: any = this.api.ProcesarRespuesta(data);
-      if (response.tipo == 0) {
-        // response.result.forEach((x: any) => {
-        //   x.item1 = x.NombreEmpresa;
-        //   x.item2 = x.SiglasNombreClave;
-        // });
-        this.lstEmpresas = response.result;
-      }
-    });
-  }
+  // getEmpresas() {
+  //   this.usuario.getEmpresas().subscribe(data => {
+  //     let response: any = this.api.ProcesarRespuesta(data);
+  //     if (response.tipo == 0) {
+  //       // response.result.forEach((x: any) => {
+  //       //   x.item1 = x.NombreEmpresa;
+  //       //   x.item2 = x.SiglasNombreClave;
+  //       // });
+  //       this.lstEmpresas = response.result;
+  //     }
+  //   });
+  // }
 
-  getEscuadrones() {
-    this.usuario.getEscuadrones().subscribe(data => {
-      let response: any = this.api.ProcesarRespuesta(data);
-      if (response.tipo == 0) {
-        // response.result.forEach((x: any) => {
-        //   x.item1 = x.NombreEmpresa;
-        //   x.item2 = x.SiglasNombreClave;
-        // });
-        this.lstEscuadrones = response.result;
-      }
-    });
-  }
+  // getEscuadrones() {
+  //   this.usuario.getEscuadrones().subscribe(data => {
+  //     let response: any = this.api.ProcesarRespuesta(data);
+  //     if (response.tipo == 0) {
+  //       // response.result.forEach((x: any) => {
+  //       //   x.item1 = x.NombreEmpresa;
+  //       //   x.item2 = x.SiglasNombreClave;
+  //       // });
+  //       this.lstEscuadrones = response.result;
+  //     }
+  //   });
+  // }
 
-  getEspecialidadCert() {
-    this.usuario.getEspecialidadCert().subscribe(data => {
-      let response: any = this.api.ProcesarRespuesta(data);
-      if (response.tipo == 0) {
-        // response.result.forEach((x: any) => {
-        //   x.item1 = x.NombreEmpresa;
-        //   x.item2 = x.SiglasNombreClave;
-        // });
-        this.lstEspecialidadCert = response.result;
-      }
-    });
-  }
+  // getEspecialidadCert() {
+  //   this.usuario.getEspecialidadCert().subscribe(data => {
+  //     let response: any = this.api.ProcesarRespuesta(data);
+  //     if (response.tipo == 0) {
+  //       // response.result.forEach((x: any) => {
+  //       //   x.item1 = x.NombreEmpresa;
+  //       //   x.item2 = x.SiglasNombreClave;
+  //       // });
+  //       this.lstEspecialidadCert = response.result;
+  //     }
+  //   });
+  // }
 
-  getEspecialidades() {
-    this.usuario.getEspecialidades().subscribe(data => {
-      let response: any = this.api.ProcesarRespuesta(data);
-      if (response.tipo == 0) {
-        // response.result.forEach((x: any) => {
-        //   x.item1 = x.NombreEmpresa;
-        //   x.item2 = x.SiglasNombreClave;
-        // });
-        this.lstEspecialidades = response.result;
-      }
-    });
-  }
+  // getEspecialidades() {
+  //   this.usuario.getEspecialidades().subscribe(data => {
+  //     let response: any = this.api.ProcesarRespuesta(data);
+  //     if (response.tipo == 0) {
+  //       // response.result.forEach((x: any) => {
+  //       //   x.item1 = x.NombreEmpresa;
+  //       //   x.item2 = x.SiglasNombreClave;
+  //       // });
+  //       this.lstEspecialidades = response.result;
+  //     }
+  //   });
+  // }
 
-  getFuerzas() {
-    this.usuario.getFuerzas().subscribe(data => {
-      let response: any = this.api.ProcesarRespuesta(data);
-      if (response.tipo == 0) {
-        // response.result.forEach((x: any) => {
-        //   x.item1 = x.NombreEmpresa;
-        //   x.item2 = x.SiglasNombreClave;
-        // });
-        this.lstFuerzas = response.result;
-      }
-    });
-  }
+  // getFuerzas() {
+  //   this.usuario.getFuerzas().subscribe(data => {
+  //     let response: any = this.api.ProcesarRespuesta(data);
+  //     if (response.tipo == 0) {
+  //       // response.result.forEach((x: any) => {
+  //       //   x.item1 = x.NombreEmpresa;
+  //       //   x.item2 = x.SiglasNombreClave;
+  //       // });
+  //       this.lstFuerzas = response.result;
+  //     }
+  //   });
+  // }
 
-  getGrados() {
-    this.usuario.getGrados().subscribe(data => {
-      let response: any = this.api.ProcesarRespuesta(data);
-      if (response.tipo == 0) {
-        // response.result.forEach((x: any) => {
-        //   x.item1 = x.NombreEmpresa;
-        //   x.item2 = x.SiglasNombreClave;
-        // });
-        this.lstGrados = response.result;
-      }
-    });
-  }
+  // getGrados() {
+  //   this.usuario.getGrados().subscribe(data => {
+  //     let response: any = this.api.ProcesarRespuesta(data);
+  //     if (response.tipo == 0) {
+  //       // response.result.forEach((x: any) => {
+  //       //   x.item1 = x.NombreEmpresa;
+  //       //   x.item2 = x.SiglasNombreClave;
+  //       // });
+  //       this.lstGrados = response.result;
+  //     }
+  //   });
+  // }
 
-  getGrupos() {
-    this.usuario.getGrupos().subscribe(data => {
-      let response: any = this.api.ProcesarRespuesta(data);
-      if (response.tipo == 0) {
-        // response.result.forEach((x: any) => {
-        //   x.item1 = x.NombreEmpresa;
-        //   x.item2 = x.SiglasNombreClave;
-        // });
-        this.lstGrupos = response.result;
-      }
-    });
-  }
+  // getGrupos() {
+  //   this.usuario.getGrupos().subscribe(data => {
+  //     let response: any = this.api.ProcesarRespuesta(data);
+  //     if (response.tipo == 0) {
+  //       // response.result.forEach((x: any) => {
+  //       //   x.item1 = x.NombreEmpresa;
+  //       //   x.item2 = x.SiglasNombreClave;
+  //       // });
+  //       this.lstGrupos = response.result;
+  //     }
+  //   });
+  // }
 
-  getNivelComp() {
-    this.usuario.getNivelComp().subscribe(data => {
-      let response: any = this.api.ProcesarRespuesta(data);
-      if (response.tipo == 0) {
-        // response.result.forEach((x: any) => {
-        //   x.item1 = x.NombreEmpresa;
-        //   x.item2 = x.SiglasNombreClave;
-        // });
-        this.lstNivelComp = response.result;
-      }
-    });
-  }
+  // getNivelComp() {
+  //   this.usuario.getNivelComp().subscribe(data => {
+  //     let response: any = this.api.ProcesarRespuesta(data);
+  //     if (response.tipo == 0) {
+  //       // response.result.forEach((x: any) => {
+  //       //   x.item1 = x.NombreEmpresa;
+  //       //   x.item2 = x.SiglasNombreClave;
+  //       // });
+  //       this.lstNivelComp = response.result;
+  //     }
+  //   });
+  // }
 
-  getProcesos() {
-    this.usuario.getProcesos().subscribe(data => {
-      let response: any = this.api.ProcesarRespuesta(data);
-      if (response.tipo == 0) {
-        // response.result.forEach((x: any) => {
-        //   x.item1 = x.NombreEmpresa;
-        //   x.item2 = x.SiglasNombreClave;
-        // });
-        this.lstProcesos = response.result;
-      }
-    });
-  }
+  // getProcesos() {
+  //   this.usuario.getProcesos().subscribe(data => {
+  //     let response: any = this.api.ProcesarRespuesta(data);
+  //     if (response.tipo == 0) {
+  //       // response.result.forEach((x: any) => {
+  //       //   x.item1 = x.NombreEmpresa;
+  //       //   x.item2 = x.SiglasNombreClave;
+  //       // });
+  //       this.lstProcesos = response.result;
+  //     }
+  //   });
+  // }
 
-  getTalleres() {
-    this.usuario.getTalleres().subscribe(data => {
-      let response: any = this.api.ProcesarRespuesta(data);
-      if (response.tipo == 0) {
-        // response.result.forEach((x: any) => {
-        //   x.item1 = x.NombreEmpresa;
-        //   x.item2 = x.SiglasNombreClave;
-        // });
-        this.lstTalleres = response.result;
-      }
-    });
-  }
+  // getTalleres() {
+  //   this.usuario.getTalleres().subscribe(data => {
+  //     let response: any = this.api.ProcesarRespuesta(data);
+  //     if (response.tipo == 0) {
+  //       // response.result.forEach((x: any) => {
+  //       //   x.item1 = x.NombreEmpresa;
+  //       //   x.item2 = x.SiglasNombreClave;
+  //       // });
+  //       this.lstTalleres = response.result;
+  //     }
+  //   });
+  // }
 
-  getUnidades() {
-    this.usuario.getUnidades().subscribe(data => {
-      let response: any = this.api.ProcesarRespuesta(data);
-      if (response.tipo == 0) {
-        // response.result.forEach((x: any) => {
-        //   x.item1 = x.NombreEmpresa;
-        //   x.item2 = x.SiglasNombreClave;
-        // });
-        this.lstUnidades = response.result;
-      }
-    });
-  }
+  // getUnidades() {
+  //   this.usuario.getUnidades().subscribe(data => {
+  //     let response: any = this.api.ProcesarRespuesta(data);
+  //     if (response.tipo == 0) {
+  //       // response.result.forEach((x: any) => {
+  //       //   x.item1 = x.NombreEmpresa;
+  //       //   x.item2 = x.SiglasNombreClave;
+  //       // });
+  //       this.lstUnidades = response.result;
+  //     }
+  //   });
+  // }
 
   getRolPrivilegios() {
     this.usuario.getRolPrivilegiosPantalla().subscribe(data => {
@@ -485,10 +494,10 @@ export class UsuariosComponent implements AfterViewInit {
   }
 
   openCrearModal() {
-    this.model.title = 'Crear personal';
+    this.model.title = 'Crear usuario';
     this.userModal = true;
     this.model.varPersona = new Model().varPersona;
-    this.isDisabled = false;
+    this.model.varUsuario = new Model().varUsuario;
     this.model.isEdit = false;
     this.model.IsLectura = false;
   }
@@ -499,9 +508,8 @@ export class UsuariosComponent implements AfterViewInit {
   }
 
   editPersonal(data: any) {
-    this.model.title = 'Actualizar personal - ' + data.Nombres + ' ' + data.Apellidos;
+    this.model.title = 'Actualizar usuario - ' + data.Nombres + ' ' + data.Apellidos;
     this.userModal = true;
-    this.isDisabled = true;
     this.model.isEdit = true;
     this.model.IsLectura = false;
 
@@ -557,13 +565,16 @@ export class UsuariosComponent implements AfterViewInit {
     this.model.varPersona.idespecialidadcertificacionmil = this.model.varPersona.idespecialidadcertificacion;
     this.model.varPersona.idnivelcompetenciamil = this.model.varPersona.idnivelcompetencia;
 
-    if (data.existe_img == 1) {
-      let foto = this.api.url_image + data.Foto;
-      this.loadImage(this.ctx, foto);
-    }
-    else {
-      this.loadImage(this.ctx, this.model.filename);
-    }
+    this.model.varUsuario.id = data.id;
+    this.model.varUsuario.idpersonal = data.IdPersonal;
+
+    // if (data.existe_img == 1) {
+    //   let foto = this.api.url_image + data.Foto;
+    //   this.loadImage(this.ctx, foto);
+    // }
+    // else {
+    //   this.loadImage(this.ctx, this.model.filename);
+    // }
   }
 
   openDetalle(data: any) {
@@ -625,13 +636,13 @@ export class UsuariosComponent implements AfterViewInit {
     this.model.varPersona.idespecialidadcertificacionmil = this.model.varPersona.idespecialidadcertificacion;
     this.model.varPersona.idnivelcompetenciamil = this.model.varPersona.idnivelcompetencia;
 
-    if (data.existe_img == 1) {
-      let foto = this.api.url_image + data.Foto;
-      this.loadImage(this.ctx, foto);
-    }
-    else {
-      this.loadImage(this.ctx, this.model.filename);
-    }
+    // if (data.existe_img == 1) {
+    //   let foto = this.api.url_image + data.Foto;
+    //   this.loadImage(this.ctx, foto);
+    // }
+    // else {
+    //   this.loadImage(this.ctx, this.model.filename);
+    // }
   }
 
   openRol(dato: any) {
@@ -778,21 +789,21 @@ export class UsuariosComponent implements AfterViewInit {
     this.grado = this.lstGrados.filter((x: any) => x.IdGrado == Number(idgrado))[0].Abreviatura;
   }
 
-  changeFileImage(event: any) {
-    this.file = event.target.files[0];
+  // changeFileImage(event: any) {
+  //   this.file = event.target.files[0];
 
-    this.model.filename = this.file.name;
-    this.model.varPersona.tipo_imagen = this.file.name.substr(this.file.name.indexOf('.'));
+  //   this.model.filename = this.file.name;
+  //   this.model.varPersona.tipo_imagen = this.file.name.substr(this.file.name.indexOf('.'));
 
-    this.ctx?.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+  //   this.ctx?.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
-    const reader = new FileReader();
-    reader.readAsDataURL(this.file);
-    reader.onload = e => {
-        this.model.foto = e.target?.result;
-        this.loadImage(this.ctx, e.target?.result);
-    };
-  }
+  //   const reader = new FileReader();
+  //   reader.readAsDataURL(this.file);
+  //   reader.onload = e => {
+  //       this.model.foto = e.target?.result;
+  //       this.loadImage(this.ctx, e.target?.result);
+  //   };
+  // }
 
   savePersonal() {
     let existePersonal = this.varhistorial.filter((x: any) => x.Cedula == this.model.varPersona.cedula);
@@ -812,7 +823,7 @@ export class UsuariosComponent implements AfterViewInit {
       if (this.model.varUsuario.password != this.model.varUsuario.passwordMatch) {
         Swal.fire({
           title: 'ERROR',
-          text: 'La contraseña no coincide. Por favor ingrese de nuevo.',
+          text: 'Las contraseñas no coinciden. Por favor ingrese de nuevo.',
           allowOutsideClick: false,
           showConfirmButton: true,
           icon: 'error'
@@ -822,70 +833,71 @@ export class UsuariosComponent implements AfterViewInit {
         })
       }
       else {
-        if (this.file) this.model.varPersona.foto = this.model.foto?.toString().substring(this.model.foto?.toString().indexOf(',') + 1);
-        else this.model.varPersona.foto = null;
+        // if (this.file) this.model.varPersona.foto = this.model.foto?.toString().substring(this.model.foto?.toString().indexOf(',') + 1);
+        // else this.model.varPersona.foto = null;
 
         this.model.varPersona.idtipodoc = this.model.varPersona.idtipodoc == '0' ? null : Number(this.model.varPersona.idtipodoc);
-        this.model.varPersona.idproceso = this.model.varPersona.idproceso == '0' ? null : Number(this.model.varPersona.idproceso);
+        // this.model.varPersona.idproceso = this.model.varPersona.idproceso == '0' ? null : Number(this.model.varPersona.idproceso);
 
-        if (this.model.varPersona.categoria == 'Civil') {
-          this.model.varPersona.idempresa = this.model.varPersona.idempresa == '0' ? null : Number(this.model.varPersona.idempresa);
-          this.model.varPersona.idcarreraprofesion = this.model.varPersona.idcarreraprofesion == '0' ? null : Number(this.model.varPersona.idcarreraprofesion);
-          this.model.varPersona.idcargo = this.model.varPersona.idcargo == '0' ? null : Number(this.model.varPersona.idcargo);
-          this.model.varPersona.idnivelcompetencia = this.model.varPersona.idnivelcompetencia == '0' ? null : Number(this.model.varPersona.idnivelcompetencia);
-          this.model.varPersona.idareaexperiencia = this.model.varPersona.idareaexperiencia == '0' ? null : Number(this.model.varPersona.idareaexperiencia);
-          this.model.varPersona.idsupervisor = this.model.varPersona.idsupervisor == '0' ? null : Number(this.model.varPersona.idsupervisor);
-
-          this.model.varPersona.idgrado = null;
-          this.model.varPersona.idfuerza = null;
-          this.model.varPersona.idcuerpo = null;
-          this.model.varPersona.idespecialidad1 = null;
-          this.model.varPersona.idespecialidad2 = null;
-          this.model.varPersona.idespecialidadcertificacion = null;
-          this.model.varPersona.fechaincorporacion = '1900-01-01';
-          this.model.varPersona.fechaasense = '1900-01-01';
-          this.model.varPersona.idunidad = null;
-          this.model.varPersona.idgrupo = null;
-          this.model.varPersona.idtaller = null;
-          this.model.varPersona.idescuadron = null;
-
-          this.model.varUsuario.name = this.model.varPersona.nombres + ' ' + this.model.varPersona.apellidos;
-          this.model.varUsuario.idempresa = this.model.varPersona.idempresa;
-        }
-        else if (this.model.varPersona.categoria == 'Militar') {
-          this.model.varPersona.idempresa = null;
-          this.model.varPersona.dependeciafacultad = null;
-          this.model.varPersona.idcarreraprofesion = this.model.varPersona.idcarreraprofesionmil == '0' ? null : Number(this.model.varPersona.idcarreraprofesionmil);
-          this.model.varPersona.escolaridad = null;
-          this.model.varPersona.idcargo = this.model.varPersona.idcargomil == '0' ? null : Number(this.model.varPersona.idcargomil);
-          this.model.varPersona.idnivelcompetencia = this.model.varPersona.idnivelcompetenciamil == '0' ? null : Number(this.model.varPersona.idnivelcompetenciamil);
-          this.model.varPersona.idareaexperiencia = null;
-          this.model.varPersona.idsupervisor = null;
-          this.model.varPersona.celular = null;
-          this.model.varPersona.fijo = null;
-          this.model.varPersona.oficina = null;
-          this.model.varPersona.paisresidencia = null;
-          this.model.varPersona.fechatermino = null;
-          this.model.varPersona.estadocivil = null;
-          this.model.varPersona.direccionresi = null;
-          this.model.varPersona.barrio = null;
-
-          this.model.varPersona.idgrado = this.model.varPersona.idgrado == '0' ? null : Number(this.model.varPersona.idgrado);
-          this.model.varPersona.idfuerza = this.model.varPersona.idfuerza == '0' ? null : Number(this.model.varPersona.idfuerza);
-          this.model.varPersona.idcuerpo = this.model.varPersona.idcuerpo == '0' ? null : Number(this.model.varPersona.idcuerpo);
-          this.model.varPersona.idespecialidad1 = this.model.varPersona.idespecialidad1 == '0' ? null : Number(this.model.varPersona.idespecialidad1);
-          this.model.varPersona.idespecialidad2 = this.model.varPersona.idespecialidad2 == '0' ? null : Number(this.model.varPersona.idespecialidad2);
-          this.model.varPersona.idunidad = this.model.varPersona.idunidad == '0' ? null : Number(this.model.varPersona.idunidad);
-          this.model.varPersona.idgrupo = this.model.varPersona.idgrupo == '0' ? null : Number(this.model.varPersona.idgrupo);
-          this.model.varPersona.idtaller = this.model.varPersona.idtaller == '0' ? null : Number(this.model.varPersona.idtaller);
-          this.model.varPersona.idespecialidadcertificacion = this.model.varPersona.idespecialidadcertificacion == '0' ? null : Number(this.model.varPersona.idespecialidadcertificacion);
-          this.model.varPersona.idescuadron = this.model.varPersona.idescuadron == '0' ? null : Number(this.model.varPersona.idescuadron);
-
-          this.model.varUsuario.name = this.grado + '. ' + this.model.varPersona.nombres + ' ' + this.model.varPersona.apellidos;
-          this.model.varUsuario.idempresa = this.model.varPersona.idempresa;
-        }
-
+        this.model.varUsuario.name = this.model.varPersona.nombres + ' ' + this.model.varPersona.apellidos;
         this.model.varUsuario.email = this.model.varPersona.email;
+
+        // if (this.model.varPersona.categoria == 'Civil') {
+        //   this.model.varPersona.idempresa = this.model.varPersona.idempresa == '0' ? null : Number(this.model.varPersona.idempresa);
+        //   this.model.varPersona.idcarreraprofesion = this.model.varPersona.idcarreraprofesion == '0' ? null : Number(this.model.varPersona.idcarreraprofesion);
+        //   this.model.varPersona.idcargo = this.model.varPersona.idcargo == '0' ? null : Number(this.model.varPersona.idcargo);
+        //   this.model.varPersona.idnivelcompetencia = this.model.varPersona.idnivelcompetencia == '0' ? null : Number(this.model.varPersona.idnivelcompetencia);
+        //   this.model.varPersona.idareaexperiencia = this.model.varPersona.idareaexperiencia == '0' ? null : Number(this.model.varPersona.idareaexperiencia);
+        //   this.model.varPersona.idsupervisor = this.model.varPersona.idsupervisor == '0' ? null : Number(this.model.varPersona.idsupervisor);
+
+        //   this.model.varPersona.idgrado = null;
+        //   this.model.varPersona.idfuerza = null;
+        //   this.model.varPersona.idcuerpo = null;
+        //   this.model.varPersona.idespecialidad1 = null;
+        //   this.model.varPersona.idespecialidad2 = null;
+        //   this.model.varPersona.idespecialidadcertificacion = null;
+        //   this.model.varPersona.fechaincorporacion = '1900-01-01';
+        //   this.model.varPersona.fechaasense = '1900-01-01';
+        //   this.model.varPersona.idunidad = null;
+        //   this.model.varPersona.idgrupo = null;
+        //   this.model.varPersona.idtaller = null;
+        //   this.model.varPersona.idescuadron = null;
+
+        //   this.model.varUsuario.name = this.model.varPersona.nombres + ' ' + this.model.varPersona.apellidos;
+        //   this.model.varUsuario.idempresa = this.model.varPersona.idempresa;
+        // }
+        // else if (this.model.varPersona.categoria == 'Militar') {
+        //   this.model.varPersona.idempresa = null;
+        //   this.model.varPersona.dependeciafacultad = null;
+        //   this.model.varPersona.idcarreraprofesion = this.model.varPersona.idcarreraprofesionmil == '0' ? null : Number(this.model.varPersona.idcarreraprofesionmil);
+        //   this.model.varPersona.escolaridad = null;
+        //   this.model.varPersona.idcargo = this.model.varPersona.idcargomil == '0' ? null : Number(this.model.varPersona.idcargomil);
+        //   this.model.varPersona.idnivelcompetencia = this.model.varPersona.idnivelcompetenciamil == '0' ? null : Number(this.model.varPersona.idnivelcompetenciamil);
+        //   this.model.varPersona.idareaexperiencia = null;
+        //   this.model.varPersona.idsupervisor = null;
+        //   this.model.varPersona.celular = null;
+        //   this.model.varPersona.fijo = null;
+        //   this.model.varPersona.oficina = null;
+        //   this.model.varPersona.paisresidencia = null;
+        //   this.model.varPersona.fechatermino = null;
+        //   this.model.varPersona.estadocivil = null;
+        //   this.model.varPersona.direccionresi = null;
+        //   this.model.varPersona.barrio = null;
+
+        //   this.model.varPersona.idgrado = this.model.varPersona.idgrado == '0' ? null : Number(this.model.varPersona.idgrado);
+        //   this.model.varPersona.idfuerza = this.model.varPersona.idfuerza == '0' ? null : Number(this.model.varPersona.idfuerza);
+        //   this.model.varPersona.idcuerpo = this.model.varPersona.idcuerpo == '0' ? null : Number(this.model.varPersona.idcuerpo);
+        //   this.model.varPersona.idespecialidad1 = this.model.varPersona.idespecialidad1 == '0' ? null : Number(this.model.varPersona.idespecialidad1);
+        //   this.model.varPersona.idespecialidad2 = this.model.varPersona.idespecialidad2 == '0' ? null : Number(this.model.varPersona.idespecialidad2);
+        //   this.model.varPersona.idunidad = this.model.varPersona.idunidad == '0' ? null : Number(this.model.varPersona.idunidad);
+        //   this.model.varPersona.idgrupo = this.model.varPersona.idgrupo == '0' ? null : Number(this.model.varPersona.idgrupo);
+        //   this.model.varPersona.idtaller = this.model.varPersona.idtaller == '0' ? null : Number(this.model.varPersona.idtaller);
+        //   this.model.varPersona.idespecialidadcertificacion = this.model.varPersona.idespecialidadcertificacion == '0' ? null : Number(this.model.varPersona.idespecialidadcertificacion);
+        //   this.model.varPersona.idescuadron = this.model.varPersona.idescuadron == '0' ? null : Number(this.model.varPersona.idescuadron);
+
+        //   this.model.varUsuario.name = this.grado + '. ' + this.model.varPersona.nombres + ' ' + this.model.varPersona.apellidos;
+        //   this.model.varUsuario.idempresa = this.model.varPersona.idempresa;
+        // }
 
         this.usuario.createPersonal(this.model.varPersona).subscribe(data => {
           let response: any = this.api.ProcesarRespuesta(data);
@@ -910,61 +922,83 @@ export class UsuariosComponent implements AfterViewInit {
   }
 
   updatePersonal() {
-    if (this.file) this.model.varPersona.foto = this.model.foto?.toString().substring(this.model.foto?.toString().indexOf(',') + 1);
+    // if (this.file) this.model.varPersona.foto = this.model.foto?.toString().substring(this.model.foto?.toString().indexOf(',') + 1);
     // else this.model.varPersona.foto = null;
 
     this.model.varPersona.idtipodoc = this.model.varPersona.idtipodoc == '0' ? null : Number(this.model.varPersona.idtipodoc);
-    this.model.varPersona.idproceso = this.model.varPersona.idproceso == '0' ? null : Number(this.model.varPersona.idproceso);
+    // this.model.varPersona.idproceso = this.model.varPersona.idproceso == '0' ? null : Number(this.model.varPersona.idproceso);
 
-    if (this.model.varPersona.categoria == 'Civil') {
-      this.model.varPersona.idempresa = this.model.varPersona.idempresa == '0' ? null : Number(this.model.varPersona.idempresa);
-      this.model.varPersona.idcarreraprofesion = this.model.varPersona.idcarreraprofesion == '0' ? null : Number(this.model.varPersona.idcarreraprofesion);
-      this.model.varPersona.idcargo = this.model.varPersona.idcargo == '0' ? null : Number(this.model.varPersona.idcargo);
-      this.model.varPersona.idnivelcompetencia = this.model.varPersona.idnivelcompetencia == '0' ? null : Number(this.model.varPersona.idnivelcompetencia);
-      this.model.varPersona.idareaexperiencia = this.model.varPersona.idareaexperiencia == '0' ? null : Number(this.model.varPersona.idareaexperiencia);
-      this.model.varPersona.idsupervisor = this.model.varPersona.idsupervisor == '0' ? null : Number(this.model.varPersona.idsupervisor);
+    // if (this.model.varPersona.categoria == 'Civil') {
+    //   this.model.varPersona.idempresa = this.model.varPersona.idempresa == '0' ? null : Number(this.model.varPersona.idempresa);
+    //   this.model.varPersona.idcarreraprofesion = this.model.varPersona.idcarreraprofesion == '0' ? null : Number(this.model.varPersona.idcarreraprofesion);
+    //   this.model.varPersona.idcargo = this.model.varPersona.idcargo == '0' ? null : Number(this.model.varPersona.idcargo);
+    //   this.model.varPersona.idnivelcompetencia = this.model.varPersona.idnivelcompetencia == '0' ? null : Number(this.model.varPersona.idnivelcompetencia);
+    //   this.model.varPersona.idareaexperiencia = this.model.varPersona.idareaexperiencia == '0' ? null : Number(this.model.varPersona.idareaexperiencia);
+    //   this.model.varPersona.idsupervisor = this.model.varPersona.idsupervisor == '0' ? null : Number(this.model.varPersona.idsupervisor);
 
-      this.model.varPersona.idgrado = null;
-      this.model.varPersona.idfuerza = null;
-      this.model.varPersona.idcuerpo = null;
-      this.model.varPersona.idespecialidad1 = null;
-      this.model.varPersona.idespecialidad2 = null;
-      this.model.varPersona.idespecialidadcertificacion = null;
-      this.model.varPersona.fechaincorporacion = '1900-01-01';
-      this.model.varPersona.fechaasense = '1900-01-01';
-      this.model.varPersona.idunidad = null;
-      this.model.varPersona.idgrupo = null;
-      this.model.varPersona.idtaller = null;
-      this.model.varPersona.idescuadron = null;
-    }
-    else if (this.model.varPersona.categoria == 'Militar') {
-      this.model.varPersona.idempresa = null;
-      this.model.varPersona.dependeciafacultad = null;
-      this.model.varPersona.idcarreraprofesion = this.model.varPersona.idcarreraprofesionmil == '0' ? null : Number(this.model.varPersona.idcarreraprofesionmil);
-      this.model.varPersona.escolaridad = null;
-      this.model.varPersona.idcargo = this.model.varPersona.idcargomil == '0' ? null : Number(this.model.varPersona.idcargomil);
-      this.model.varPersona.idnivelcompetencia = this.model.varPersona.idnivelcompetenciamil == '0' ? null : Number(this.model.varPersona.idnivelcompetenciamil);
-      this.model.varPersona.idareaexperiencia = null;
-      this.model.varPersona.idsupervisor = null;
-      this.model.varPersona.celular = null;
-      this.model.varPersona.fijo = null;
-      this.model.varPersona.oficina = null;
-      this.model.varPersona.paisresidencia = null;
-      this.model.varPersona.fechatermino = null;
-      this.model.varPersona.estadocivil = null;
-      this.model.varPersona.direccionresi = null;
-      this.model.varPersona.barrio = null;
+    //   this.model.varPersona.idgrado = null;
+    //   this.model.varPersona.idfuerza = null;
+    //   this.model.varPersona.idcuerpo = null;
+    //   this.model.varPersona.idespecialidad1 = null;
+    //   this.model.varPersona.idespecialidad2 = null;
+    //   this.model.varPersona.idespecialidadcertificacion = null;
+    //   this.model.varPersona.fechaincorporacion = '1900-01-01';
+    //   this.model.varPersona.fechaasense = '1900-01-01';
+    //   this.model.varPersona.idunidad = null;
+    //   this.model.varPersona.idgrupo = null;
+    //   this.model.varPersona.idtaller = null;
+    //   this.model.varPersona.idescuadron = null;
+    // }
+    // else if (this.model.varPersona.categoria == 'Militar') {
+    //   this.model.varPersona.idempresa = null;
+    //   this.model.varPersona.dependeciafacultad = null;
+    //   this.model.varPersona.idcarreraprofesion = this.model.varPersona.idcarreraprofesionmil == '0' ? null : Number(this.model.varPersona.idcarreraprofesionmil);
+    //   this.model.varPersona.escolaridad = null;
+    //   this.model.varPersona.idcargo = this.model.varPersona.idcargomil == '0' ? null : Number(this.model.varPersona.idcargomil);
+    //   this.model.varPersona.idnivelcompetencia = this.model.varPersona.idnivelcompetenciamil == '0' ? null : Number(this.model.varPersona.idnivelcompetenciamil);
+    //   this.model.varPersona.idareaexperiencia = null;
+    //   this.model.varPersona.idsupervisor = null;
+    //   this.model.varPersona.celular = null;
+    //   this.model.varPersona.fijo = null;
+    //   this.model.varPersona.oficina = null;
+    //   this.model.varPersona.paisresidencia = null;
+    //   this.model.varPersona.fechatermino = null;
+    //   this.model.varPersona.estadocivil = null;
+    //   this.model.varPersona.direccionresi = null;
+    //   this.model.varPersona.barrio = null;
 
-      this.model.varPersona.idgrado = this.model.varPersona.idgrado == '0' ? null : Number(this.model.varPersona.idgrado);
-      this.model.varPersona.idfuerza = this.model.varPersona.idfuerza == '0' ? null : Number(this.model.varPersona.idfuerza);
-      this.model.varPersona.idcuerpo = this.model.varPersona.idcuerpo == '0' ? null : Number(this.model.varPersona.idcuerpo);
-      this.model.varPersona.idespecialidad1 = this.model.varPersona.idespecialidad1 == '0' ? null : Number(this.model.varPersona.idespecialidad1);
-      this.model.varPersona.idespecialidad2 = this.model.varPersona.idespecialidad2 == '0' ? null : Number(this.model.varPersona.idespecialidad2);
-      this.model.varPersona.idunidad = this.model.varPersona.idunidad == '0' ? null : Number(this.model.varPersona.idunidad);
-      this.model.varPersona.idgrupo = this.model.varPersona.idgrupo == '0' ? null : Number(this.model.varPersona.idgrupo);
-      this.model.varPersona.idtaller = this.model.varPersona.idtaller == '0' ? null : Number(this.model.varPersona.idtaller);
-      this.model.varPersona.idespecialidadcertificacion = this.model.varPersona.idespecialidadcertificacion == '0' ? null : Number(this.model.varPersona.idespecialidadcertificacion);
-      this.model.varPersona.idescuadron = this.model.varPersona.idescuadron == '0' ? null : Number(this.model.varPersona.idescuadron);
+    //   this.model.varPersona.idgrado = this.model.varPersona.idgrado == '0' ? null : Number(this.model.varPersona.idgrado);
+    //   this.model.varPersona.idfuerza = this.model.varPersona.idfuerza == '0' ? null : Number(this.model.varPersona.idfuerza);
+    //   this.model.varPersona.idcuerpo = this.model.varPersona.idcuerpo == '0' ? null : Number(this.model.varPersona.idcuerpo);
+    //   this.model.varPersona.idespecialidad1 = this.model.varPersona.idespecialidad1 == '0' ? null : Number(this.model.varPersona.idespecialidad1);
+    //   this.model.varPersona.idespecialidad2 = this.model.varPersona.idespecialidad2 == '0' ? null : Number(this.model.varPersona.idespecialidad2);
+    //   this.model.varPersona.idunidad = this.model.varPersona.idunidad == '0' ? null : Number(this.model.varPersona.idunidad);
+    //   this.model.varPersona.idgrupo = this.model.varPersona.idgrupo == '0' ? null : Number(this.model.varPersona.idgrupo);
+    //   this.model.varPersona.idtaller = this.model.varPersona.idtaller == '0' ? null : Number(this.model.varPersona.idtaller);
+    //   this.model.varPersona.idespecialidadcertificacion = this.model.varPersona.idespecialidadcertificacion == '0' ? null : Number(this.model.varPersona.idespecialidadcertificacion);
+    //   this.model.varPersona.idescuadron = this.model.varPersona.idescuadron == '0' ? null : Number(this.model.varPersona.idescuadron);
+    // }
+
+    if (this.model.varUsuario.password != "") {
+      if (this.model.varUsuario.password != this.model.varUsuario.passwordMatch) {
+        Swal.fire({
+          title: 'ERROR',
+          text: 'Las contraseñas no coinciden',
+          allowOutsideClick: false,
+          showConfirmButton: true,
+          confirmButtonText: 'Aceptar',
+          icon: 'error'
+        }).then((result: any) => {
+          this.model.varUsuario.password = "";
+          this.model.varUsuario.passwordMatch = "";
+        })
+      }
+      else {
+        this.model.varUsuario.name = this.model.varPersona.nombres + ' ' + this.model.varPersona.apellidos;
+        this.model.varUsuario.email = this.model.varPersona.email;
+        
+        this.perfil.updateChangePassword(this.model.varUsuario).subscribe(data => {});
+      }
     }
 
     this.usuario.updatePersonal(this.model.varPersona).subscribe(data => {

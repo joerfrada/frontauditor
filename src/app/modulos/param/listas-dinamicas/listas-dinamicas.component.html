@@ -24,7 +24,7 @@
                         </td>
                         <td class="buttons">
                             <button type="button" class="btn btn-info" (click)="editLista(item)"><i class="fa fa-pencil"></i> Editar</button>
-                            <button type="button" class="btn btn-secondary"><i class="fa fa-bars"></i> Listas Detalles</button>
+                            <button type="button" class="btn btn-secondary" (click)="openListaDetalle(item)"><i class="fa fa-bars"></i> Listas Detalles</button>
                         </td>
                     </tr>
                     <tr *ngIf="model.varhistorial?.length == 0">
@@ -42,7 +42,7 @@
             <div class="row">
                 <div class="input-group">
                     <label>Nombre Lista:</label>
-                    <input type="text" class="form-control" [(ngModel)]="model.varLista.nombre_lista">
+                    <input type="text" class="form-control" [(ngModel)]="model.varLista.nombre_lista" style="text-transform: uppercase;">
                 </div>
             </div>
             <div class="row">
@@ -55,8 +55,84 @@
     </div>
     <div role="footer">
         <button type="button" class="btn btn-danger" (click)="closeListaModal(false)">Cerrar</button>
-        <button type="button" class="btn btn-primary" *ngIf="model.isCrear == true">Guardar</button>
-        <button type="button" class="btn btn-primary" *ngIf="model.isCrear == false">Actualizar</button>
+        <button type="button" class="btn btn-primary" (click)="crearLista()" *ngIf="model.isCrear == true">Guardar</button>
+        <button type="button" class="btn btn-primary" (click)="actualizarLista()" *ngIf="model.isCrear == false">Actualizar</button>
     </div>
 </app-modal>
 
+<app-modal [title]="model.title" [show]="model.detalleModal" [size]="'modal-lg1 modal-h65'" (close)="closeListaDetalleModal($event)">
+    <div role="body">
+        <div class="filter-content">
+            <button type="button" class="btn btn-primary" (click)="openCrearListaDetalle()"><i class="fa fa-plus"></i></button>
+            <input type="search" placeholder="Buscar..." (keyup)="searchDetalle($event)" (search)="clearSearchDetalle($event)">
+        </div>
+        <div class="table-content">
+            <table class="table flex-table">
+                <thead>
+                    <tr>
+                        <th>Lista Dinámica</th>
+                        <th>Código</th>
+                        <th>Padre</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="scroll">
+                    <tr *ngFor="let item of model.varhistorialDetalle; let i = index">
+                        <td>{{ item.lista_dinamica }}</td>
+                        <td>{{ item.codigo }}</td>
+                        <td>{{ item.lista_padre }}</td>
+                        <td>
+                            <i class="fa fa-1m5x fa-check-circle" *ngIf="item.activo == 1"></i>
+                            <i class="fa fa-1m5x fa-times-circle" *ngIf="item.activo == 0"></i>
+                        </td>
+                        <td class="buttons">
+                            <button type="button" class="btn btn-info" (click)="editListaDetalle(item)"><i class="fa fa-pencil"></i> Editar</button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="model.varhistorialDetalle?.length == 0">
+                        <div class="dbempty">No hay registros.</div>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div role="footer">
+        <button type="button" class="btn btn-danger" (click)="closeListaDetalleModal(false)">Cerrar</button>
+    </div>
+</app-modal>
+
+<app-modal [title]="model.title" [show]="model.ldetalleModal" [size]="'modal-md modal-h35'" (close)="closeListaDDetalleModal($event)">
+    <div role="body">
+        <div class="form-body">
+            <div class="row">
+                <div class="input-group">
+                    <label>Lista Dinamica:</label>
+                    <input type="text" class="form-control" [(ngModel)]="model.varListaDetalle.lista_dinamica">
+                </div>
+                <div class="input-group">
+                    <label>Código:</label>
+                    <input type="text" class="form-control" [(ngModel)]="model.varListaDetalle.codigo">
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <label>Lista Padre</label>
+                    <select class="form-select form-select-sm" [(ngModel)]="model.varListaDetalle.lista_padre_id">
+                        <option value="0">Seleccionar</option>
+                        <option *ngFor="let item of model.lstListaDetalleFull" value="{{ item.lista_dinamica_id }}">{{ item.lista_dinamica }}</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Activo</label>
+                    <input type="checkbox" checked="checked" [(ngModel)]="model.varListaDetalle.activo">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div role="footer">
+        <button type="button" class="btn btn-danger" (click)="closeListaDDetalleModal(false)">Cerrar</button>
+        <button type="button" class="btn btn-primary" (click)="crearListaDetalle()" *ngIf="model.isCrear == true">Guardar</button>
+        <button type="button" class="btn btn-primary" (click)="actualizarListaDetalle()" *ngIf="model.isCrear == false">Actualizar</button>
+    </div>
+</app-modal>

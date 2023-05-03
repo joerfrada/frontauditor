@@ -77,7 +77,8 @@ export class ApiService {
         Swal.fire({
           title: 'ERROR AUTENTICACIÓN',
           icon: 'error',
-          text: errorMessage
+          text: errorMessage,
+          confirmButtonText: 'Aceptar'
         }).then((result: any) => {
           setTimeout(() => {
             localStorage.clear();
@@ -126,7 +127,8 @@ export class ApiService {
       Swal.fire({
         title: 'ADVERTENCIA',
         icon: 'error',
-        text: request.mensaje
+        text: request.mensaje,
+        confirmButtonText: 'Aceptar'
       }).then((result: any) => {
         setTimeout(() => {
           localStorage.clear();

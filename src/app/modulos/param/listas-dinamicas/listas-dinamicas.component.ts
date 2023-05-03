@@ -13,6 +13,7 @@ declare var Swal:any;
 })
 export class ListasDinamicasComponent implements OnInit {
   model = new Model();
+  detalle_id: any;
 
   currentUser: any;
 
@@ -22,6 +23,7 @@ export class ListasDinamicasComponent implements OnInit {
 
   ngOnInit(): void {
     this.getListas();
+    this.getListaDetalleFull();
   }
   
   reload() {
@@ -52,12 +54,55 @@ export class ListasDinamicasComponent implements OnInit {
     }
   }
 
+  searchDetalle(e: any) {
+    let filtro = e.target.value.trim().toLowerCase();
+    if (filtro.length == 0) {
+      this.model.varhistorialDetalle = this.model.varhistorialDetalleTemp;
+    }
+    else {
+      this.model.varhistorialDetalle = this.model.varhistorialDetalleTemp.filter((item: any) => {
+        if (item.lista_dinamica.toString().toLowerCase().indexOf(filtro) !== -1) {
+            return true;
+        }
+        return false;
+      });
+    }
+  }
+
+  clearSearchDetalle(e: any) {
+    if (e.target.value == "") {
+      this.model.varhistorialDetalle = this.model.varhistorialDetalleTemp;
+    }
+  }
+
   getListas() {
     this.lista.getListas().subscribe(data => {
       let response: any = this.api.ProcesarRespuesta(data);
       if (response.tipo == 0) {
         this.model.varhistorial = response.result;
         this.model.varhistorialTemp = response.result;
+      }
+    });
+  }
+
+  getListaDetalleFull() {
+    this.lista.getListaDetalleFull().subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        this.model.lstListaDetalleFull = response.result;
+      }
+    });
+  }
+
+  getListasDinamicasById(id: any) {
+    this.lista.ObtenerListasDetalles({ nombre_lista_id: id }).subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        response.result.forEach((x: any) => {
+          x.lista_padre_id = (x.lista_padre_id == null) ? 0 : x.lista_padre_id;
+        });
+        this.model.varhistorialDetalle = response.result;
+        this.model.varhistorialDetalleTemp = response.result;
       }
     });
   }
@@ -79,10 +124,130 @@ export class ListasDinamicasComponent implements OnInit {
     this.model.modal = true;
     this.model.isCrear = false;
 
+    this.model.varLista.nombre_lista_id = data.nombre_lista_id;
     this.model.varLista.nombre_lista = data.nombre_lista;
     this.model.varLista.activo = (data.activo == 1) ? true : false;
     this.model.varLista.usuario = this.currentUser.usuario;
   }
 
-  crearLista() {}
+  openListaDetalle(data: any) {
+    this.model.title = 'Lista Dinámica Detalle - ' + data.nombre_lista;
+    this.model.detalleModal = true;
+
+    this.detalle_id = data.nombre_lista_id;
+
+    this.getListasDinamicasById(data.nombre_lista_id);
+  }  
+
+  closeListaDetalleModal(bol: any) {
+    this.model.detalleModal = bol;
+  }
+
+  openCrearListaDetalle() {
+    this.model.title = 'Crear Lista Dinamica Detalle';
+    this.model.ldetalleModal = true;
+    this.model.isCrear = true;
+    this.model.varListaDetalle = new Model().varListaDetalle;
+  }
+
+  editListaDetalle(data: any) {
+    this.model.title = 'Actualizar Lista Dinamica Detalle';
+    this.model.ldetalleModal = true;
+    this.model.isCrear = false;
+
+    this.model.varListaDetalle.lista_dinamica_id = data.lista_dinamica_id;
+    this.model.varListaDetalle.nombre_lista_id = data.nombre_lista_id;
+    this.model.varListaDetalle.lista_dinamica = data.lista_dinamica;
+    this.model.varListaDetalle.codigo = data.codigo;
+    this.model.varListaDetalle.lista_padre_id = (data.lista_padre_id == null) ? 0 : data.lista_padre_id;
+  }
+
+  closeListaDDetalleModal(bol: any) {
+    this.model.ldetalleModal = bol;
+  }
+
+  crearLista() {
+    this.model.varLista.nombre_lista = this.model.varLista.nombre_lista.toUpperCase();
+    this.model.varLista.usuario = this.currentUser.usuario;
+
+    this.lista.crearLista(this.model.varLista).subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        Swal.fire({
+          title: 'Crear Listas',
+          text: response.mensaje,
+          allowOutsideClick: false,
+          showConfirmButton: true,
+          icon: 'success'
+        }).then((result: any) => {
+          this.model.modal = false;
+          this.reload();
+        })
+      }
+    });
+  }
+
+  actualizarLista() {
+    this.model.varLista.nombre_lista = this.model.varLista.nombre_lista.toUpperCase();
+    this.model.varLista.usuario = this.currentUser.usuario;
+
+    this.lista.actualizarLista(this.model.varLista).subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        Swal.fire({
+          title: 'Actualizar Listas',
+          text: response.mensaje,
+          allowOutsideClick: false,
+          showConfirmButton: true,
+          icon: 'success'
+        }).then((result: any) => {
+          this.model.modal = false;
+          this.reload();
+        })
+      }
+    });
+  }
+
+  crearListaDetalle() {
+    this.model.varListaDetalle.nombre_lista_id = this.detalle_id;
+    this.model.varListaDetalle.lista_padre_id = Number(this.model.varListaDetalle.lista_padre_id);
+    this.model.varListaDetalle.usuario = this.currentUser.usuario;
+
+    this.lista.crearListaDetalle(this.model.varListaDetalle).subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        Swal.fire({
+          title: 'Crear Listas Detalles',
+          text: response.mensaje,
+          allowOutsideClick: false,
+          showConfirmButton: true,
+          icon: 'success'
+        }).then((result: any) => {
+          this.model.ldetalleModal = false;
+          this.getListasDinamicasById(this.detalle_id);
+        })
+      }
+    });
+  }
+
+  actualizarListaDetalle() {
+    this.model.varListaDetalle.lista_padre_id = Number(this.model.varListaDetalle.lista_padre_id);
+    this.model.varListaDetalle.usuario = this.currentUser.usuario;
+
+    this.lista.actualizarListaDetalle(this.model.varListaDetalle).subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        Swal.fire({
+          title: 'Actualizar Listas Detalles',
+          text: response.mensaje,
+          allowOutsideClick: false,
+          showConfirmButton: true,
+          icon: 'success'
+        }).then((result: any) => {
+          this.model.ldetalleModal = false;
+          this.getListasDinamicasById(this.detalle_id);
+        })
+      }
+    });
+  }
 }

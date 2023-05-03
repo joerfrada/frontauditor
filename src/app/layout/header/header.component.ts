@@ -1,8 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ApiService } from 'src/app/services/api.service';
 import { LoginService } from '../../services/auth/login.service';
+import { PerfilService } from 'src/app/services/config/perfil.service';
 
 declare var $:any;
+declare var Swal:any;
+
+export class Model {
+  title = "";
+
+  varUsuario: any = {
+    id: 0,
+    name: "",
+    email: "",
+    password: "",
+    passwordVerify: ""
+  }
+
+  varRoles: any = [];
+}
 
 @Component({
   selector: 'app-header',
@@ -11,9 +28,13 @@ declare var $:any;
 })
 export class HeaderComponent implements OnInit {
 
+  model = new Model();
+
   currentUser: any;
 
-  constructor(private router: Router, private loginService: LoginService) {
+  perfilModal: any;
+
+  constructor(private router: Router, private api: ApiService, private login: LoginService, private perfil: PerfilService) {
     this.currentUser = JSON.parse(localStorage.getItem("currentUser") as any);
   }
 
@@ -21,7 +42,7 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    this.loginService.logout().subscribe(data => {});
+    this.login.logout().subscribe(data => {});
     setTimeout(() => {
       localStorage.clear();
       this.router.navigate(['/']);    
@@ -30,5 +51,61 @@ export class HeaderComponent implements OnInit {
 
   toggleDropdown() {
     $('.dropdown-menu').toggleClass('dropdown-open');
+  }
+
+  openPerfil() {
+    this.perfilModal = true;
+    this.model.title = 'Mi Perfil - ' + this.currentUser.name;
+    this.model.varUsuario = new Model().varUsuario;
+
+    $('.dropdown-menu').removeClass('dropdown-open');
+
+    this.perfil.getRoles({ user_id: this.currentUser.user_id }).subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        this.model.varRoles = response.result;
+        this.model.varUsuario.name = this.currentUser.name;
+      }
+    })
+  }
+
+  closePerfilModal(bol: any) {
+    this.perfilModal = bol;
+  }
+
+  updatePassword() {
+    if (this.model.varUsuario.password != this.model.varUsuario.passwordVerify) {
+      Swal.fire({
+        title: 'ERROR',
+        text: 'Las contraseñas no coinciden',
+        allowOutsideClick: false,
+        showConfirmButton: true,
+        confirmButtonText: 'Aceptar',
+        icon: 'error'
+      }).then((result: any) => {
+        this.model.varUsuario.password = "";
+        this.model.varUsuario.passwordVerify = "";
+      })
+    }
+    else {
+      this.model.varUsuario.id = this.currentUser.user_id;
+      this.model.varUsuario.email = this.currentUser.email;
+
+      this.perfil.updateChangePassword(this.model.varUsuario).subscribe(data => {
+        let response: any = this.api.ProcesarRespuesta(data);
+        if (response.tipo == 0) {
+          Swal.fire({
+            title: 'Mi Perfil',
+            text: response.mensaje,
+            allowOutsideClick: false,
+            showConfirmButton: true,
+            confirmButtonText: 'Aceptar',
+            icon: 'success'
+          }).then((result: any) => {
+            this.perfilModal = false;
+          });
+        }
+      });
+    }
   }
 }

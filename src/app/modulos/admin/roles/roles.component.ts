@@ -151,9 +151,11 @@ export class RolesComponent implements OnInit {
     this.rolModal = true;
     this.model.title = 'Actualizar Rol';
     this.model.isEdit = true;
+    this.model.IsLectura = false;
 
     this.model.varRol.id = data.id;
     this.model.varRol.name = data.name;
+    this.model.varRol.activo = (data.activo == 1) ? true : false;
   }
 
   saveRol() {
@@ -350,8 +352,6 @@ export class RolesComponent implements OnInit {
         this.permiso.crear = response.result.crear;
         this.permiso.actualizar = response.result.actualizar;
         this.permiso.eliminar = response.result.eliminar;
-
-        console.log(this.permiso);
       }
     })
   }

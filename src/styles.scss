@@ -627,6 +627,11 @@ input[type="button"].btn-block {
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
+
+    .btn {
+        margin-right: 10px;
+        padding: 0.275rem 0.75rem;
+    }
 }
 
 .filter-content input[type=search] {
@@ -892,21 +897,18 @@ input[type="button"].btn-block {
 }
 
 .modal-footer .btn {
-    padding: 0.25rem 1rem;
+    padding: 0.25rem;
     font-size: 13px;
     width: 82px !important;
-}
-
-.modal-footer > * {
-    margin: 0.25rem;
-}
-
-.modal-footer button {
     margin-right: 10px;
 
     &:last-child {
         margin-right: 0;
     }
+}
+
+.modal-footer > * {
+    margin: 0.25rem;
 }
 
 .modal-sm {
@@ -1030,6 +1032,7 @@ input[type="button"].btn-block {
     border-radius: 0.25em;
     position: relative;
     top: 12px;
+    width: 15px;
 }
 
 .table-checkbox-component input[type=checkbox] {

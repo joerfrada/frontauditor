@@ -1,0 +1,95 @@
+<card [items]="'Administración,Unidades'">
+    <div role="button" class="card-button" *ngIf="permiso.crear == 1">
+        <button type="button" class="btn btn-primary" (click)="openUnidadModal()"><i class="fa fa-plus"></i></button>
+    </div>
+    <div role="body">
+        <div class="filter-content">
+            <input type="search" placeholder="Buscar..." (keyup)="search($event)" (search)="clearSearch($event)">
+        </div>
+        <div class="table-content">
+            <table class="table flex-table">
+                <thead>
+                    <tr>
+                        <th>Nombre Unidad</th>
+                        <th>Denominación</th>
+                        <th>Ciudad</th>
+                        <th>Dirección</th>
+                        <th>Unidad Padre</th>
+                        <th>Estado</th>
+                        <th *ngIf="permiso.consultar == 1">Detalle</th>
+                        <th *ngIf="permiso.actualizar || permiso.eliminar == 1">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="scroll">
+                    <tr *ngFor="let item of varhistorial">
+                        <td>{{ item.nombre_unidad }}</td>
+                        <td>{{ item.denominacion }}</td>
+                        <td>{{ item.ciudad }}</td>
+                        <td>{{ item.direccion }}</td>
+                        <td>{{ item.unidad_padre }}</td>
+                        <td>
+                            <i class="fa fa-1m5x fa-check-circle" *ngIf="item.activo == 1"></i>
+                            <i class="fa fa-1m5x fa-times-circle" *ngIf="item.activo == 0"></i>
+                        </td>
+                        <td class="buttons" *ngIf="permiso.consultar == 1">
+                            <button type="button" class="btn btn-secondary" (click)="openDetalleUnidad(item)"><i class="fa fa-eye"></i> Unidad</button>
+                        </td>
+                        <td class="buttons" *ngIf="permiso.actualizar || permiso.eliminar == 1">
+                            <button type="button" class="btn btn-info" (click)="editUnidad(item)"><i class="fa fa-pencil"> Editar</i></button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="varhistorial?.length == 0">
+                        <div class="dbempty">No hay registros.</div>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</card>
+
+<app-modal [title]="model.title" [show]="modal" [size]="'modal-lg'" (close)="closeUnidadModal($event)">
+    <div role="body">
+        <div class="form-body">
+            <div class="row">
+                <div class="input-group">
+                    <label>Nombre Unidad:</label>
+                    <input type="text" class="form-control" [(ngModel)]="model.varUnidad.nombre_unidad" [disabled]="model.IsLectura">
+                </div>
+                <div class="input-group">
+                    <label>Denominación:</label>
+                    <input type="text" class="form-control" [(ngModel)]="model.varUnidad.denominacion" [disabled]="model.IsLectura">
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <label>Ciudad:</label>
+                    <input type="text" class="form-control" [(ngModel)]="model.varUnidad.ciudad" [disabled]="model.IsLectura">
+                </div>
+                <div class="input-group">
+                    <label>Dirección</label>
+                    <input type="text" class="form-control" [(ngModel)]="model.varUnidad.direccion" [disabled]="model.IsLectura">
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <label>Unidad Padre:</label>
+                    <select class="form-select form-select-sm" [(ngModel)]="model.varUnidad.unidad_padre_id" [disabled]="model.IsLectura">
+                        <option value="0">Seleccionar</option>
+                        <option *ngFor="let unidad of model.lstUnidades" value="{{ unidad.unidad_id }}">{{ unidad.nombre_unidad }}</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Activo</label>
+                    <input type="checkbox" checked="checked" [(ngModel)]="model.varUnidad.activo" [disabled]="model.IsLectura">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div role="footer">
+        <button type="button" class="btn btn-danger" (click)="closeUnidadModal(false)">Cerrar</button>
+        <ng-container *ngIf="model.IsLectura == false">
+            <button type="button" class="btn btn-primary" (click)="crearUnidad()" *ngIf="model.isCrear == true">Guardar</button>
+            <button type="button" class="btn btn-primary" (click)="actualizarUnidad()" *ngIf="model.isCrear == false">Actualizar</button>
+        </ng-container>
+    </div>
+</app-modal>

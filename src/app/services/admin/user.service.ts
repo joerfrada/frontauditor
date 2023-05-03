@@ -13,21 +13,20 @@ export class UserService {
   private apiGetPersonasActivos = this.api.getBaseUrl + "admin/personasActivos";
   private apiGetUsers = this.api.getBaseUrl + "admin/usuarios";
   private apiGetTipoDocumentos = this.api.getBaseUrl + "admin/tipodocumentos";
-  private apiGetAreas = this.api.getBaseUrl + "admin/areas";
-  private apiGetCarerrasPro = this.api.getBaseUrl + "admin/carreraspro";
-  private apiGetCargos = this.api.getBaseUrl + "admin/cargos";
-  private apiGetCuerpos = this.api.getBaseUrl + "admin/cuerpos";
-  private apiGetEmpresas = this.api.getBaseUrl + "admin/empresas";
-  private apiGetEscuadrones = this.api.getBaseUrl + "admin/escuadrones";
-  private apiGetEspecalidadCert = this.api.getBaseUrl + "admin/especialidadcert";
-  private apiGetEspecialidades = this.api.getBaseUrl + "admin/especialidades";
-  private apiGetFuerzas = this.api.getBaseUrl + "admin/fuerzas";
-  private apiGetGrados = this.api.getBaseUrl + "admin/grados";
-  private apiGetGrupos = this.api.getBaseUrl + "admin/grupos";
-  private apiGetNivelComp = this.api.getBaseUrl + "admin/nivelcomp";
-  private apiGetProcesos = this.api.getBaseUrl + "admin/procesos";
-  private apiGetTalleres = this.api.getBaseUrl + "admin/talleres";
-  private apiGetUnidades = this.api.getBaseUrl + "admin/unidades";
+  // private apiGetAreas = this.api.getBaseUrl + "admin/areas";
+  // private apiGetCarerrasPro = this.api.getBaseUrl + "admin/carreraspro";
+  // private apiGetCargos = this.api.getBaseUrl + "admin/cargos";
+  // private apiGetCuerpos = this.api.getBaseUrl + "admin/cuerpos";
+  // private apiGetEmpresas = this.api.getBaseUrl + "admin/empresas";
+  // private apiGetEscuadrones = this.api.getBaseUrl + "admin/escuadrones";
+  // private apiGetEspecalidadCert = this.api.getBaseUrl + "admin/especialidadcert";
+  // private apiGetEspecialidades = this.api.getBaseUrl + "admin/especialidades";
+  // private apiGetFuerzas = this.api.getBaseUrl + "admin/fuerzas";
+  // private apiGetGrados = this.api.getBaseUrl + "admin/grados";
+  // private apiGetGrupos = this.api.getBaseUrl + "admin/grupos";
+  // private apiGetNivelComp = this.api.getBaseUrl + "admin/nivelcomp";
+  // private apiGetProcesos = this.api.getBaseUrl + "admin/procesos";
+  // private apiGetTalleres = this.api.getBaseUrl + "admin/talleres";
   private apiCreatePersonal = this.api.getBaseUrl + "admin/usuario/crearPersonal";
   private apiUpdatePersonal = this.api.getBaseUrl + "admin/usuario/actualizarPersonal";
   private apiCreateUsuario = this.api.getBaseUrl + "admin/usuario/crearUsuario";
@@ -62,80 +61,75 @@ export class UserService {
     .pipe(retry(1), catchError(this.api.errorHandle));
   }
 
-  public getAreas(): Observable<any> {
-    return this.http.get<any>(this.apiGetAreas, this.api.getHttpOptions('g'))
-    .pipe(retry(1), catchError(this.api.errorHandle));
-  }
+  // public getAreas(): Observable<any> {
+  //   return this.http.get<any>(this.apiGetAreas, this.api.getHttpOptions('g'))
+  //   .pipe(retry(1), catchError(this.api.errorHandle));
+  // }
 
-  public getCarrerasPro(): Observable<any> {
-    return this.http.get<any>(this.apiGetCarerrasPro, this.api.getHttpOptions('g'))
-    .pipe(retry(1), catchError(this.api.errorHandle));
-  }
+  // public getCarrerasPro(): Observable<any> {
+  //   return this.http.get<any>(this.apiGetCarerrasPro, this.api.getHttpOptions('g'))
+  //   .pipe(retry(1), catchError(this.api.errorHandle));
+  // }
 
-  public getCargos(): Observable<any> {
-    return this.http.get<any>(this.apiGetCargos, this.api.getHttpOptions('g'))
-    .pipe(retry(1), catchError(this.api.errorHandle));
-  }
+  // public getCargos(): Observable<any> {
+  //   return this.http.get<any>(this.apiGetCargos, this.api.getHttpOptions('g'))
+  //   .pipe(retry(1), catchError(this.api.errorHandle));
+  // }
 
-  public getCuerpos(): Observable<any> {
-    return this.http.get<any>(this.apiGetCuerpos, this.api.getHttpOptions('g'))
-    .pipe(retry(1), catchError(this.api.errorHandle));
-  }
+  // public getCuerpos(): Observable<any> {
+  //   return this.http.get<any>(this.apiGetCuerpos, this.api.getHttpOptions('g'))
+  //   .pipe(retry(1), catchError(this.api.errorHandle));
+  // }
 
-  public getEmpresas(): Observable<any> {
-    return this.http.get<any>(this.apiGetEmpresas, this.api.getHttpOptions('g'))
-    .pipe(retry(1), catchError(this.api.errorHandle));
-  }
+  // public getEmpresas(): Observable<any> {
+  //   return this.http.get<any>(this.apiGetEmpresas, this.api.getHttpOptions('g'))
+  //   .pipe(retry(1), catchError(this.api.errorHandle));
+  // }
 
-  public getEscuadrones(): Observable<any> {
-    return this.http.get<any>(this.apiGetEscuadrones, this.api.getHttpOptions('g'))
-    .pipe(retry(1), catchError(this.api.errorHandle));
-  }
+  // public getEscuadrones(): Observable<any> {
+  //   return this.http.get<any>(this.apiGetEscuadrones, this.api.getHttpOptions('g'))
+  //   .pipe(retry(1), catchError(this.api.errorHandle));
+  // }
 
-  public getEspecialidadCert(): Observable<any> {
-    return this.http.get<any>(this.apiGetEspecalidadCert, this.api.getHttpOptions('g'))
-    .pipe(retry(1), catchError(this.api.errorHandle));
-  }
+  // public getEspecialidadCert(): Observable<any> {
+  //   return this.http.get<any>(this.apiGetEspecalidadCert, this.api.getHttpOptions('g'))
+  //   .pipe(retry(1), catchError(this.api.errorHandle));
+  // }
 
-  public getEspecialidades(): Observable<any> {
-    return this.http.get<any>(this.apiGetEspecialidades, this.api.getHttpOptions('g'))
-    .pipe(retry(1), catchError(this.api.errorHandle));
-  }
+  // public getEspecialidades(): Observable<any> {
+  //   return this.http.get<any>(this.apiGetEspecialidades, this.api.getHttpOptions('g'))
+  //   .pipe(retry(1), catchError(this.api.errorHandle));
+  // }
 
-  public getFuerzas(): Observable<any> {
-    return this.http.get<any>(this.apiGetFuerzas, this.api.getHttpOptions('g'))
-    .pipe(retry(1), catchError(this.api.errorHandle));
-  }
+  // public getFuerzas(): Observable<any> {
+  //   return this.http.get<any>(this.apiGetFuerzas, this.api.getHttpOptions('g'))
+  //   .pipe(retry(1), catchError(this.api.errorHandle));
+  // }
 
-  public getGrados(): Observable<any> {
-    return this.http.get<any>(this.apiGetGrados, this.api.getHttpOptions('g'))
-    .pipe(retry(1), catchError(this.api.errorHandle));
-  }
+  // public getGrados(): Observable<any> {
+  //   return this.http.get<any>(this.apiGetGrados, this.api.getHttpOptions('g'))
+  //   .pipe(retry(1), catchError(this.api.errorHandle));
+  // }
 
-  public getGrupos(): Observable<any> {
-    return this.http.get<any>(this.apiGetGrupos, this.api.getHttpOptions('g'))
-    .pipe(retry(1), catchError(this.api.errorHandle));
-  }
+  // public getGrupos(): Observable<any> {
+  //   return this.http.get<any>(this.apiGetGrupos, this.api.getHttpOptions('g'))
+  //   .pipe(retry(1), catchError(this.api.errorHandle));
+  // }
 
-  public getNivelComp(): Observable<any> {
-    return this.http.get<any>(this.apiGetNivelComp, this.api.getHttpOptions('g'))
-    .pipe(retry(1), catchError(this.api.errorHandle));
-  }
+  // public getNivelComp(): Observable<any> {
+  //   return this.http.get<any>(this.apiGetNivelComp, this.api.getHttpOptions('g'))
+  //   .pipe(retry(1), catchError(this.api.errorHandle));
+  // }
 
-  public getProcesos(): Observable<any> {
-    return this.http.get<any>(this.apiGetProcesos, this.api.getHttpOptions('g'))
-    .pipe(retry(1), catchError(this.api.errorHandle));
-  }
+  // public getProcesos(): Observable<any> {
+  //   return this.http.get<any>(this.apiGetProcesos, this.api.getHttpOptions('g'))
+  //   .pipe(retry(1), catchError(this.api.errorHandle));
+  // }
 
-  public getTalleres(): Observable<any> {
-    return this.http.get<any>(this.apiGetTalleres, this.api.getHttpOptions('g'))
-    .pipe(retry(1), catchError(this.api.errorHandle));
-  }
-
-  public getUnidades(): Observable<any> {
-    return this.http.get<any>(this.apiGetUnidades, this.api.getHttpOptions('g'))
-    .pipe(retry(1), catchError(this.api.errorHandle));
-  }
+  // public getTalleres(): Observable<any> {
+  //   return this.http.get<any>(this.apiGetTalleres, this.api.getHttpOptions('g'))
+  //   .pipe(retry(1), catchError(this.api.errorHandle));
+  // }
 
   public createPersonal(data: any): Observable<any> {
     return this.http.post<any>(this.apiCreatePersonal, data, this.api.getHttpOptions('g'))
