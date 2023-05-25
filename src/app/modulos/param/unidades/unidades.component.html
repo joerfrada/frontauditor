@@ -14,10 +14,10 @@
                         <th>Denominación</th>
                         <th>Ciudad</th>
                         <th>Dirección</th>
-                        <th>Unidad Padre</th>
+                        <!-- <th>Unidad Padre</th> -->
                         <th>Estado</th>
                         <th *ngIf="permiso.consultar == 1">Detalle</th>
-                        <th *ngIf="permiso.actualizar || permiso.eliminar == 1">Acciones</th>
+                        <th *ngIf="permiso.actualizar == 1 || permiso.eliminar == 1">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="scroll">
@@ -26,7 +26,7 @@
                         <td>{{ item.denominacion }}</td>
                         <td>{{ item.ciudad }}</td>
                         <td>{{ item.direccion }}</td>
-                        <td>{{ item.unidad_padre }}</td>
+                        <!-- <td>{{ item.unidad_padre }}</td> -->
                         <td>
                             <i class="fa fa-1m5x fa-check-circle" *ngIf="item.activo == 1"></i>
                             <i class="fa fa-1m5x fa-times-circle" *ngIf="item.activo == 0"></i>
@@ -36,6 +36,7 @@
                         </td>
                         <td class="buttons" *ngIf="permiso.actualizar || permiso.eliminar == 1">
                             <button type="button" class="btn btn-info" (click)="editUnidad(item)"><i class="fa fa-pencil"> Editar</i></button>
+                            <button type="button" class="btn btn-secondary" (click)="openDependencias(item)"><i class="fa fa-list-ul"></i> Dep.</button>
                         </td>
                     </tr>
                     <tr *ngIf="varhistorial?.length == 0">
@@ -71,13 +72,13 @@
                 </div>
             </div>
             <div class="row">
-                <div class="input-group">
+                <!-- <div class="input-group">
                     <label>Unidad Padre:</label>
                     <select class="form-select form-select-sm" [(ngModel)]="model.varUnidad.unidad_padre_id" [disabled]="model.IsLectura">
                         <option value="0">Seleccionar</option>
                         <option *ngFor="let unidad of model.lstUnidades" value="{{ unidad.unidad_id }}">{{ unidad.nombre_unidad }}</option>
                     </select>
-                </div>
+                </div> -->
                 <div class="input-group">
                     <label>Activo</label>
                     <input type="checkbox" checked="checked" [(ngModel)]="model.varUnidad.activo" [disabled]="model.IsLectura">
@@ -90,6 +91,76 @@
         <ng-container *ngIf="model.IsLectura == false">
             <button type="button" class="btn btn-primary" (click)="crearUnidad()" *ngIf="model.isCrear == true">Guardar</button>
             <button type="button" class="btn btn-primary" (click)="actualizarUnidad()" *ngIf="model.isCrear == false">Actualizar</button>
+        </ng-container>
+    </div>
+</app-modal>
+
+<app-modal [title]="model.title" [show]="model.modalDependencias" [size]="'modal-lg1'" (close)="closeDependencias($event)">
+    <div role="body">
+        <div class="filter-content">
+            <button type="button" class="btn btn-primary" (click)="openUnidadDependenciaModal()"><i class="fa fa-plus"></i></button>
+            <input type="search" placeholder="Buscar..." (keyup)="searchDetalle($event)" (search)="clearSearchDetalle($event)">
+        </div>
+        <div class="table-content">
+            <table class="table flex-table">
+                <thead>
+                    <tr>
+                        <th>Dependencia</th>
+                        <th>Denominación</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="scroll">
+                    <tr *ngFor="let item of model.varhistorialDependencia; let i = index">
+                        <td>{{ item.nombre_unidad }}</td>
+                        <td>{{item.denominacion}}</td>
+                        <td>
+                            <i class="fa fa-check" style="color: darkgreen;" *ngIf="item.activo"></i>
+                            <i class="fa fa-times-circle" style="color:red" *ngIf="!item.activo"></i>
+                        </td>
+                        <td class="buttons">
+                            <button type="button" class="btn btn-primary button" (click)="editDependencias(item)">Editar</button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="model.varhistorialDependencia?.length == 0">
+                        <div class="dbempty">No hay registros</div>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div role="footer">
+        <button type="button" class="btn btn-danger" (click)="closeDependencias(false)">Cerrar</button>
+    </div>
+</app-modal>
+
+<app-modal [title]="model.title" [show]="modalDependencia" [size]="'modal-lg'" (close)="closeUnidadDependenciaModal($event)">
+    <div role="body">
+        <div class="form-body">
+            <div class="row">
+                <div class="input-group">
+                    <label>Dependencia:</label>
+                    <input type="text" class="form-control" [(ngModel)]="model.varUnidadDependencia.nombre_unidad" [disabled]="model.IsLectura">
+                </div>
+                <div class="input-group">
+                    <label>Denominación:</label>
+                    <input type="text" class="form-control" [(ngModel)]="model.varUnidadDependencia.denominacion" [disabled]="model.IsLectura">
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <label>Activo</label>
+                    <input type="checkbox" checked="checked" [(ngModel)]="model.varUnidadDependencia.activo" [disabled]="model.IsLectura">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div role="footer">
+        <button type="button" class="btn btn-danger" (click)="closeUnidadDependenciaModal(false)">Cerrar</button>
+        <ng-container *ngIf="model.IsLectura == false">
+            <button type="button" class="btn btn-primary" (click)="saveUnidadDependencia()" *ngIf="model.isCrear == true">Guardar</button>
+            <button type="button" class="btn btn-primary" (click)="updateUnidadDependencia()" *ngIf="model.isCrear == false">Actualizar</button>
         </ng-container>
     </div>
 </app-modal>

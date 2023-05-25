@@ -11,10 +11,18 @@
                 </div>
                 <div class="table-content">
                     <table class="table flex-table">
+                        <thead *ngIf="arrTitle?.length > 0">
+                            <tr>
+                                <th>{{ arrTitle[0] }}</th>
+                                <th *ngIf="arrTitle[1] !=''">{{ arrTitle[1] }}</th>
+                                <th *ngIf="arrTitle[2] !=''">{{ arrTitle[2] }}</th>
+                            </tr>
+                        </thead>
                         <tbody class="scroll">
                             <tr class="pointer" *ngFor="let dato of array" (click)="clickData(dato)">
                                 <td>{{dato.item1}}</td>
-                                <td *ngIf='dato.item2 != ""'>{{dato.item2}}</td>
+                                <td *ngIf="dato.item2 != ''">{{dato.item2}}</td>
+                                <td *ngIf="dato.item3 != ''">{{dato.item3}}</td>
                             </tr>
                             <tr *ngIf="array?.length == 0">
                                 <div class="dbempty">Sin resultados</div>

@@ -5,6 +5,7 @@ export class Model{
     detalleModal: any;
     ldetalleModal: any;
     title = "";
+    titleValor = "";
     isCrear: any;
 
     varLista: any = {
@@ -21,7 +22,8 @@ export class Model{
         codigo: "",
         lista_padre_id: 0,
         activo: true,
-        usuario: ""
+        usuario: "",
+        nombre_valor: ""
     }
 
     varhistorialDetalle: any = [];

@@ -24,7 +24,7 @@
                         </td>
                         <td class="buttons">
                             <button type="button" class="btn btn-info" (click)="editLista(item)"><i class="fa fa-pencil"></i> Editar</button>
-                            <button type="button" class="btn btn-secondary" (click)="openListaDetalle(item)"><i class="fa fa-bars"></i> Listas Detalles</button>
+                            <button type="button" class="btn btn-secondary" (click)="openListaDetalle(item)"><i class="fa fa-bars"></i> Listas Valores</button>
                         </td>
                     </tr>
                     <tr *ngIf="model.varhistorial?.length == 0">
@@ -60,7 +60,7 @@
     </div>
 </app-modal>
 
-<app-modal [title]="model.title" [show]="model.detalleModal" [size]="'modal-lg1 modal-h65'" (close)="closeListaDetalleModal($event)">
+<app-modal [title]="model.title" [show]="model.detalleModal" [size]="'modal-lg1'" (close)="closeListaDetalleModal($event)">
     <div role="body">
         <div class="filter-content">
             <button type="button" class="btn btn-primary" (click)="openCrearListaDetalle()"><i class="fa fa-plus"></i></button>
@@ -70,7 +70,7 @@
             <table class="table flex-table">
                 <thead>
                     <tr>
-                        <th>Lista Dinámica</th>
+                        <th>Lista Valor</th>
                         <th>Código</th>
                         <th>Padre</th>
                         <th>Estado</th>
@@ -102,12 +102,12 @@
     </div>
 </app-modal>
 
-<app-modal [title]="model.title" [show]="model.ldetalleModal" [size]="'modal-md modal-h35'" (close)="closeListaDDetalleModal($event)">
+<app-modal [title]="model.titleValor" [show]="model.ldetalleModal" [size]="'modal-lg modal-h35'" (close)="closeListaDDetalleModal($event)">
     <div role="body">
         <div class="form-body">
             <div class="row">
                 <div class="input-group">
-                    <label>Lista Dinamica:</label>
+                    <label>Lista Valor:</label>
                     <input type="text" class="form-control" [(ngModel)]="model.varListaDetalle.lista_dinamica">
                 </div>
                 <div class="input-group">
@@ -117,11 +117,8 @@
             </div>
             <div class="row">
                 <div class="input-group">
-                    <label>Lista Padre</label>
-                    <select class="form-select form-select-sm" [(ngModel)]="model.varListaDetalle.lista_padre_id">
-                        <option value="0">Seleccionar</option>
-                        <option *ngFor="let item of model.lstListaDetalleFull" value="{{ item.lista_dinamica_id }}">{{ item.lista_dinamica }}</option>
-                    </select>
+                    <label>Lista Valor Padre</label>
+                    <input type="text" class="form-control" placeholder="Selccionar..." [(ngModel)]="model.varListaDetalle.nombre_valor" (click)="saveListaValor()">
                 </div>
                 <div class="input-group">
                     <label>Activo</label>
@@ -136,3 +133,9 @@
         <button type="button" class="btn btn-primary" (click)="actualizarListaDetalle()" *ngIf="model.isCrear == false">Actualizar</button>
     </div>
 </app-modal>
+
+<app-select-modal [title]="'Lista Valor Padre'" [show]="selectModal" [size]="'modal-lg1'" [titleHeader]="'Nombre Lista,Valor,Padre'" [array]="array" [arrayTemp]="array" (output)="dataform(inputform, $event)" (close)="closeSelectModal($event)">
+    <div role="footer">
+        <button type="button" class="btn btn-danger" (click)="closeSelectModal(false)">Cerrar</button>
+    </div>
+</app-select-modal>

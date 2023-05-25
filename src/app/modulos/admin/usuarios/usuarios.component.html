@@ -97,7 +97,7 @@
             <div class="row">
                 <div class="input-group">
                     <label>Tipo de Documento:</label>
-                    <select class="form-select form-select-sm" [(ngModel)]="model.varPersona.idtipodoc" [disabled]="model.IsLectura">
+                    <select class="form-select form-select-sm" [(ngModel)]="model.varPersona.idtipoident" [disabled]="model.IsLectura">
                         <option value="0">Seleccionar</option>
                         <option *ngFor="let item of lstTipoDoc" value="{{ item.IdTipoDoc }}">{{ item.NombreTipoDoc }}</option>
                     </select>

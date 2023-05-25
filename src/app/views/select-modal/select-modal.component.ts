@@ -10,6 +10,7 @@ export class SelectModalComponent implements OnInit {
   @ViewChild('input', { static: false }) private input!: ElementRef;
 
   @Input() title?: string;
+  @Input() titleHeader?: string;
   @Input() show?: Boolean;
   @Input() array?: any;
   @Input() arrayTemp?: any;
@@ -17,9 +18,13 @@ export class SelectModalComponent implements OnInit {
   @Output() close = new EventEmitter<Boolean>();
   @Output() output = new EventEmitter<any>();
 
+  arrTitle: any = [];
+
   constructor() { }
 
   ngOnInit(): void {
+    if (this.titleHeader == undefined) this.arrTitle.length = 0;
+    else this.arrTitle = this.titleHeader?.split(',');;
   }
 
   closeModal() {
@@ -38,7 +43,8 @@ export class SelectModalComponent implements OnInit {
     else {
       this.array = this.arrayTemp.filter((item: any) => {
         if (item.item1.toString().toLowerCase().indexOf(filter) !== -1 ||
-            item.item2.toString().toLowerCase().indexOf(filter) !== -1) {
+            item.item2.toString().toLowerCase().indexOf(filter) !== -1 ||
+            item.item3.toString().toLowerCase().indexOf(filter) !== -1) {
               return true;
             }
         return false;

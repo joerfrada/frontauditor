@@ -2,10 +2,10 @@ import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from '../../../services/api.service';
 import { UserService } from '../../../services/admin/user.service';
-import { EmpresaService } from 'src/app/services/unidad/empresa.service';
 import { ImageService } from 'src/app/services/image/image.service';
 import { Permiso } from 'src/app/modelos/permiso.model';
 import { PerfilService } from 'src/app/services/config/perfil.service';
+import { ListasService } from 'src/app/services/param/listas.service';
 
 declare var $:any;
 declare var Swal:any;
@@ -76,6 +76,7 @@ export class Model {
     tipo_imagen: '',
     active: 1,
     idproceso: 0,
+    idtipoident: 0,
     idcarreraprofesionmil: 0,
     idcargomil: 0,
     idespecialidadcertificacionmil: 0,
@@ -158,7 +159,7 @@ export class UsuariosComponent implements AfterViewInit {
 
   isDisabled = false;
 
-  constructor(private router: Router, private api: ApiService, private usuario: UserService, private empresa: EmpresaService, private perfil: PerfilService) {
+  constructor(private router: Router, private api: ApiService, private usuario: UserService, private perfil: PerfilService, private lista: ListasService) {
     this.currentUser = JSON.parse(localStorage.getItem("currentUser") as any);
     this.user_id = this.currentUser.user_id;
   }
@@ -183,8 +184,11 @@ export class UsuariosComponent implements AfterViewInit {
       this.getRolPrivilegios();
     }, 500);
     setTimeout(() => {
-      this.getTipoDocumentos();
+      this.getTipoIdentificacion();
     }, 500);
+    // setTimeout(() => {
+    //   this.getTipoDocumentos();
+    // }, 500);
     // this.getAreas();
     // this.getCarrerasPro();
     // this.getCargos();
@@ -276,18 +280,31 @@ export class UsuariosComponent implements AfterViewInit {
     });
   }
 
-  getTipoDocumentos() {
-    this.usuario.getTipoDocumentos().subscribe(data => {
+  getTipoIdentificacion() {
+    this.lista.getListaDetalleFull().subscribe(data => {
       let response: any = this.api.ProcesarRespuesta(data);
       if (response.tipo == 0) {
-        // response.result.forEach((x: any) => {
-        //   x.item1 = x.NombreEmpresa;
-        //   x.item2 = x.SiglasNombreClave;
-        // });
-        this.lstTipoDoc = response.result;
+        response.result.forEach((x : any) => {
+          x.IdTipoDoc = x.lista_dinamica_id;
+          x.NombreTipoDoc = x.lista_dinamica;
+        });
+        this.lstTipoDoc = response.result.filter((x: any) => x.nombre_lista == 'SG_TIPO_DOCUMENTO');
       }
     });
   }
+
+  // getTipoDocumentos() {
+  //   this.usuario.getTipoDocumentos().subscribe(data => {
+  //     let response: any = this.api.ProcesarRespuesta(data);
+  //     if (response.tipo == 0) {
+  //       // response.result.forEach((x: any) => {
+  //       //   x.item1 = x.NombreEmpresa;
+  //       //   x.item2 = x.SiglasNombreClave;
+  //       // });
+  //       this.lstTipoDoc = response.result;
+  //     }
+  //   });
+  // }
 
   // getAreas() {
   //   this.usuario.getAreas().subscribe(data => {
@@ -517,6 +534,7 @@ export class UsuariosComponent implements AfterViewInit {
     this.model.varPersona.nombres = data.Nombres;
     this.model.varPersona.apellidos = data.Apellidos;
     this.model.varPersona.idtipodoc = data.IdTipoDoc == null ? 0 : data.IdTipoDoc;
+    this.model.varPersona.idtipoident = data.IdTipoIdent == null ? 0 : data.IdTipoIdent;
     this.model.varPersona.cedula = data.Cedula;
     this.model.varPersona.lugarexpedicion = data.Lugarexpedicion;
     this.model.varPersona.lugarnacim = data.LugarNacim;
@@ -836,6 +854,7 @@ export class UsuariosComponent implements AfterViewInit {
         // if (this.file) this.model.varPersona.foto = this.model.foto?.toString().substring(this.model.foto?.toString().indexOf(',') + 1);
         // else this.model.varPersona.foto = null;
 
+        this.model.varPersona.idtipoident = this.model.varPersona.idtipoident == '0' ? null : Number(this.model.varPersona.idtipoident);
         this.model.varPersona.idtipodoc = this.model.varPersona.idtipodoc == '0' ? null : Number(this.model.varPersona.idtipodoc);
         // this.model.varPersona.idproceso = this.model.varPersona.idproceso == '0' ? null : Number(this.model.varPersona.idproceso);
 
@@ -925,6 +944,7 @@ export class UsuariosComponent implements AfterViewInit {
     // if (this.file) this.model.varPersona.foto = this.model.foto?.toString().substring(this.model.foto?.toString().indexOf(',') + 1);
     // else this.model.varPersona.foto = null;
 
+    this.model.varPersona.idtipoident = this.model.varPersona.idtipoident == '0' ? null : Number(this.model.varPersona.idtipoident);
     this.model.varPersona.idtipodoc = this.model.varPersona.idtipodoc == '0' ? null : Number(this.model.varPersona.idtipodoc);
     // this.model.varPersona.idproceso = this.model.varPersona.idproceso == '0' ? null : Number(this.model.varPersona.idproceso);
 

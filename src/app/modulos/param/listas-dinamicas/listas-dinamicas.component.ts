@@ -14,6 +14,10 @@ declare var Swal:any;
 export class ListasDinamicasComponent implements OnInit {
   model = new Model();
   detalle_id: any;
+  selectModal: any;
+
+  array: any = [];
+  inputform: any;
 
   currentUser: any;
 
@@ -61,7 +65,8 @@ export class ListasDinamicasComponent implements OnInit {
     }
     else {
       this.model.varhistorialDetalle = this.model.varhistorialDetalleTemp.filter((item: any) => {
-        if (item.lista_dinamica.toString().toLowerCase().indexOf(filtro) !== -1) {
+        if (item.lista_dinamica.toString().toLowerCase().indexOf(filtro) !== -1 ||
+            item.lista_padre.toString().toLowerCase().indexOf(filtro) !== -1) {
             return true;
         }
         return false;
@@ -89,6 +94,11 @@ export class ListasDinamicasComponent implements OnInit {
     this.lista.getListaDetalleFull().subscribe(data => {
       let response: any = this.api.ProcesarRespuesta(data);
       if (response.tipo == 0) {
+        response.result.forEach((x: any) => {
+          x.item1 = x.nombre_lista;
+          x.item2 = x.lista_dinamica;
+          x.item3 = x.lista_padre;
+        });
         this.model.lstListaDetalleFull = response.result;
       }
     });
@@ -131,7 +141,7 @@ export class ListasDinamicasComponent implements OnInit {
   }
 
   openListaDetalle(data: any) {
-    this.model.title = 'Lista Dinámica Detalle - ' + data.nombre_lista;
+    this.model.title = 'Lista Valores - ' + data.nombre_lista;
     this.model.detalleModal = true;
 
     this.detalle_id = data.nombre_lista_id;
@@ -141,17 +151,18 @@ export class ListasDinamicasComponent implements OnInit {
 
   closeListaDetalleModal(bol: any) {
     this.model.detalleModal = bol;
+    this.reload();
   }
 
   openCrearListaDetalle() {
-    this.model.title = 'Crear Lista Dinamica Detalle';
+    this.model.titleValor = 'Crear Lista Valores';
     this.model.ldetalleModal = true;
     this.model.isCrear = true;
     this.model.varListaDetalle = new Model().varListaDetalle;
   }
 
   editListaDetalle(data: any) {
-    this.model.title = 'Actualizar Lista Dinamica Detalle';
+    this.model.titleValor = 'Actualizar Lista Valores - ' + data.lista_dinamica;
     this.model.ldetalleModal = true;
     this.model.isCrear = false;
 
@@ -159,7 +170,8 @@ export class ListasDinamicasComponent implements OnInit {
     this.model.varListaDetalle.nombre_lista_id = data.nombre_lista_id;
     this.model.varListaDetalle.lista_dinamica = data.lista_dinamica;
     this.model.varListaDetalle.codigo = data.codigo;
-    this.model.varListaDetalle.lista_padre_id = (data.lista_padre_id == null) ? 0 : data.lista_padre_id;
+    this.model.varListaDetalle.lista_padre_id = data.lista_padre_id == null ? 0 : data.lista_padre_id;
+    this.model.varListaDetalle.nombre_valor = data.lista_padre;
   }
 
   closeListaDDetalleModal(bol: any) {
@@ -217,7 +229,7 @@ export class ListasDinamicasComponent implements OnInit {
       let response: any = this.api.ProcesarRespuesta(data);
       if (response.tipo == 0) {
         Swal.fire({
-          title: 'Crear Listas Detalles',
+          title: 'Crear Listas Valores',
           text: response.mensaje,
           allowOutsideClick: false,
           showConfirmButton: true,
@@ -238,7 +250,7 @@ export class ListasDinamicasComponent implements OnInit {
       let response: any = this.api.ProcesarRespuesta(data);
       if (response.tipo == 0) {
         Swal.fire({
-          title: 'Actualizar Listas Detalles',
+          title: 'Actualizar Listas Valores',
           text: response.mensaje,
           allowOutsideClick: false,
           showConfirmButton: true,
@@ -249,5 +261,25 @@ export class ListasDinamicasComponent implements OnInit {
         })
       }
     });
+  }
+
+  closeSelectModal(bol: any) {
+    this.selectModal = bol;
+  }
+
+  saveListaValor() {
+    this.array = this.model.lstListaDetalleFull;
+    this.inputform = 'lista-valor';
+    this.selectModal = true;
+  }
+
+  dataform(inputform: any, data: any) {
+    this.selectModal = false;
+
+    if (inputform == 'lista-valor') {
+      console.log(data);
+      this.model.varListaDetalle.lista_padre_id = data.lista_dinamica_id;
+      this.model.varListaDetalle.nombre_valor = data.lista_dinamica;
+    }
   }
 }

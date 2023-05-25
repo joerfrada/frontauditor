@@ -9,10 +9,10 @@ import { ApiService } from '../api.service';
 })
 export class UnidadService {
 
-  private apiGetUnidades = this.api.getBaseUrl + "admin/unidades";
-  private apiCrearUnidades = this.api.getBaseUrl + "admin/unidad/crearUnidades";
-  private apiActualizarUnidades = this.api.getBaseUrl + "admin/unidad/actualizarUnidades";
-  private apiGetUnidadesById = this.api.getBaseUrl + "admin/unidad/obtenerUnidadesById";
+  private apiGetUnidades = this.api.getBaseUrl + "param/unidades";
+  private apiCrearUnidades = this.api.getBaseUrl + "param/unidad/crearUnidades";
+  private apiActualizarUnidades = this.api.getBaseUrl + "param/unidad/actualizarUnidades";
+  private apiGetUnidadesById = this.api.getBaseUrl + "param/unidad/getUnidadesById";
 
   constructor(private http: HttpClient, private api: ApiService) { }
 

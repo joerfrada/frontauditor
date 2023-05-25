@@ -1,0 +1,308 @@
+<card [items]="'Inspecciones'">
+    <div role="button" class="card-button" *ngIf="permiso.crear == 1">
+        <button type="button" class="btn btn-primary" (click)="openInspeccion()"><i class="fa fa-plus"></i></button>
+    </div>
+    <div role="body">
+        <div class="filter-content">
+            <input type="search" placeholder="Buscar..." (keyup)="search($event)" (search)="clearSearch($event)">
+        </div>
+        <div class="table-content">
+            <table class="table flex-table">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Nombre Inspección</th>
+                        <th>Fecha Inicio</th>
+                        <th>Tipo de Inspección</th>
+                        <th>Plan de Inspección</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="scroll">
+                    <tr *ngFor="let item of varhistorial">
+                        <td>{{ item.codigo }}</td>
+                        <td>{{ item.nombre_inspeccion }}</td>
+                        <td>{{ item.fecha_inicio }}</td>
+                        <td>{{ item.tipo_inspeccion }}</td>
+                        <td class="buttons">
+                            <button type="button" class="btn btn-info" (click)="openPlan(item)"><i class="fa fa-bookmark"> </i></button>
+                        </td>
+                        <td class="buttons">
+                            <button type="button" class="btn btn-info"><i class="fa fa-pencil"> Editar</i></button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="varhistorial?.length == 0">
+                        <div class="dbempty">No hay registros.</div>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</card>
+
+<app-modal [title]="model.title" [show]="modal" [size]="'modal-lg-md modal-h80'" [scroll]="'modal-scroll'" (close)="closeInspeccion($event)">
+    <div role="body">
+        <div class="form-body">
+            <div class="row">
+                <div class="input-group">
+                    <label>Nombre Inspección</label>
+                    <input type="text" class="form-control" [disabled]="model.IsLectura">
+                </div>
+                <div class="input-group">
+                    <label>Código</label>
+                    <input type="text" class="form-control" [disabled]="model.IsLectura">
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <label>UMA</label>
+                    <input type="text" class="form-control" [disabled]="model.IsLectura">
+                </div>
+                <div class="input-group">
+                    <label>Dependencia</label>
+                    <input type="text" class="form-control" disabled>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <label>Aspecto a inspeccionar</label>
+                    <textarea class="form-control" rows="4" [disabled]="model.IsLectura"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <label>Responsable</label>
+                    <input type="text" class="form-control" placeholder="Seleccionar..." [disabled]="model.IsLectura">
+                </div>
+                <div class="input-group">
+                    <label>Cargo</label>
+                    <input type="text" class="form-control" [disabled]="model.IsLectura">
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <label>Inspector General / Jefe Oficina Regional Inspección y Control</label>
+                    <input type="text" class="form-control" placeholder="Seleccionar..." [disabled]="model.IsLectura">
+                </div>
+                <div class="input-group">
+                    <label>Inspector Líder</label>
+                    <input type="text" class="form-control" [disabled]="model.IsLectura">
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <label>Objetivo de la inspección</label>
+                    <textarea class="form-control" rows="4" [disabled]="model.IsLectura"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <label>Alcance de la inspección</label>
+                    <textarea class="form-control" rows="4" [disabled]="model.IsLectura"></textarea>
+                </div>
+            </div>
+            <div class="line-col"></div>
+            <div class="col col100 title-row">CRITERIO DE LA INSPECCIÓN</div>
+            <div class="row">
+                <div class="input-group">
+                    <label>Observador</label>
+                    <input type="text" class="form-control" [disabled]="model.IsLectura">
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <label>Fecha Inicio</label>
+                    <input type="text" class="form-control" [disabled]="model.IsLectura">
+                </div>
+                <div class="input-group">
+                    <label>Hora Inicio</label>
+                    <input type="text" class="form-control" [disabled]="model.IsLectura">
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <label>Fecha Cierre</label>
+                    <input type="text" class="form-control" [disabled]="model.IsLectura">
+                </div>
+                <div class="input-group">
+                    <label>Hora Cierre</label>
+                    <input type="text" class="form-control" [disabled]="model.IsLectura">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div role="footer">
+        <button type="button" class="btn btn-danger" (click)="closeInspeccion(false)">Cerrar</button>
+    </div>
+</app-modal>
+
+<app-modal [title]="model.title" [show]="planModal" [size]="'modal-lg2'" (close)="closePlan($event)">
+    <div role="body">
+        <div role="body">
+            <div class="filter-content">
+                <button type="button" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+                <input type="search" placeholder="Buscar...">
+            </div>
+            <div class="table-content">
+                <table class="table flex-table">
+                    <thead>
+                        <tr>
+                            <th>Inspección</th>
+                            <th>Fecha Inspección</th>
+                            <th>Inspeccionado</th>
+                            <th>Observaciones</th>
+                            <th>Actividades Inspección</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="scroll">
+                        <tr *ngFor="let item of varplan">
+                            <td>{{ item.codigo }}</td>
+                            <td>{{ item.fecha_inspeccion }}</td>
+                            <td>{{ item.inspeccionado }}</td>
+                            <td>{{ item.observaciones }}</td>
+                            <td class="buttons">
+                                <button type="button" class="btn btn-info" (click)="openActividad(item)"><i class="fa fa-plus"></i></button>
+                            </td>
+                            <td class="buttons">
+                                <button type="button" class="btn btn-info"><i class="fa fa-pencil"> Editar</i></button>
+                            </td>
+                        </tr>
+                        <tr *ngIf="varplan?.length == 0">
+                            <div class="dbempty">No hay registros.</div>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div role="footer">
+        <button type="button" class="btn btn-danger" (click)="closePlan(false)">Cerrar</button>
+    </div>
+</app-modal>
+
+<app-modal [title]="model.title" [show]="f_planModal" [size]="'modal-lg'" (close)="closeFormPlan($event)">
+    <div role="body">
+        <div class="form-body">
+            <div class="row">
+                <div class="input-group">
+                    <label>Código Auditoría</label>
+                    <input type="text" class="form-control" placeholder="Seleccionar..." [disabled]="model.IsLectura">
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <label>Observaciones</label>
+                    <textarea class="form-control" [disabled]="model.IsLectura"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div role="footer">
+        <button type="button" class="btn btn-danger" (click)="closeFormPlan(false)">Cerrar</button>
+    </div>
+</app-modal>
+
+<app-modal [title]="'Actividades Plan Inpsección'" [show]="actividadModal" [size]="'modal-lg2'" (close)="closeActividad($event)">
+    <div role="body">
+        <div class="filter-content">
+            <button type="button" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+            <input type="search" placeholder="Buscar...">
+        </div>
+        <div class="table-content">
+            <table class="table flex-table">
+                <thead>
+                    <tr>
+                        <th>Actividad</th>
+                        <th>Procesos - SubProcesos</th>
+                        <th>Inspeccionado</th>
+                        <th>Inspector</th>
+                        <th>Fecha Inicio</th>
+                        <th>Hora Inicio</th>
+                        <th>Fecha Cierre</th>
+                        <th>Hora Final</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="scroll">
+                    <tr *ngFor="let item of varactividad; let i = index">
+                        <td>{{ item.actividades }}</td>
+                        <td>{{ item.procesos }}</td>
+                        <td>{{ item.inspeccionado }}</td>
+                        <td>{{ item.inspector }}</td>
+                        <td>{{ item.fecha_inicio }}</td>
+                        <td>{{ item.hora_inicio }}</td>
+                        <td>{{ item.fecha_cierre }}</td>
+                        <td>{{ item.hora_final }}</td>
+                        <td class="buttons">
+                            <button type="button" class="btn btn-info"><i class="fa fa-pencil"></i></button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="varactividad?.length == 0">
+                        <div class="dbempty">No hay registros.</div>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div role="footer">
+        <button type="button" class="btn btn-danger" (click)="closeActividad(false)">Cerrar</button>
+    </div>
+</app-modal>
+
+<app-modal [title]="model.title" [show]="f_actividadModal" [size]="'modal-lg'" (close)="closeFormActividad($event)">
+    <div role="body">
+        <div class="form-body">
+            <div class="row">
+                <div class="input-group">
+                    <label>Proceso</label>
+                    <input type="text" class="form-control" placeholder="Seleccionar...">
+                </div>
+                <div class="input-group">
+                    <label>SubProceso</label>
+                    <input type="text" class="form-control" disabled>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <label>Actividad</label>
+                    <textarea class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <label>Inspeccionado</label>
+                    <input type="text" class="form-control" placeholder="Seleccionar...">
+                </div>
+                <div class="input-group">
+                    <label>Inspector</label>
+                    <input type="text" class="form-control" placeholder="Seleccionar...">
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <label>Fecha Inicio</label>
+                    <input type="text" class="form-control" placeholder="Seleccionar...">
+                </div>
+                <div class="input-group">
+                    <label>Fecha Cierre</label>
+                    <input type="text" class="form-control" placeholder="Seleccionar...">
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <label>Hora Inicio</label>
+                    <input type="text" class="form-control" placeholder="Seleccionar...">
+                </div>
+                <div class="input-group">
+                    <label>Hora Final</label>
+                    <input type="text" class="form-control" placeholder="Seleccionar...">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div role="footer">
+        <button type="button" class="btn btn-danger" (click)="closeFormActividad(false)">Cerrar</button>
+        <button type="button" class="btn btn-primary">Guardar</button>
+    </div>
+</app-modal>
