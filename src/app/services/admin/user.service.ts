@@ -9,6 +9,7 @@ import { ApiService } from '../api.service';
 })
 export class UserService {
 
+  private apiGetUsersLDAP = this.api.getBaseUrl + "admin/usuario/getUsersLDAP";
   private apiGetPersonas = this.api.getBaseUrl + "admin/personas";
   private apiGetPersonasActivos = this.api.getBaseUrl + "admin/personasActivos";
   private apiGetUsers = this.api.getBaseUrl + "admin/usuarios";
@@ -40,6 +41,11 @@ export class UserService {
   private apiGetPermisos = this.api.getBaseUrl + "admin/usuario/permisos";
 
   constructor(private http: HttpClient, private api: ApiService) { }
+
+  public getUsersLDAP(): Observable<any> {
+    return this.http.get<any>(this.apiGetUsersLDAP, this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
 
   public getPersonas(): Observable<any> {
     return this.http.get<any>(this.apiGetPersonas, this.api.getHttpOptions('g'))

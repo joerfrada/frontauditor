@@ -20,6 +20,8 @@ import { ListasDinamicasComponent } from '../modulos/param/listas-dinamicas/list
 import { UnidadesComponent } from '../modulos/param/unidades/unidades.component';
 import { InspeccionesComponent } from '../modulos/inspec/inspecciones/inspecciones.component';
 import { AnotacionesComponent } from '../modulos/inspec/anotaciones/anotaciones.component';
+import { TimePickerComponent } from '../views/time-picker/time-picker.component';
+import { SelectUserModalComponent } from '../views/select-user-modal/select-user-modal.component';
 
 
 @NgModule({
@@ -38,7 +40,9 @@ import { AnotacionesComponent } from '../modulos/inspec/anotaciones/anotaciones.
     RolesComponent,
     UnidadesComponent,
     InspeccionesComponent,
-    AnotacionesComponent
+    AnotacionesComponent,
+    TimePickerComponent,
+    SelectUserModalComponent
   ],
   imports: [
     CommonModule,

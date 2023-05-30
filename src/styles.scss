@@ -605,6 +605,43 @@ fieldset:disabled a.btn {
     box-shadow: 0 0 0 0.2rem rgba(82, 88, 93, 0.5);
 }
 
+.btn-gray {
+    color: #212529;
+    background-color: #d6d4d4;
+    border-color: #c9c8c8;
+}
+
+.btn-gray:hover {
+    color: #212529;
+    background-color: #d6d4d4;
+    border-color: #c9c8c8;
+}
+
+.btn-gray:focus, .btn-gray.focus {
+    color: #212529;
+    background-color: #d6d4d4;
+    border-color: #c9c8c8;
+    box-shadow: 0 0 0 0.2rem rgba(216, 217, 219, 0.5);
+}
+
+.btn-gray.disabled, .btn-gray:disabled {
+    color: #212529;
+    background-color: #d6d4d4;
+    border-color: #d6d4d4;
+}
+
+.btn-gray:not(:disabled):not(.disabled):active, .btn-gray:not(:disabled):not(.disabled).active,
+.show > .btn-gray.dropdown-toggle {
+    color: #212529;
+    background-color: #d6d4d4;
+    border-color: #c9c8c8;
+}
+
+.btn-gray:not(:disabled):not(.disabled):active:focus, .btn-gray:not(:disabled):not(.disabled).active:focus,
+.show > .btn-gray.dropdown-toggle:focus {
+    box-shadow: 0 0 0 0.2rem rgba(216, 217, 219, 0.5);
+}
+
 .btn-block {
     display: block;
     width: 100%;
@@ -690,6 +727,11 @@ input[type="button"].btn-block {
     height: calc(100vh - 230px);
 }
 
+.form-table .table-content table.flex-table {
+    height: inherit;
+    padding-bottom: 5px;
+}
+
 .table-content table.flex-table {
     display: flex;
     flex-direction: column;
@@ -702,6 +744,10 @@ input[type="button"].btn-block {
     font-weight: 900;
     color: #fff;
     background: #3F518D !important;
+}
+
+.form-table .table-content table.flex-table thead, .form-table .table-content table.flex-table thead tr {
+    background: #343a40 !important;
 }
 
 .table-content table.flex-table thead tr th {
@@ -965,6 +1011,10 @@ input[type="button"].btn-block {
 
 .modal-h70 {
     height: 70vh;
+
+    .table-content table.flex-table {
+        height: calc(100vh - 387px);
+    }
 }
 
 .modal-h75 {
@@ -1110,6 +1160,14 @@ background-color: #e9ecef;
     text-align: left;
     font-weight: bold;
     color: #b10404;
+}
+
+.subtitle-row {
+    padding: 8px;
+    font-size: 14px;
+    text-align: left;
+    font-weight: bold;
+    color: #3F518D;
 }
 
 input[type=file] {

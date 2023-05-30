@@ -1,0 +1,30 @@
+<div class="timepicker">
+    <div class="timepicker-input">
+        <input type="text" class="form-control">
+        <button type="button" class="btn btn-gray" (click)="openTimePicker()"><i class="fa fa-clock-o"></i></button>
+    </div>
+    <div class="timepicker-content" *ngIf="show">
+        <div class="timepicker-hour">
+            <div class="table-content">
+                <table class="table flex-table">
+                    <tbody class="scroll">
+                        <tr *ngFor="let hh of hour">
+                            <td>{{ hh }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="timepicker-minute">
+            <div class="table-content">
+                <table class="table flex-table">
+                    <tbody class="scroll">
+                        <tr *ngFor="let hh of hour">
+                            <td>{{ hh }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

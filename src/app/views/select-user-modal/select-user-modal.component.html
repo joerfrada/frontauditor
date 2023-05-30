@@ -11,18 +11,9 @@
                 </div>
                 <div class="table-content">
                     <table class="table flex-table">
-                        <thead *ngIf="arrTitle?.length > 0">
-                            <tr>
-                                <th>{{ arrTitle[0] }}</th>
-                                <th *ngIf="arrTitle[1] != null">{{ arrTitle[1] }}</th>
-                                <th *ngIf="arrTitle[2] != null">{{ arrTitle[2] }}</th>
-                            </tr>
-                        </thead>
                         <tbody class="scroll">
                             <tr class="pointer" *ngFor="let dato of array" (click)="clickData(dato)">
-                                <td>{{dato.item1}}</td>
-                                <td *ngIf="dato.item2 != null">{{dato.item2}}</td>
-                                <td *ngIf="dato.item3 != null">{{dato.item3}}</td>
+                                <td>{{dato.item}}</td>
                             </tr>
                             <tr *ngIf="array?.length == 0">
                                 <div class="dbempty">Sin resultados</div>

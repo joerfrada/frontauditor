@@ -56,11 +56,11 @@
             <div class="row">
                 <div class="input-group">
                     <label>UMA</label>
-                    <input type="text" class="form-control" [disabled]="model.IsLectura">
+                    <input type="text" class="form-control" (click)="saveUnidad()" [(ngModel)]="model.varInspeccion.unidad" [disabled]="model.IsLectura">
                 </div>
                 <div class="input-group">
                     <label>Dependencia</label>
-                    <input type="text" class="form-control" disabled>
+                    <input type="text" class="form-control" [(ngModel)]="model.varInspeccion.dependencia" disabled>
                 </div>
             </div>
             <div class="row">
@@ -72,7 +72,7 @@
             <div class="row">
                 <div class="input-group">
                     <label>Responsable</label>
-                    <input type="text" class="form-control" placeholder="Seleccionar..." [disabled]="model.IsLectura">
+                    <input type="text" class="form-control" placeholder="Seleccionar..." [(ngModel)]="model.varInspeccion.responsable" (click)="saveResponsable()" [disabled]="model.IsLectura">
                 </div>
                 <div class="input-group">
                     <label>Cargo</label>
@@ -82,11 +82,11 @@
             <div class="row">
                 <div class="input-group">
                     <label>Inspector General / Jefe Oficina Regional Inspección y Control</label>
-                    <input type="text" class="form-control" placeholder="Seleccionar..." [disabled]="model.IsLectura">
+                    <input type="text" class="form-control" placeholder="Seleccionar..." [(ngModel)]="model.varInspeccion.inspector_general" (click)="saveInspectorGeneral()" [disabled]="model.IsLectura">
                 </div>
                 <div class="input-group">
                     <label>Inspector Líder</label>
-                    <input type="text" class="form-control" [disabled]="model.IsLectura">
+                    <input type="text" class="form-control" placeholder="Seleccionar..." [(ngModel)]="model.varInspeccion.inspector_lider" (click)="saveInspectorLider()" [disabled]="model.IsLectura">
                 </div>
             </div>
             <div class="row">
@@ -101,32 +101,241 @@
                     <textarea class="form-control" rows="4" [disabled]="model.IsLectura"></textarea>
                 </div>
             </div>
-            <div class="line-col"></div>
-            <div class="col col100 title-row">CRITERIO DE LA INSPECCIÓN</div>
             <div class="row">
                 <div class="input-group">
-                    <label>Observador</label>
-                    <input type="text" class="form-control" [disabled]="model.IsLectura">
+                    <label>Tipo Inspección</label>
+                    <input type="text" class="form-control" placeholder="Seleccionar..." [(ngModel)]="model.varInspeccion.tipo_inspeccion" (click)="saveTipoInspeccion()" [disabled]="model.IsLectura">
+                </div>
+            </div>
+            <div class="line-col"></div>
+            <div class="col col100 title-row">CRITERIO DE LA INSPECCIÓN</div>
+            <div class="col col100 subtitle-row">En forma general</div>
+            <div class="row">
+                <div class="input-group">
+                    <label>Criterio</label>
+                    <input type="text" class="form-control" placeholder="Seleccionar..." title="{{ model.varInspeccion.criterio }}" [(ngModel)]="model.varInspeccion.criterio" (click)="saveCriteriosGeneral()" [disabled]="model.IsLectura">
+                </div>
+            </div>
+            <div class="col col100 subtitle-row">En forma particular</div>
+            <div class="form-table">
+                <div class="table-content">
+                    <table class="table flex-table">
+                        <thead>
+                            <tr>
+                                <th>Criterio</th>
+                                <th>Procesos - SubProcesos</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="scroll">
+                            <tr *ngFor="let item of model.lstParticular; let i = index">
+                                <td><input type="text" class="form-control" placeholder="Seleccionar..." title="{{ item.criterio }}" [(ngModel)]="item.criterio" (click)="saveCriterios(i)" [disabled]="model.IsLectura"></td>
+                                <td><input type="text" class="form-control" placeholder="Seleccionar..." title="{{ item.proceso }}" [(ngModel)]="item.proceso" (click)="saveProcesosParticular(i)" [disabled]="model.IsLectura"></td>
+                                <td *ngIf="model.IsLectura == false">
+                                    <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="model.lstParticular[i].NuevoRegistro" (click)="deleteParticular(i)"></i>
+                                </td>
+                            </tr>
+                            <tr class="add_row_full" *ngIf="model.IsLectura == false">
+                                <button type="button" class="btn btn-primary button" (click)="addParticular()">Agregar</button>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col col100 subtitle-row">Equipos Inspector</div>
+            <div class="form-table">
+                <div class="table-content">
+                    <table class="table flex-table">
+                        <thead>
+                            <tr>
+                                <th>Proceso - SubProcesos</th>
+                                <th>Grado Nombre</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="scroll">
+                            <tr *ngFor="let item of model.lstInspector; let i = index">
+                                <td><input type="text" class="form-control" placeholder="Seleccionar..." title="{{ item.procesos }}" [(ngModel)]="item.procesos" (click)="saveProcesosInspector(i)" [disabled]="model.IsLectura"></td>
+                                <td><input type="text" class="form-control" placeholder="Seleccionar..." title="{{ item.grado }}" [(ngModel)]="item.grado" (click)="saveGradoInspector(i)" [disabled]="model.IsLectura"></td>
+                                <td *ngIf="model.IsLectura == false">
+                                    <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="model.lstInspector[i].NuevoRegistro" (click)="deleteInspector(i)"></i>
+                                </td>
+                            </tr>
+                            <tr class="add_row_full" *ngIf="model.IsLectura == false">
+                                <button type="button" class="btn btn-primary button" (click)="addInspector()">Agregar</button>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col col100 subtitle-row">Equipos Técnicos</div>
+            <div class="form-table">
+                <div class="table-content">
+                    <table class="table flex-table">
+                        <thead>
+                            <tr>
+                                <th>Procesos - SubProcesos</th>
+                                <th>Grado Nombre</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="scroll">
+                            <tr *ngFor="let item of model.lstTecnicos; let i = index">
+                                <td><input type="text" class="form-control" placeholder="Seleccionar..." title="{{ item.procesos }}" [(ngModel)]="item.procesos" (click)="saveProcesosTecnico(i)" [disabled]="model.IsLectura"></td>
+                                <td><input type="text" class="form-control" placeholder="Seleccionar..." title="{{ item.grado }}" [(ngModel)]="item.grado" (click)="saveGradoTecnicos(i)" [disabled]="model.IsLectura"></td>
+                                <td *ngIf="model.IsLectura == false">
+                                    <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="model.lstTecnicos[i].NuevoRegistro" (click)="deleteTecnico(i)"></i>
+                                </td>
+                            </tr>
+                            <tr class="add_row_full" *ngIf="model.IsLectura == false">
+                                <button type="button" class="btn btn-primary button" (click)="addTecnico()">Agregar</button>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col col100 subtitle-row">Observador</div>
+            <div class="form-table">
+                <div class="table-content">
+                    <table class="table flex-table">
+                        <thead>
+                            <tr>
+                                <th>Obsevador</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="scroll">
+                            <tr *ngFor="let item of model.lstObservador; let i = index">
+                                <td><input type="text" class="form-control" placeholder="Seleccionar..." title="{{ item.observador }}" [(ngModel)]="item.observador" (click)="saveObservador(i)" [disabled]="model.IsLectura"></td>
+                                <td *ngIf="model.IsLectura == false">
+                                    <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="model.lstObservador[i].NuevoRegistro" (click)="deleteObservador(i)"></i>
+                                </td>
+                            </tr>
+                            <tr class="add_row_full" *ngIf="model.IsLectura == false">
+                                <button type="button" class="btn btn-primary button" (click)="addObservador()">Agregar</button>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <div class="row">
                 <div class="input-group">
                     <label>Fecha Inicio</label>
-                    <input type="text" class="form-control" [disabled]="model.IsLectura">
+                    <input type="date" class="form-control" [disabled]="model.IsLectura">
                 </div>
                 <div class="input-group">
                     <label>Hora Inicio</label>
-                    <input type="text" class="form-control" [disabled]="model.IsLectura">
+                    <select class="form-control" [disabled]="model.IsLectura">
+                        <option value="" selected="selected">Seleccionar...</option>
+                        <option value="00:00">00:00</option>
+                        <option value="00:30">00:30</option>
+                        <option value="01:00">01:00</option>
+                        <option value="01:30">01:30</option>
+                        <option value="02:00">02:00</option>
+                        <option value="02:30">02:30</option>
+                        <option value="03:00">03:00</option>
+                        <option value="03:30">03:30</option>
+                        <option value="04:00">04:00</option>
+                        <option value="04:30">04:30</option>
+                        <option value="05:00">05:00</option>
+                        <option value="05:30">05:30</option>
+                        <option value="06:00">06:00</option>
+                        <option value="06:30">06:30</option>
+                        <option value="07:00">07:00</option>
+                        <option value="07:30">07:30</option>
+                        <option value="08:00">08:00</option>
+                        <option value="08:30">08:30</option>
+                        <option value="09:00">09:00</option>
+                        <option value="09:30">09:30</option>
+                        <option value="10:00">10:00</option>
+                        <option value="10:30">10:30</option>
+                        <option value="11:00">11:00</option>
+                        <option value="11:30">11:30</option>
+                        <option value="12:00">12:00</option>
+                        <option value="12:30">12:30</option>
+                        <option value="13:00">13:00</option>
+                        <option value="13:30">13:30</option>
+                        <option value="14:00">14:00</option>
+                        <option value="14:30">14:30</option>
+                        <option value="15:00">15:00</option>
+                        <option value="15:30">15:30</option>
+                        <option value="16:00">16:00</option>
+                        <option value="16:30">16:30</option>
+                        <option value="17:00">17:00</option>
+                        <option value="17:30">17:30</option>
+                        <option value="18:00">18:00</option>
+                        <option value="18:30">18:30</option>
+                        <option value="19:00">19:00</option>
+                        <option value="19:30">19:30</option>
+                        <option value="20:00">20:00</option>
+                        <option value="20:30">20:30</option>
+                        <option value="21:00">21:00</option>
+                        <option value="21:30">21:30</option>
+                        <option value="22:00">22:00</option>
+                        <option value="22:30">22:30</option>
+                        <option value="23:00">23:00</option>
+                        <option value="23:30">23:30</option>
+                    </select>
                 </div>
             </div>
             <div class="row">
                 <div class="input-group">
                     <label>Fecha Cierre</label>
-                    <input type="text" class="form-control" [disabled]="model.IsLectura">
+                    <input type="date" class="form-control" [disabled]="model.IsLectura">
                 </div>
                 <div class="input-group">
                     <label>Hora Cierre</label>
-                    <input type="text" class="form-control" [disabled]="model.IsLectura">
+                    <select class="form-control" [disabled]="model.IsLectura">
+                        <option value="" selected="selected">Seleccionar...</option>
+                        <option value="00:00">00:00</option>
+                        <option value="00:30">00:30</option>
+                        <option value="01:00">01:00</option>
+                        <option value="01:30">01:30</option>
+                        <option value="02:00">02:00</option>
+                        <option value="02:30">02:30</option>
+                        <option value="03:00">03:00</option>
+                        <option value="03:30">03:30</option>
+                        <option value="04:00">04:00</option>
+                        <option value="04:30">04:30</option>
+                        <option value="05:00">05:00</option>
+                        <option value="05:30">05:30</option>
+                        <option value="06:00">06:00</option>
+                        <option value="06:30">06:30</option>
+                        <option value="07:00">07:00</option>
+                        <option value="07:30">07:30</option>
+                        <option value="08:00">08:00</option>
+                        <option value="08:30">08:30</option>
+                        <option value="09:00">09:00</option>
+                        <option value="09:30">09:30</option>
+                        <option value="10:00">10:00</option>
+                        <option value="10:30">10:30</option>
+                        <option value="11:00">11:00</option>
+                        <option value="11:30">11:30</option>
+                        <option value="12:00">12:00</option>
+                        <option value="12:30">12:30</option>
+                        <option value="13:00">13:00</option>
+                        <option value="13:30">13:30</option>
+                        <option value="14:00">14:00</option>
+                        <option value="14:30">14:30</option>
+                        <option value="15:00">15:00</option>
+                        <option value="15:30">15:30</option>
+                        <option value="16:00">16:00</option>
+                        <option value="16:30">16:30</option>
+                        <option value="17:00">17:00</option>
+                        <option value="17:30">17:30</option>
+                        <option value="18:00">18:00</option>
+                        <option value="18:30">18:30</option>
+                        <option value="19:00">19:00</option>
+                        <option value="19:30">19:30</option>
+                        <option value="20:00">20:00</option>
+                        <option value="20:30">20:30</option>
+                        <option value="21:00">21:00</option>
+                        <option value="21:30">21:30</option>
+                        <option value="22:00">22:00</option>
+                        <option value="22:30">22:30</option>
+                        <option value="23:00">23:00</option>
+                        <option value="23:30">23:30</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -140,7 +349,7 @@
     <div role="body">
         <div role="body">
             <div class="filter-content">
-                <button type="button" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+                <button type="button" class="btn btn-primary" (click)="openFormPlan()"><i class="fa fa-plus"></i></button>
                 <input type="search" placeholder="Buscar...">
             </div>
             <div class="table-content">
@@ -306,3 +515,56 @@
         <button type="button" class="btn btn-primary">Guardar</button>
     </div>
 </app-modal>
+
+<app-select-modal [title]="'Unidad'" [titleHeader]="'Unidad,Dependencia'" [show]="selectUnidadModal" [size]="'modal-md modal-h70'" [array]="array" [arrayTemp]="array" (output)="dataform(inputform, $event)" (close)="closeSelectUnidadModal($event)">
+    <div role="footer">
+        <button type="button" class="btn btn-danger" (click)="closeSelectUnidadModal(false)">Cerrar</button>
+    </div>
+</app-select-modal>
+
+<app-select-modal [title]="model.titleModal" [show]="selectModal" [size]="'modal-lg modal-h70'" [array]="array" [arrayTemp]="array" (output)="dataform(inputform, $event)" (close)="closeSelectModal($event)">
+    <div role="footer">
+        <button type="button" class="btn btn-danger" (click)="closeSelectModal(false)">Cerrar</button>
+    </div>
+</app-select-modal>
+
+<app-select-user-modal [title]="model.titleUser" [show]="selectUserModal" [size]="'modal-md modal-h70'" [array]="array" [arrayTemp]="array" (output)="dataform(inputform, $event)" (close)="closeSelectUserModal($event)">
+    <div role="footer">
+        <button type="button" class="btn btn-danger" (click)="closeSelectUserModal(false)">Cerrar</button>
+    </div>
+</app-select-user-modal>
+
+<app-select-modal [title]="'Procesos - SubProcesos'" [titleHeader]="'Procesos,SubProcesos'" [show]="selectProcesoModal" [size]="'modal-md modal-h70'" [array]="array" [arrayTemp]="array" (output)="dataform(inputform, $event)" (close)="closeSelectProcesoModal($event)">
+    <div role="footer">
+        <button type="button" class="btn btn-danger" (click)="closeSelectProcesoModal(false)">Cerrar</button>
+    </div>
+</app-select-modal>
+
+<app-modal [title]="model.title" [show]="f_planModal" [size]="'modal-lg modal-h70'" (close)="closeFormPlan($event)">
+    <div role="body">
+        <div class="form-body">
+            <div class="row">
+                <div class="input-group">
+                    <label>Código Auditoria</label>
+                    <input type="text" class="form-control" placeholder="Seleccionar..." [(ngModel)]="model.varPlanInspeccion.inspeccion" (click)="saveInspeccion()">
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <label>Observaciones</label>
+                    <textarea class="form-control" [(ngModel)]="model.varPlanInspeccion.observaciones"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div role="footer">
+        <button type="button" class="btn btn-danger" (click)="closeFormPlan(false)">Cerrar</button>
+        <button type="button" class="btn btn-primary">Guardar</button>
+    </div>
+</app-modal>
+
+<app-select-modal [title]="'Código Auditoría'" [show]="selectInspeccionModal" [size]="'modal-lg'" [array]="array" [arrayTemp]="array" (output)="dataform(inputform, $event)" (close)="closeSelectInspeccionModal($event)">
+    <div role="footer">
+        <button type="button" class="btn btn-danger" (click)="closeSelectModal(false)">Cerrar</button>
+    </div>
+</app-select-modal>

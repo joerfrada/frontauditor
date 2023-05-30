@@ -41,12 +41,25 @@ export class SelectModalComponent implements OnInit {
       this.array = this.arrayTemp;
     }
     else {
-      this.array = this.arrayTemp.filter((item: any) => {
-        if (item.item1.toString().toLowerCase().indexOf(filter) !== -1 ||
-            item.item2.toString().toLowerCase().indexOf(filter) !== -1 ||
-            item.item3.toString().toLowerCase().indexOf(filter) !== -1) {
-              return true;
-            }
+      this.array = this.arrayTemp.filter((x: any) => {
+        if (x.item2 == null || x.item3 == null) {
+          if (x.item1.toString().toLowerCase().indexOf(filter) !== -1) {
+            return true;
+          }
+        }
+        else if (x.item3 == null) {
+          if (x.item1.toString().toLowerCase().indexOf(filter) !== -1 ||
+              x.item2.toString().toLowerCase().indexOf(filter) !== -1) {
+            return true;
+          }
+        }
+        else if (x.item2 != null || x.item3 != null) {
+          if (x.item1.toString().toLowerCase().indexOf(filter) !== -1 ||
+              x.item2.toString().toLowerCase().indexOf(filter) !== -1 ||
+              x.item3.toString().toLowerCase().indexOf(filter) !== -1) {
+            return true;
+          }
+        }
         return false;
       });
     }
