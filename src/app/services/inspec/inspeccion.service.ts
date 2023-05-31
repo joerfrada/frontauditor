@@ -34,6 +34,8 @@ export class InspeccionService {
   private apiUpdateInspeccionTecnico = this.api.getBaseUrl + "inspec/inspeccion/actualizarInspeccionTecnico";
   private apiCreatePlanInspeccion = this.api.getBaseUrl + "inspec/inspeccion/crearPlanInspeccion";
   private apiUpdatePlanInspeccion = this.api.getBaseUrl + "inspec/inspeccion/actualizarPlanInspeccion";
+  private apiCreateActividadPlanInspeccion = this.api.getBaseUrl + "inspec/inspeccion/crearActividadPlanInspeccion";
+  private apiUpdateActividadPlanInspeccion = this.api.getBaseUrl + "inspec/inspeccion/actualizarActividadPlanInspeccion";
 
   constructor(private http: HttpClient, private api: ApiService) { }
 
@@ -159,6 +161,16 @@ export class InspeccionService {
 
   updatePlanInspeccion(data: any): Observable<any> {
     return this.http.post<any>(this.apiUpdatePlanInspeccion, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  createActividadPlanInspeccion(data: any): Observable<any> {
+    return this.http.post<any>(this.apiCreateActividadPlanInspeccion, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  updateActividadPlanInspeccion(data: any): Observable<any> {
+    return this.http.post<any>(this.apiUpdateActividadPlanInspeccion, JSON.stringify(data), this.api.getHttpOptions('g'))
     .pipe(retry(1), catchError(this.api.errorHandle));
   }
 }

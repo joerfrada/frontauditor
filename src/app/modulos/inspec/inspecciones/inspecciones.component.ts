@@ -52,6 +52,27 @@ export class Model {
     usuario: ""
   }
 
+  varActividad: any = {
+    actividad_plan_inspeccion_id: 0,
+    plan_inspeccion_id: 0,
+    criterio_id: 0,
+    criterio: "",
+    proceso_id: "",
+    proceso: "",
+    subproceso: "",
+    lugar: "",
+    actividad: "",
+    inspeccionado_id: "",
+    inspeccionado: "",
+    inspector_id: "",
+    inspector: "",
+    fecha_inicio: new Date(),
+    hora_inicio: "",
+    fecha_cierre: new Date(),
+    hora_final: "",
+    usuario: ""
+  }
+
   lstParticular: any = [];
   lstInspector: any = [];
   lstTecnicos: any = [];
@@ -318,8 +339,13 @@ export class InspeccionesComponent implements OnInit {
 
   openActividad(data: any) {
     this.actividadModal = true;
+    this.model.varPlanInspeccion.plan_inspeccion_id = data.plan_inspeccion_id;
 
-    this.inspeccion.getActividadesPlanInspecciones({ plan_inspeccion_id: data.idplaninspeccion }).subscribe(data => {
+    this.getActividadesPlanInspecciones(data.plan_inspeccion_id);
+  }
+
+  getActividadesPlanInspecciones(id: any) {
+    this.inspeccion.getActividadesPlanInspecciones({ plan_inspeccion_id: id }).subscribe(data => {
       let response: any = this.api.ProcesarRespuesta(data);
       if (response.tipo == 0) {
         this.varactividad = response.result;
@@ -334,9 +360,47 @@ export class InspeccionesComponent implements OnInit {
 
   openFormActividad() {
     this.f_actividadModal = true;
-    this.model.title = 'Crear Nueva Actividad';
+    this.model.title = 'Crear Actividad Plan Inspección';
     this.model.isCrear = true;
     this.model.IsLectura = false;
+    this.model.varActividad = new Model().varActividad;
+
+    this.inspeccion.getProcesosSubProcesos().subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        response.result.forEach((x:any) => {
+          x.item1 = x.proceso;
+          x.item2 = x.subproceso;
+          x.item3 = null;
+        });
+        this.lstProcesos = response.result;
+      }
+    });
+
+    this.inspeccion.getCriterios().subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        response.result.forEach((x: any) => {
+          x.criterio_id = x.lista_dinamica_id;
+          x.criterio = x.lista_dinamica;
+          x.item1 = x.lista_dinamica;
+          x.item2 = null;
+          x.item3 = null;
+        });
+        this.lstCriterios = response.result;
+      }
+    });
+
+    this.inspeccion.getFuncionarios().subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        response.result.forEach((x: any) => {
+          x.id = x.IdUserLDAP;
+          x.item = x.Name;
+        });
+        this.lstFuncionarios = response.result;
+      }
+    });
   }
 
   editInspeccion(data: any) {
@@ -575,6 +639,33 @@ export class InspeccionesComponent implements OnInit {
     this.model.titleModal = "Código Auditoría";
   }
 
+  saveActividadCriterio() {
+    this.array = this.lstCriterios;
+    this.inputform = 'actividad-criterio';
+    this.selectModal = true;
+    this.model.titleModal = 'Criterios';
+  }
+
+  saveActividadProceso() {
+    this.array = this.lstProcesos;
+    this.inputform = 'actividad-proceso';
+    this.selectProcesoModal = true;
+  }
+
+  saveActividadInspeccionado() {
+    this.array = this.lstFuncionarios;
+    this.inputform = 'actividad-inspeccionado';
+    this.selectUserModal = true;
+    this.model.titleUser = "Inspeccionado";
+  }
+
+  saveActividadInspector() {
+    this.array = this.lstFuncionarios;
+    this.inputform = 'actividad-inspector';
+    this.selectUserModal = true;
+    this.model.titleUser = "Inspector";
+  }
+
   dataform(inputform: any, data: any) {
     if (inputform == 'unidad') {
       this.selectUnidadModal = false;
@@ -659,6 +750,31 @@ export class InspeccionesComponent implements OnInit {
       this.selectInspeccionModal = false;
       this.model.varPlanInspeccion.inspeccion_id = data.inspeccion_id;
       this.model.varPlanInspeccion.inspeccion = data.codigo;
+    }
+
+    if (inputform == 'actividad-criterio') {
+      this.selectModal = false;
+      this.model.varActividad.criterio_id = data.criterio_id;
+      this.model.varActividad.criterio = data.criterio;
+    }
+
+    if (inputform == 'actividad-proceso') {
+      this.selectProcesoModal = false;
+      this.model.varActividad.proceso_id = data.id;
+      this.model.varActividad.proceso = data.proceso;
+      this.model.varActividad.subproceso = data.subproceso;
+    }
+
+    if (inputform == 'actividad-inspeccionado') {
+      this.selectUserModal = false;
+      this.model.varActividad.inspeccionado_id = data.id;
+      this.model.varActividad.inspeccionado = data.Name;
+    }
+
+    if (inputform == 'actividad-inspector') {
+      this.selectUserModal = false;
+      this.model.varActividad.inspector_id = data.id;
+      this.model.varActividad.inspector = data.Name;
     }
   }
 
@@ -832,6 +948,48 @@ export class InspeccionesComponent implements OnInit {
         }).then((result: any) => {
           this.f_planModal = false;
           this.getPlanInspeccionById(this.model.varPlanInspeccion.inspeccion_id);
+        })
+      }
+    });
+  }
+
+  crearActividadPlanInspeccion() {
+    this.model.varActividad.plan_inspeccion_id = this.model.varPlanInspeccion.plan_inspeccion_id;
+    this.model.varActividad.usuario = this.currentUser.usuario;
+
+    this.inspeccion.createActividadPlanInspeccion(this.model.varActividad).subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        Swal.fire({
+          title: 'Crear Actividad Plan Inspección',
+          text: response.mensaje,
+          allowOutsideClick: false,
+          showConfirmButton: true,
+          icon: 'success'
+        }).then((result: any) => {
+          this.f_actividadModal = false;
+          this.getActividadesPlanInspecciones(this.model.varPlanInspeccion.plan_inspeccion_id);
+        })
+      }
+    });
+  }
+
+  actualizarActividadPlanInspeccion() {
+    this.model.varActividad.plan_inspeccion_id = this.model.varPlanInspeccion.plan_inspeccion_id;
+    this.model.varActividad.usuario = this.currentUser.usuario;
+
+    this.inspeccion.updateActividadPlanInspeccion(this.model.varActividad).subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        Swal.fire({
+          title: 'Actualizar Actividad Plan Inspección',
+          text: response.mensaje,
+          allowOutsideClick: false,
+          showConfirmButton: true,
+          icon: 'success'
+        }).then((result: any) => {
+          this.f_actividadModal = false;
+          this.getActividadesPlanInspecciones(this.model.varPlanInspeccion.plan_inspeccion_id);
         })
       }
     });
