@@ -28,7 +28,7 @@
                             <button type="button" class="btn btn-info" (click)="openPlan(item)"><i class="fa fa-bookmark"> </i></button>
                         </td>
                         <td class="buttons">
-                            <button type="button" class="btn btn-info"><i class="fa fa-pencil"> Editar</i></button>
+                            <button type="button" class="btn btn-info" (click)="editInspeccion(item)"><i class="fa fa-pencil"> Editar</i></button>
                         </td>
                     </tr>
                     <tr *ngIf="varhistorial?.length == 0">
@@ -46,11 +46,11 @@
             <div class="row">
                 <div class="input-group">
                     <label>Nombre Inspección</label>
-                    <input type="text" class="form-control" [disabled]="model.IsLectura">
+                    <input type="text" class="form-control" [(ngModel)]="model.varInspeccion.nombre_inspeccion" [disabled]="model.IsLectura">
                 </div>
                 <div class="input-group">
                     <label>Código</label>
-                    <input type="text" class="form-control" [disabled]="model.IsLectura">
+                    <input type="text" class="form-control"[(ngModel)]="model.varInspeccion.codigo"  [disabled]="model.IsLectura">
                 </div>
             </div>
             <div class="row">
@@ -66,7 +66,7 @@
             <div class="row">
                 <div class="input-group">
                     <label>Aspecto a inspeccionar</label>
-                    <textarea class="form-control" rows="4" [disabled]="model.IsLectura"></textarea>
+                    <textarea class="form-control" rows="4" [(ngModel)]="model.varInspeccion.aspecto"  [disabled]="model.IsLectura"></textarea>
                 </div>
             </div>
             <div class="row">
@@ -76,7 +76,7 @@
                 </div>
                 <div class="input-group">
                     <label>Cargo</label>
-                    <input type="text" class="form-control" [disabled]="model.IsLectura">
+                    <input type="text" class="form-control" [(ngModel)]="model.varInspeccion.cargo_resp"  [disabled]="model.IsLectura">
                 </div>
             </div>
             <div class="row">
@@ -92,13 +92,13 @@
             <div class="row">
                 <div class="input-group">
                     <label>Objetivo de la inspección</label>
-                    <textarea class="form-control" rows="4" [disabled]="model.IsLectura"></textarea>
+                    <textarea class="form-control" rows="4" [(ngModel)]="model.varInspeccion.objetivo" [disabled]="model.IsLectura"></textarea>
                 </div>
             </div>
             <div class="row">
                 <div class="input-group">
                     <label>Alcance de la inspección</label>
-                    <textarea class="form-control" rows="4" [disabled]="model.IsLectura"></textarea>
+                    <textarea class="form-control" rows="4" [(ngModel)]="model.varInspeccion.alcance"  [disabled]="model.IsLectura"></textarea>
                 </div>
             </div>
             <div class="row">
@@ -130,7 +130,7 @@
                         <tbody class="scroll">
                             <tr *ngFor="let item of model.lstParticular; let i = index">
                                 <td><input type="text" class="form-control" placeholder="Seleccionar..." title="{{ item.criterio }}" [(ngModel)]="item.criterio" (click)="saveCriterios(i)" [disabled]="model.IsLectura"></td>
-                                <td><input type="text" class="form-control" placeholder="Seleccionar..." title="{{ item.proceso }}" [(ngModel)]="item.proceso" (click)="saveProcesosParticular(i)" [disabled]="model.IsLectura"></td>
+                                <td><input type="text" class="form-control" placeholder="Seleccionar..." title="{{ item.proceso }}" [(ngModel)]="item.procesos" (click)="saveProcesosParticular(i)" [disabled]="model.IsLectura"></td>
                                 <td *ngIf="model.IsLectura == false">
                                     <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="model.lstParticular[i].NuevoRegistro" (click)="deleteParticular(i)"></i>
                                 </td>
@@ -200,7 +200,7 @@
                     <table class="table flex-table">
                         <thead>
                             <tr>
-                                <th>Obsevador</th>
+                                <th>Observador</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -221,11 +221,11 @@
             <div class="row">
                 <div class="input-group">
                     <label>Fecha Inicio</label>
-                    <input type="date" class="form-control" [disabled]="model.IsLectura">
+                    <input type="date" class="form-control" [(ngModel)]="model.varInspeccion.fecha_inicio"  [disabled]="model.IsLectura">
                 </div>
                 <div class="input-group">
                     <label>Hora Inicio</label>
-                    <select class="form-control" [disabled]="model.IsLectura">
+                    <select class="form-control" [(ngModel)]="model.varInspeccion.hora_inicio" [disabled]="model.IsLectura">
                         <option value="" selected="selected">Seleccionar...</option>
                         <option value="00:00">00:00</option>
                         <option value="00:30">00:30</option>
@@ -281,11 +281,11 @@
             <div class="row">
                 <div class="input-group">
                     <label>Fecha Cierre</label>
-                    <input type="date" class="form-control" [disabled]="model.IsLectura">
+                    <input type="date" [(ngModel)]="model.varInspeccion.fecha_cierre" class="form-control" [disabled]="model.IsLectura">
                 </div>
                 <div class="input-group">
                     <label>Hora Cierre</label>
-                    <select class="form-control" [disabled]="model.IsLectura">
+                    <select class="form-control" [(ngModel)]="model.varInspeccion.hora_termino"  [disabled]="model.IsLectura">
                         <option value="" selected="selected">Seleccionar...</option>
                         <option value="00:00">00:00</option>
                         <option value="00:30">00:30</option>
@@ -342,6 +342,8 @@
     </div>
     <div role="footer">
         <button type="button" class="btn btn-danger" (click)="closeInspeccion(false)">Cerrar</button>
+        <button type="button" class="btn btn-primary" (click)="crearInspeccion()" *ngIf="model.isCrear == true">Guardar</button>
+        <button type="button" class="btn btn-primary" (click)="actualizarInspeccion()" *ngIf="model.isCrear == false">Actualizar</button>
     </div>
 </app-modal>
 
@@ -367,14 +369,14 @@
                     <tbody class="scroll">
                         <tr *ngFor="let item of varplan">
                             <td>{{ item.codigo }}</td>
-                            <td>{{ item.fecha_inspeccion }}</td>
+                            <td>{{ item.fecha }}</td>
                             <td>{{ item.inspeccionado }}</td>
                             <td>{{ item.observaciones }}</td>
                             <td class="buttons">
                                 <button type="button" class="btn btn-info" (click)="openActividad(item)"><i class="fa fa-plus"></i></button>
                             </td>
                             <td class="buttons">
-                                <button type="button" class="btn btn-info"><i class="fa fa-pencil"> Editar</i></button>
+                                <button type="button" class="btn btn-info" (click)="editPlanInspeccion(item)"><i class="fa fa-pencil"> Editar</i></button>
                             </td>
                         </tr>
                         <tr *ngIf="varplan?.length == 0">
@@ -390,29 +392,31 @@
     </div>
 </app-modal>
 
-<app-modal [title]="model.title" [show]="f_planModal" [size]="'modal-lg'" (close)="closeFormPlan($event)">
+<app-modal [title]="model.title" [show]="f_planModal" [size]="'modal-lg modal-h70'" (close)="closeFormPlan($event)">
     <div role="body">
         <div class="form-body">
             <div class="row">
                 <div class="input-group">
-                    <label>Código Auditoría</label>
-                    <input type="text" class="form-control" placeholder="Seleccionar..." [disabled]="model.IsLectura">
+                    <label>Código Auditoria</label>
+                    <input type="text" class="form-control" [(ngModel)]="model.varPlanInspeccion.codigo" disabled>
                 </div>
             </div>
             <div class="row">
                 <div class="input-group">
                     <label>Observaciones</label>
-                    <textarea class="form-control" [disabled]="model.IsLectura"></textarea>
+                    <textarea class="form-control" [(ngModel)]="model.varPlanInspeccion.observaciones"></textarea>
                 </div>
             </div>
         </div>
     </div>
     <div role="footer">
         <button type="button" class="btn btn-danger" (click)="closeFormPlan(false)">Cerrar</button>
+        <button type="button" class="btn btn-primary" (click)="crearPlanInspeccion()" *ngIf="model.isCrear == true">Guardar</button>
+        <button type="button" class="btn btn-primary" (click)="actualizarPlanInspeccion()" *ngIf="model.isCrear == false">Actualizar</button>
     </div>
 </app-modal>
 
-<app-modal [title]="'Actividades Plan Inpsección'" [show]="actividadModal" [size]="'modal-lg2'" (close)="closeActividad($event)">
+<app-modal [title]="'Actividades Plan Inspección'" [show]="actividadModal" [size]="'modal-lg2'" (close)="closeActividad($event)">
     <div role="body">
         <div class="filter-content">
             <button type="button" class="btn btn-primary"><i class="fa fa-plus"></i></button>
@@ -540,28 +544,7 @@
     </div>
 </app-select-modal>
 
-<app-modal [title]="model.title" [show]="f_planModal" [size]="'modal-lg modal-h70'" (close)="closeFormPlan($event)">
-    <div role="body">
-        <div class="form-body">
-            <div class="row">
-                <div class="input-group">
-                    <label>Código Auditoria</label>
-                    <input type="text" class="form-control" placeholder="Seleccionar..." [(ngModel)]="model.varPlanInspeccion.inspeccion" (click)="saveInspeccion()">
-                </div>
-            </div>
-            <div class="row">
-                <div class="input-group">
-                    <label>Observaciones</label>
-                    <textarea class="form-control" [(ngModel)]="model.varPlanInspeccion.observaciones"></textarea>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div role="footer">
-        <button type="button" class="btn btn-danger" (click)="closeFormPlan(false)">Cerrar</button>
-        <button type="button" class="btn btn-primary">Guardar</button>
-    </div>
-</app-modal>
+
 
 <app-select-modal [title]="'Código Auditoría'" [show]="selectInspeccionModal" [size]="'modal-lg'" [array]="array" [arrayTemp]="array" (output)="dataform(inputform, $event)" (close)="closeSelectInspeccionModal($event)">
     <div role="footer">

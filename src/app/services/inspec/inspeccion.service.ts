@@ -18,6 +18,22 @@ export class InspeccionService {
   private apiGetFuncionarios = this.api.getBaseUrl + "inspec/inspeccion/getFuncionarios";
   private apiGetResponsables = this.api.getBaseUrl + "inspec/inspeccion/getResponsables"
   private apiGetTipoInspeccion = this.api.getBaseUrl + "inspec/inspeccion/getTipoInspeccion"
+  private apiCreateInspeccion = this.api.getBaseUrl + "inspec/inspeccion/crearInspeccion";
+  private apiUpdateInspeccion = this.api.getBaseUrl + "inspec/inspeccion/actualizarInspeccion";
+  private apiGetInspeccionInspectores = this.api.getBaseUrl + "inspec/inspeccion/getInspeccionInspectores";
+  private apiCreateInspeccionInspector = this.api.getBaseUrl + "inspec/inspeccion/crearInspeccionInspector";
+  private apiUpdateInspeccionInspector = this.api.getBaseUrl + "inspec/inspeccion/actualizarInspeccionInspector";
+  private apiGetInspeccionObservadores = this.api.getBaseUrl + "inspec/inspeccion/getInspeccionObservadores";
+  private apiCreateInspeccionObservador = this.api.getBaseUrl + "inspec/inspeccion/crearInspeccionObservador";
+  private apiUpdateInspeccionObservador = this.api.getBaseUrl + "inspec/inspeccion/actualizarInspeccionObservador";
+  private apiGetInspeccionParticulares = this.api.getBaseUrl + "inspec/inspeccion/getInspeccionParticulares";
+  private apiCreateInspeccionParticular = this.api.getBaseUrl + "inspec/inspeccion/crearInspeccionParticular";
+  private apiUpdateInspeccionParticular = this.api.getBaseUrl + "inspec/inspeccion/actualizarInspeccionParticular";
+  private apiGetInspeccionTecnicos = this.api.getBaseUrl + "inspec/inspeccion/getInspeccionTecnicos";
+  private apiCreateInspeccionTecnico = this.api.getBaseUrl + "inspec/inspeccion/crearInspeccionTecnico";
+  private apiUpdateInspeccionTecnico = this.api.getBaseUrl + "inspec/inspeccion/actualizarInspeccionTecnico";
+  private apiCreatePlanInspeccion = this.api.getBaseUrl + "inspec/inspeccion/crearPlanInspeccion";
+  private apiUpdatePlanInspeccion = this.api.getBaseUrl + "inspec/inspeccion/actualizarPlanInspeccion";
 
   constructor(private http: HttpClient, private api: ApiService) { }
 
@@ -63,6 +79,86 @@ export class InspeccionService {
 
   getTipoInspeccion(): Observable<any> {
     return this.http.get<any>(this.apiGetTipoInspeccion, this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  createInspeccion(data: any): Observable<any> {
+    return this.http.post<any>(this.apiCreateInspeccion, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  updateInspeccion(data: any): Observable<any> {
+    return this.http.post<any>(this.apiUpdateInspeccion, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  getInspeccionInspectores(data: any): Observable<any> {
+    return this.http.post<any>(this.apiGetInspeccionInspectores, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  createInspeccionInspector(data: any): Observable<any> {
+    return this.http.post<any>(this.apiCreateInspeccionInspector, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  updateInspeccionInspector(data: any): Observable<any> {
+    return this.http.post<any>(this.apiUpdateInspeccionInspector, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  getInspeccionObservadores(data: any): Observable<any> {
+    return this.http.post<any>(this.apiGetInspeccionObservadores, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  createInspeccionObservador(data: any): Observable<any> {
+    return this.http.post<any>(this.apiCreateInspeccionObservador, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  updateInspeccionObservador(data: any): Observable<any> {
+    return this.http.post<any>(this.apiUpdateInspeccionObservador, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  getInspeccionParticulares(data: any): Observable<any> {
+    return this.http.post<any>(this.apiGetInspeccionParticulares, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  createInspeccionParticular(data: any): Observable<any> {
+    return this.http.post<any>(this.apiCreateInspeccionParticular, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  updateInspeccionParticular(data: any): Observable<any> {
+    return this.http.post<any>(this.apiUpdateInspeccionParticular, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  getInspeccionTecnicos(data: any): Observable<any> {
+    return this.http.post<any>(this.apiGetInspeccionTecnicos, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  createInspeccionTecnico(data: any): Observable<any> {
+    return this.http.post<any>(this.apiCreateInspeccionTecnico, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  updateInspeccionTecnico(data: any): Observable<any> {
+    return this.http.post<any>(this.apiUpdateInspeccionTecnico, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  createPlanInspeccion(data: any): Observable<any> {
+    return this.http.post<any>(this.apiCreatePlanInspeccion, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  updatePlanInspeccion(data: any): Observable<any> {
+    return this.http.post<any>(this.apiUpdatePlanInspeccion, JSON.stringify(data), this.api.getHttpOptions('g'))
     .pipe(retry(1), catchError(this.api.errorHandle));
   }
 }
