@@ -172,6 +172,7 @@ export class ListasDinamicasComponent implements OnInit {
     this.model.varListaDetalle.codigo = data.codigo;
     this.model.varListaDetalle.lista_padre_id = data.lista_padre_id == null ? 0 : data.lista_padre_id;
     this.model.varListaDetalle.nombre_valor = data.lista_padre;
+    this.model.varListaDetalle.activo = (data.activo == 1) ? true : false;
   }
 
   closeListaDDetalleModal(bol: any) {

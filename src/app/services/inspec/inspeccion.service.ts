@@ -23,15 +23,19 @@ export class InspeccionService {
   private apiGetInspeccionInspectores = this.api.getBaseUrl + "inspec/inspeccion/getInspeccionInspectores";
   private apiCreateInspeccionInspector = this.api.getBaseUrl + "inspec/inspeccion/crearInspeccionInspector";
   private apiUpdateInspeccionInspector = this.api.getBaseUrl + "inspec/inspeccion/actualizarInspeccionInspector";
+  private apiDeleteInspeccionInspector = this.api.getBaseUrl + "inspec/inspeccion/eliminarInspeccionInspector";
   private apiGetInspeccionObservadores = this.api.getBaseUrl + "inspec/inspeccion/getInspeccionObservadores";
   private apiCreateInspeccionObservador = this.api.getBaseUrl + "inspec/inspeccion/crearInspeccionObservador";
   private apiUpdateInspeccionObservador = this.api.getBaseUrl + "inspec/inspeccion/actualizarInspeccionObservador";
+  private apiDeleteInspeccionObservador = this.api.getBaseUrl + "inspec/inspeccion/eliminarInspeccionObservador";
   private apiGetInspeccionParticulares = this.api.getBaseUrl + "inspec/inspeccion/getInspeccionParticulares";
   private apiCreateInspeccionParticular = this.api.getBaseUrl + "inspec/inspeccion/crearInspeccionParticular";
   private apiUpdateInspeccionParticular = this.api.getBaseUrl + "inspec/inspeccion/actualizarInspeccionParticular";
+  private apiDeleteInspeccionParticular = this.api.getBaseUrl + "inspec/inspeccion/eliminarInspeccionParticular";
   private apiGetInspeccionTecnicos = this.api.getBaseUrl + "inspec/inspeccion/getInspeccionTecnicos";
   private apiCreateInspeccionTecnico = this.api.getBaseUrl + "inspec/inspeccion/crearInspeccionTecnico";
   private apiUpdateInspeccionTecnico = this.api.getBaseUrl + "inspec/inspeccion/actualizarInspeccionTecnico";
+  private apiDeleteInspeccionTecnico = this.api.getBaseUrl + "inspec/inspeccion/eliminarInspeccionTecnico";
   private apiCreatePlanInspeccion = this.api.getBaseUrl + "inspec/inspeccion/crearPlanInspeccion";
   private apiUpdatePlanInspeccion = this.api.getBaseUrl + "inspec/inspeccion/actualizarPlanInspeccion";
   private apiCreateActividadPlanInspeccion = this.api.getBaseUrl + "inspec/inspeccion/crearActividadPlanInspeccion";
@@ -109,6 +113,11 @@ export class InspeccionService {
     .pipe(retry(1), catchError(this.api.errorHandle));
   }
 
+  deleteInspeccionInspector(data: any): Observable<any> {
+    return this.http.post<any>(this.apiDeleteInspeccionInspector, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
   getInspeccionObservadores(data: any): Observable<any> {
     return this.http.post<any>(this.apiGetInspeccionObservadores, JSON.stringify(data), this.api.getHttpOptions('g'))
     .pipe(retry(1), catchError(this.api.errorHandle));
@@ -121,6 +130,11 @@ export class InspeccionService {
 
   updateInspeccionObservador(data: any): Observable<any> {
     return this.http.post<any>(this.apiUpdateInspeccionObservador, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  deleteInspeccionObservador(data: any): Observable<any> {
+    return this.http.post<any>(this.apiDeleteInspeccionObservador, JSON.stringify(data), this.api.getHttpOptions('g'))
     .pipe(retry(1), catchError(this.api.errorHandle));
   }
 
@@ -139,6 +153,11 @@ export class InspeccionService {
     .pipe(retry(1), catchError(this.api.errorHandle));
   }
 
+  deleteInspeccionParticular(data: any): Observable<any> {
+    return this.http.post<any>(this.apiDeleteInspeccionParticular, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
   getInspeccionTecnicos(data: any): Observable<any> {
     return this.http.post<any>(this.apiGetInspeccionTecnicos, JSON.stringify(data), this.api.getHttpOptions('g'))
     .pipe(retry(1), catchError(this.api.errorHandle));
@@ -151,6 +170,11 @@ export class InspeccionService {
 
   updateInspeccionTecnico(data: any): Observable<any> {
     return this.http.post<any>(this.apiUpdateInspeccionTecnico, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  deleteInspeccionTecnico(data: any): Observable<any> {
+    return this.http.post<any>(this.apiDeleteInspeccionTecnico, JSON.stringify(data), this.api.getHttpOptions('g'))
     .pipe(retry(1), catchError(this.api.errorHandle));
   }
 

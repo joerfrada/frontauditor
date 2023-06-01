@@ -87,7 +87,9 @@ export class UnidadesComponent implements OnInit {
     else {
       this.varhistorial = this.varhistorialTemp.filter((item: any) => {
         if (item.nombre_unidad.toString().toLowerCase().indexOf(filtro) !== -1 ||
-            item.denominacion.toString().toLowerCase().indexOf(filtro) !== -1) {
+            item.denominacion.toString().toLowerCase().indexOf(filtro) !== -1 ||
+            item.ciudad.toString().toLowerCase().indexOf(filtro) !== -1 ||
+            item.direccion.toString().toLowerCase().indexOf(filtro) !== -1) {
             return true;
         }
         return false;

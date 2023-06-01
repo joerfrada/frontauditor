@@ -13,7 +13,6 @@
                         <!-- <th>Grado</th> -->
                         <th>Nombres</th>
                         <th>Apellidos</th>
-                        <th>Cédula</th>
                         <th>Usuario</th>
                         <th *ngIf="permiso.consultar == 1">Detalle</th>
                         <th *ngIf="permiso.crear == 1 || permiso.actualizar == 1 || permiso.eliminar == 1">Acciones</th>
@@ -24,7 +23,6 @@
                         <!-- <td>{{ item.Grado }}</td> -->
                         <td>{{ item.Nombres }}</td>
                         <td>{{ item.Apellidos }}</td>
-                        <td>{{ item.Cedula }}</td>
                         <td>{{ item.Email }}</td>
                         <td class="buttons" *ngIf="permiso.consultar == 1">
                             <button type="button" class="btn btn-secondary" (click)="openDetalle(item)"><i class="fa fa-eye"></i> Personal</button>

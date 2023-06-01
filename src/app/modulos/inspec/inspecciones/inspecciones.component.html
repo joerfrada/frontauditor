@@ -12,7 +12,7 @@
                     <tr>
                         <th>Código</th>
                         <th>Nombre Inspección</th>
-                        <th>Fecha Inicio</th>
+                        <th>Fecha Inicio Reunión Apertura</th>
                         <th>Tipo de Inspección</th>
                         <th>Plan de Inspección</th>
                         <th>Acciones</th>
@@ -133,6 +133,7 @@
                                 <td><input type="text" class="form-control" placeholder="Seleccionar..." title="{{ item.proceso }}" [(ngModel)]="item.procesos" (click)="saveProcesosParticular(i)" [disabled]="model.IsLectura"></td>
                                 <td *ngIf="model.IsLectura == false">
                                     <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="model.lstParticular[i].NuevoRegistro" (click)="deleteParticular(i)"></i>
+                                    <i class="fa fa-1m5x fa-trash pointer noselect" style="color: red !important;" *ngIf="model.lstParticular[i].EliminarRegistro" (click)="eliminarParticular(item, i)"></i>
                                 </td>
                             </tr>
                             <tr class="add_row_full" *ngIf="model.IsLectura == false">
@@ -159,6 +160,7 @@
                                 <td><input type="text" class="form-control" placeholder="Seleccionar..." title="{{ item.grado }}" [(ngModel)]="item.grado" (click)="saveGradoInspector(i)" [disabled]="model.IsLectura"></td>
                                 <td *ngIf="model.IsLectura == false">
                                     <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="model.lstInspector[i].NuevoRegistro" (click)="deleteInspector(i)"></i>
+                                    <i class="fa fa-1m5x fa-trash pointer noselect" style="color: red !important;" *ngIf="model.lstInspector[i].EliminarRegistro" (click)="eliminarInspector(item, i)"></i>
                                 </td>
                             </tr>
                             <tr class="add_row_full" *ngIf="model.IsLectura == false">
@@ -185,6 +187,7 @@
                                 <td><input type="text" class="form-control" placeholder="Seleccionar..." title="{{ item.grado }}" [(ngModel)]="item.grado" (click)="saveGradoTecnicos(i)" [disabled]="model.IsLectura"></td>
                                 <td *ngIf="model.IsLectura == false">
                                     <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="model.lstTecnicos[i].NuevoRegistro" (click)="deleteTecnico(i)"></i>
+                                    <i class="fa fa-1m5x fa-trash pointer noselect" style="color: red !important;" *ngIf="model.lstTecnicos[i].EliminarRegistro" (click)="eliminarTecnico(item, i)"></i>
                                 </td>
                             </tr>
                             <tr class="add_row_full" *ngIf="model.IsLectura == false">
@@ -209,6 +212,7 @@
                                 <td><input type="text" class="form-control" placeholder="Seleccionar..." title="{{ item.observador }}" [(ngModel)]="item.observador" (click)="saveObservador(i)" [disabled]="model.IsLectura"></td>
                                 <td *ngIf="model.IsLectura == false">
                                     <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="model.lstObservador[i].NuevoRegistro" (click)="deleteObservador(i)"></i>
+                                    <i class="fa fa-1m5x fa-trash pointer noselect" style="color: red !important;" *ngIf="model.lstObservador[i].EliminarRegistro" (click)="eliminarObservador(item, i)"></i>
                                 </td>
                             </tr>
                             <tr class="add_row_full" *ngIf="model.IsLectura == false">
@@ -220,7 +224,7 @@
             </div>
             <div class="row">
                 <div class="input-group">
-                    <label>Fecha Inicio</label>
+                    <label>Fecha Inicio Reunión Apertura</label>
                     <input type="date" class="form-control" [(ngModel)]="model.varInspeccion.fecha_inicio"  [disabled]="model.IsLectura">
                 </div>
                 <div class="input-group">
@@ -280,7 +284,7 @@
             </div>
             <div class="row">
                 <div class="input-group">
-                    <label>Fecha Cierre</label>
+                    <label>Fecha Cierre Reunión Apertura</label>
                     <input type="date" [(ngModel)]="model.varInspeccion.fecha_cierre" class="form-control" [disabled]="model.IsLectura">
                 </div>
                 <div class="input-group">
@@ -360,7 +364,7 @@
                         <tr>
                             <th>Inspección</th>
                             <th>Fecha Inspección</th>
-                            <th>Inspeccionado</th>
+                            <!-- <th>Inspeccionado</th> -->
                             <th>Observaciones</th>
                             <th>Actividades Inspección</th>
                             <th>Acciones</th>
@@ -370,7 +374,7 @@
                         <tr *ngFor="let item of varplan">
                             <td>{{ item.codigo }}</td>
                             <td>{{ item.fecha }}</td>
-                            <td>{{ item.inspeccionado }}</td>
+                            <!-- <td>{{ item.inspeccionado }}</td> -->
                             <td>{{ item.observaciones }}</td>
                             <td class="buttons">
                                 <button type="button" class="btn btn-info" (click)="openActividad(item)"><i class="fa fa-plus"></i></button>
@@ -448,7 +452,7 @@
                         <td>{{ item.fecha_cierre }}</td>
                         <td>{{ item.hora_final }}</td>
                         <td class="buttons">
-                            <button type="button" class="btn btn-info"><i class="fa fa-pencil"></i></button>
+                            <button type="button" class="btn btn-info" (click)="editActividadPlanInspeccion(item)"><i class="fa fa-pencil"></i></button>
                         </td>
                     </tr>
                     <tr *ngIf="varactividad?.length == 0">
@@ -466,12 +470,12 @@
 <app-modal [title]="model.title" [show]="f_actividadModal" [size]="'modal-lg1'" (close)="closeFormActividad($event)">
     <div role="body">
         <div class="form-body">
-            <div class="row">
+            <!-- <div class="row">
                 <div class="input-group">
                     <label>Criterio</label>
                     <input type="text" class="form-control" placeholder="Seleccionar..." title="{{ model.varActividad.criterio }}" [(ngModel)]="model.varActividad.criterio" (click)="saveActividadCriterio()" [disabled]="model.IsLectura">
                 </div>
-            </div>
+            </div> -->
             <div class="row">
                 <div class="input-group">
                     <label>Proceso</label>
@@ -482,12 +486,12 @@
                     <input type="text" class="form-control" title="{{ model.varActividad.subproceso }}" [(ngModel)]="model.varActividad.subproceso" disabled>
                 </div>
             </div>
-            <div class="row">
+            <!-- <div class="row">
                 <div class="input-group">
                     <label>Lugar</label>
                     <input type="text" class="form-control" [(ngModel)]="model.varActividad.lugar" [disabled]="model.IsLectura">
                 </div>
-            </div>
+            </div> -->
             <div class="row">
                 <div class="input-group">
                     <label>Actividad</label>

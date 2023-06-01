@@ -377,17 +377,49 @@ export class InspeccionesComponent implements OnInit {
       }
     });
 
-    this.inspeccion.getCriterios().subscribe(data => {
+    this.inspeccion.getFuncionarios().subscribe(data => {
       let response: any = this.api.ProcesarRespuesta(data);
       if (response.tipo == 0) {
         response.result.forEach((x: any) => {
-          x.criterio_id = x.lista_dinamica_id;
-          x.criterio = x.lista_dinamica;
-          x.item1 = x.lista_dinamica;
-          x.item2 = null;
+          x.id = x.IdUserLDAP;
+          x.item = x.Name;
+        });
+        this.lstFuncionarios = response.result;
+      }
+    });
+  }
+
+  editActividadPlanInspeccion(data: any) {
+    console.log(data);
+    this.f_actividadModal = true;
+    this.model.title = 'Actualizar Actividad Plan Inspección';
+    this.model.isCrear = false;
+    this.model.IsLectura = false;
+
+    this.model.varActividad.actividad_plan_id = data.actividad_plan_id;
+    this.model.varActividad.plan_inspeccion_id = data.plan_inspeccion_id;
+    this.model.varActividad.proceso_id = data.proceso_id;
+    this.model.varActividad.proceso = data.proceso;
+    this.model.varActividad.subproceso = data.subproceso;
+    this.model.varActividad.actividad = data.actividades;
+    this.model.varActividad.inspeccionado_id = data.inspeccionado_id;
+    this.model.varActividad.inspeccionado = data.inspeccionado;
+    this.model.varActividad.inspector_id = data.inspector_id;
+    this.model.varActividad.inspector = data.inspector;
+    this.model.varActividad.fecha_inicio = data.fecha_inicio;
+    this.model.varActividad.hora_inicio = data.hora_inicio;
+    this.model.varActividad.fecha_cierre = data.fecha_cierre;
+    this.model.varActividad.hora_final = data.hora_final;
+
+    this.inspeccion.getProcesosSubProcesos().subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        response.result.forEach((x:any) => {
+          x.item1 = x.proceso;
+          x.item2 = x.subproceso;
           x.item3 = null;
         });
-        this.lstCriterios = response.result;
+        this.lstProcesos = response.result;
       }
     });
 
@@ -514,12 +546,64 @@ export class InspeccionesComponent implements OnInit {
     this.model.lstParticular.splice(index, 1);
   }
 
+  eliminarParticular(data: any, index: any) {
+    Swal.fire({
+      title: 'Eliminar Registro',
+      text: "¿Está seguro que desea eliminar el registro?",
+      allowOutsideClick: false,
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar',
+      cancelButtonColor: "#ed1c24",
+      icon: 'question'
+    }).then(((result: any) => {
+      if (result.dismiss != "cancel") {
+        let json = {
+          criterio_particular_id: data.criterio_particular_id
+        }
+        this.inspeccion.deleteInspeccionParticular(json).subscribe((data:any) => {
+          let response: any = this.api.ProcesarRespuesta(data);
+          if (response.tipo == 0) {
+            this.model.lstParticular.splice(index, 1);
+          }
+        });
+      }
+    }));
+  }
+
   addInspector() {
     this.model.lstInspector.push({ equipo_inspector_id: 0, inspeccion_id: 0, proceso_id: 0, procesos: "", grado_id: 0, grado: "", NuevoRegistro: true, EliminarRegistro: false });
   }
 
   deleteInspector(index: any) {
     this.model.lstInspector.splice(index, 1);
+  }
+
+  eliminarInspector(data: any, index: any) {
+    Swal.fire({
+      title: 'Eliminar Registro',
+      text: "¿Está seguro que desea eliminar el registro?",
+      allowOutsideClick: false,
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar',
+      cancelButtonColor: "#ed1c24",
+      icon: 'question'
+    }).then(((result: any) => {
+      if (result.dismiss != "cancel") {
+        let json = {
+          equipo_inspector_id: data.equipo_inspector_id
+        }
+        this.inspeccion.deleteInspeccionInspector(json).subscribe((data:any) => {
+          let response: any = this.api.ProcesarRespuesta(data);
+          if (response.tipo == 0) {
+            this.model.lstInspector.splice(index, 1);
+          }
+        });
+      }
+    }));
   }
 
   addTecnico() {
@@ -530,12 +614,64 @@ export class InspeccionesComponent implements OnInit {
     this.model.lstTecnicos.splice(index, 1);
   }
 
+  eliminarTecnico(data: any, index: any) {
+    Swal.fire({
+      title: 'Eliminar Registro',
+      text: "¿Está seguro que desea eliminar el registro?",
+      allowOutsideClick: false,
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar',
+      cancelButtonColor: "#ed1c24",
+      icon: 'question'
+    }).then(((result: any) => {
+      if (result.dismiss != "cancel") {
+        let json = {
+          equipo_tecnico_id: data.equipo_tecnico_id
+        }
+        this.inspeccion.deleteInspeccionTecnico(json).subscribe((data:any) => {
+          let response: any = this.api.ProcesarRespuesta(data);
+          if (response.tipo == 0) {
+            this.model.lstTecnicos.splice(index, 1);
+          }
+        });
+      }
+    }));
+  }
+
   addObservador() {
     this.model.lstObservador.push({ observador_id: 0, inspeccion_id: 0, user_id: 0, observador: "", NuevoRegistro: true, EliminarRegistro: false });
   }
 
   deleteObservador(index: any) {
     this.model.lstObservador.splice(index, 1);
+  }
+
+  eliminarObservador(data: any, index: any) {
+    Swal.fire({
+      title: 'Eliminar Registro',
+      text: "¿Está seguro que desea eliminar el registro?",
+      allowOutsideClick: false,
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar',
+      cancelButtonColor: "#ed1c24",
+      icon: 'question'
+    }).then(((result: any) => {
+      if (result.dismiss != "cancel") {
+        let json = {
+          observador_id: data.observador_id
+        }
+        this.inspeccion.deleteInspeccionObservador(json).subscribe((data:any) => {
+          let response: any = this.api.ProcesarRespuesta(data);
+          if (response.tipo == 0) {
+            this.model.lstObservador.splice(index, 1);
+          }
+        });
+      }
+    }));
   }
 
   saveUnidad() {
