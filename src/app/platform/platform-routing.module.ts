@@ -12,6 +12,8 @@ import { UnidadesComponent } from '../modulos/param/unidades/unidades.component'
 import { ListasDinamicasComponent } from '../modulos/param/listas-dinamicas/listas-dinamicas.component';
 import { InspeccionesComponent } from '../modulos/inspec/inspecciones/inspecciones.component';
 import { AnotacionesComponent } from '../modulos/inspec/anotaciones/anotaciones.component';
+import { InformePlanInspeccionComponent } from '../modulos/informes/informe-plan-inspeccion/informe-plan-inspeccion.component';
+
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -24,7 +26,8 @@ const routes: Routes = [
     { path: 'param/unidades', component: UnidadesComponent },
     { path: 'param/listas', component: ListasDinamicasComponent },
     { path: 'inspec/inspecciones', component: InspeccionesComponent },
-    { path: 'inspec/anotaciones', component: AnotacionesComponent }
+    { path: 'inspec/anotaciones', component: AnotacionesComponent },
+    { path: 'informe/plan-inspeccion', component: InformePlanInspeccionComponent }
   ]}
 ];
 

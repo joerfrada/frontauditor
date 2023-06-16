@@ -19,7 +19,7 @@ export class Model {
     inspeccion_id: 0,
     nombre_inspeccion: "",
     codigo: "",
-    unidad_id: "",
+    unidad_id: 0,
     unidad: "",
     dependencia: "",
     aspecto: "",
@@ -34,12 +34,11 @@ export class Model {
     alcance: "",
     tipo_inspeccion_id: 0,
     tipo_inspeccion: "",
-    criterio_id: 0,
-    criterio: "",
-    fecha_inicio: new Date(),
+    fecha_inicio: null,
     hora_inicio: "",
-    fecha_cierre: new Date(),
+    fecha_cierre: null,
     hora_termino: "",
+    observaciones: "",
     usuario: ""
   }
 
@@ -72,6 +71,8 @@ export class Model {
     hora_final: "",
     usuario: ""
   }
+
+  varCriterios: any = [];
 
   lstParticular: any = [];
   lstInspector: any = [];
@@ -145,7 +146,8 @@ export class InspeccionesComponent implements OnInit {
     }
     else {
       this.varhistorial = this.varhistorialTemp.filter((item: any) => {
-        if (item.nombre_inspeccion.toString().toLowerCase().indexOf(filtro) !== -1) {
+        if (item.nombre_inspeccion.toString().toLowerCase().indexOf(filtro) !== -1 ||
+            item.codigo.toString().toLowerCase().indexOf(filtro) !== -1) {
             return true;
         }
         return false;
@@ -156,6 +158,52 @@ export class InspeccionesComponent implements OnInit {
   clearSearch(e: any) {
     if (e.target.value == "") {
       this.varhistorial = this.varhistorialTemp;
+    }
+  }
+
+  searchPlan(e: any) {
+    let filtro = e.target.value.trim().toLowerCase();
+    if (filtro.length == 0) {
+      this.varplan = this.varplanTemp;
+    }
+    else {
+      this.varplan = this.varplanTemp.filter((item: any) => {
+        if (item.inspeccion.toString().toLowerCase().indexOf(filtro) !== -1 ||
+            item.observaciones.toString().toLowerCase().indexOf(filtro) !== -1) {
+            return true;
+        }
+        return false;
+      });
+    }
+  }
+
+  clearSearchPlan(e: any) {
+    if (e.target.value == "") {
+      this.varplan = this.varplanTemp;
+    }
+  }
+
+  searchActividad(e: any) {
+    let filtro = e.target.value.trim().toLowerCase();
+    if (filtro.length == 0) {
+      this.varactividad = this.varactividadTemp;
+    }
+    else {
+      this.varactividad = this.varactividadTemp.filter((item: any) => {
+        if (item.actividades.toString().toLowerCase().indexOf(filtro) !== -1 ||
+            item.procesos.toString().toLowerCase().indexOf(filtro) !== -1 ||
+            item.inspeccionado.toString().toLowerCase().indexOf(filtro) !== -1 ||
+            item.inspector.toString().toLowerCase().indexOf(filtro) !== -1) {
+            return true;
+        }
+        return false;
+      });
+    }
+  }
+
+  clearSearchActividad(e: any) {
+    if (e.target.value == "") {
+      this.varactividad = this.varactividadTemp;
     }
   }
 
@@ -390,7 +438,6 @@ export class InspeccionesComponent implements OnInit {
   }
 
   editActividadPlanInspeccion(data: any) {
-    console.log(data);
     this.f_actividadModal = true;
     this.model.title = 'Actualizar Actividad Plan Inspección';
     this.model.isCrear = false;
@@ -468,6 +515,18 @@ export class InspeccionesComponent implements OnInit {
     this.model.varInspeccion.hora_inicio = data.hora_inicio;
     this.model.varInspeccion.fecha_cierre = data.fecha_termino;
     this.model.varInspeccion.hora_termino = data.hora_termino;
+    this.model.varInspeccion.observaciones = data.observaciones;
+
+    this.inspeccion.getInspeccionCriterios({ inspeccion_id: data.inspeccion_id }).subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        response.result.forEach((x: any) => {
+          x.NuevoRegistro = false;
+          x.EliminarRegistro = true;
+        });
+        this.model.varCriterios = response.result;
+      }
+    });
 
     this.inspeccion.getInspeccionParticulares({ inspeccion_id: data.inspeccion_id }).subscribe(data => {
       let response: any = this.api.ProcesarRespuesta(data);
@@ -536,6 +595,40 @@ export class InspeccionesComponent implements OnInit {
 
   closeSelectInspeccionModal(bol: any) {
     this.selectInspeccionModal = bol;
+  }
+
+  addCriterio() {
+    this.model.varCriterios.push({ insp_criterio_id: 0, inspeccion_id: 0, criterio_id: 0, criterio: "", NuevoRegistro: true, EliminarRegistro: false });
+  }
+
+  deleteCriterio(index: any) {
+    this.model.varCriterios.splice(index, 1);
+  }
+
+  eliminarCriterio(data: any, index: any) {
+    Swal.fire({
+      title: 'Eliminar Registro',
+      text: "¿Está seguro que desea eliminar el registro?",
+      allowOutsideClick: false,
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar',
+      cancelButtonColor: "#ed1c24",
+      icon: 'question'
+    }).then(((result: any) => {
+      if (result.dismiss != "cancel") {
+        let json = {
+          insp_criterio_id: data.insp_criterio_id
+        }
+        this.inspeccion.deleteInspeccionCriterio(json).subscribe((data:any) => {
+          let response: any = this.api.ProcesarRespuesta(data);
+          if (response.tipo == 0) {
+            this.model.varCriterios.splice(index, 1);
+          }
+        });
+      }
+    }));
   }
 
   addParticular() {
@@ -724,16 +817,17 @@ export class InspeccionesComponent implements OnInit {
     this.model.titleUser = "Grado";
   }
 
-  saveCriteriosGeneral() {
-    this.array = this.lstCriterios;
-    this.inputform = 'criterio-general';
-    this.selectModal = true;
-    this.model.titleModal = 'Criterios';
-  }
-
   saveCriterios(index: any) {
     this.array = this.lstCriterios;
     this.inputform = 'criterio';
+    this.selectModal = true;
+    this.indexform = index;
+    this.model.titleModal = 'Criterios';
+  }
+
+  saveCriteriosParticular(index: any) {
+    this.array = this.lstCriterios;
+    this.inputform = 'criterio-particular';
     this.selectModal = true;
     this.indexform = index;
     this.model.titleModal = 'Criterios';
@@ -816,18 +910,6 @@ export class InspeccionesComponent implements OnInit {
       this.model.varInspeccion.tipo_inspeccion = data.item1;
     }
 
-    if (inputform == 'criterio-general') {
-      this.selectModal = false;
-      this.model.varInspeccion.criterio_id = data.criterio_id;
-      this.model.varInspeccion.criterio = data.criterio;
-    }
-
-    if (inputform == 'criterio') {
-      this.selectModal = false;
-      this.model.lstParticular[this.indexform].criterio_id = data.criterio_id;
-      this.model.lstParticular[this.indexform].criterio = data.criterio;
-    }
-
     if (inputform == 'responsable') {
       this.selectUserModal = false;
       this.model.varInspeccion.responsable_id = data.responsable_id;
@@ -844,6 +926,18 @@ export class InspeccionesComponent implements OnInit {
       this.selectUserModal = false;
       this.model.varInspeccion.inspector_lider_id = data.id;
       this.model.varInspeccion.inspector_lider = data.Name;
+    }
+
+    if (inputform == 'criterio') {
+      this.selectModal = false;
+      this.model.varCriterios[this.indexform].criterio_id = data.criterio_id;
+      this.model.varCriterios[this.indexform].criterio = data.criterio;
+    }
+
+    if (inputform == 'criterio-particular') {
+      this.selectModal = false;
+      this.model.lstParticular[this.indexform].criterio_id = data.criterio_id;
+      this.model.lstParticular[this.indexform].criterio = data.criterio;
     }
 
     if (inputform == 'grado-inspector') {
@@ -915,137 +1009,342 @@ export class InspeccionesComponent implements OnInit {
   }
 
   crearInspeccion() {
+    let error = false;
+    let error_msg = "";
+
     this.model.varInspeccion.usuario = this.currentUser.usuario;
-    
-    this.inspeccion.createInspeccion(this.model.varInspeccion).subscribe(data => {
-      let response: any = this.api.ProcesarRespuesta(data);
-      if (response.tipo == 0) {
-        let id = response.id;
 
-        if (this.model.lstParticular.length > 0) {
-          this.model.lstParticular.forEach((x: any) => {
-            x.inspeccion_id = id;
+    if (this.model.varInspeccion.nombre_inspeccion == "") {
+      error = true;
+      error_msg = '* Nombre inspección<br/>';
+    }
+    if (this.model.varInspeccion.codigo == "") {
+      error = true;
+      error_msg += '* Código<br />';
+    }
+    if (this.model.varInspeccion.unidad == 0) {
+      error = true;
+      error_msg += '* UMA<br />';
+    }
+    if (this.model.varInspeccion.codigo == "") {
+      error = true;
+      error_msg += '* Aspecto a inspeccionar<br />';
+    }
+    if (this.model.varInspeccion.responsable_id == 0) {
+      error = true;
+      error_msg += '* Responsable<br />';
+    }
+    if (this.model.varInspeccion.cargo_resp == "") {
+      error = true;
+      error_msg += '* Cargo<br />';
+    }
+    if (this.model.varInspeccion.insp_general_id == 0) {
+      error = true;
+      error_msg += '* Inspector General<br />';
+    }
+    if (this.model.varInspeccion.inspector_lider_id == 0) {
+      error = true;
+      error_msg += '* Inspector Líder<br />';
+    }
+    if (this.model.varInspeccion.objetivo == "") {
+      error = true;
+      error_msg += '* Objetivo de la Inspección<br />';
+    }
+    if (this.model.varInspeccion.alcance == "") {
+      error = true;
+      error_msg += '* Alcance de la Inspección<br />';
+    }
+    if (this.model.varInspeccion.tipo_inspeccion_id == 0) {
+      error = true;
+      error_msg += '* Tipo Inspección<br />';
+    }
+    if (this.model.varCriterios.length == 0) {
+      error = true;
+      error_msg += '* En forma general<br />';
+    }
+    if (this.model.lstParticular.length == 0) {
+      error = true;
+      error_msg += '* En forma particular<br />';
+    }
+    if (this.model.lstInspector.length == 0) {
+      error = true;
+      error_msg += '* Equipos Inspector<br />';
+    }
+    if (this.model.varInspeccion.fecha_inicio == null) {
+      error = true;
+      error_msg += '* Fecha Inicio<br />';
+    }
+    if (this.model.varInspeccion.hora_inicio == "") {
+      error = true;
+      error_msg += '* Hora Inicio<br />';
+    }
+    if (this.model.varInspeccion.fecha_cierre == null) {
+      error = true;
+      error_msg += '* Fecha Cierre<br />';
+    }
+    if (this.model.varInspeccion.hora_termino == "") {
+      error = true;
+      error_msg += '* Hora Cierre<br />';
+    }
+    if (this.model.varInspeccion.observaciones == "") {
+      error = true;
+      error_msg += '* Observaciones<br />';
+    }
 
-            if (x.NuevoRegistro == true) {
-              this.inspeccion.createInspeccionParticular(x).subscribe(data => {});
-            }
-          });
+    if (error == true) {
+      Swal.fire({
+        title: 'Error Inspección',
+        html: '<div class="align-left"><b>Requiere llenar los campos:</b><br />' + error_msg + '</div>',
+        allowOutsideClick: false,
+        showConfirmButton: true,
+        icon: 'error'
+      })
+    }
+    else {
+      this.inspeccion.createInspeccion(this.model.varInspeccion).subscribe(data => {
+        let response: any = this.api.ProcesarRespuesta(data);
+        if (response.tipo == 0) {
+          let id = response.id;
+
+          if (this.model.varCriterios.length > 0) {
+            this.model.varCriterios.forEach((x: any) => {
+              x.inspeccion_id = id;
+
+              if (x.NuevoRegistro == true) {
+                this.inspeccion.createInspeccionCriterio(x).subscribe(data => {});
+              }
+            });
+          }
+
+          if (this.model.lstParticular.length > 0) {
+            this.model.lstParticular.forEach((x: any) => {
+              x.inspeccion_id = id;
+
+              if (x.NuevoRegistro == true) {
+                this.inspeccion.createInspeccionParticular(x).subscribe(data => {});
+              }
+            });
+          }
+
+          if (this.model.lstInspector.length > 0) {
+            this.model.lstInspector.forEach((x: any) => {
+              x.inspeccion_id = id;
+
+              if (x.NuevoRegistro == true) {
+                this.inspeccion.createInspeccionInspector(x).subscribe(data => {});
+              }
+            });
+          }
+
+          if (this.model.lstTecnicos.length > 0) {
+            this.model.lstTecnicos.forEach((x: any) => {
+              x.inspeccion_id = id;
+
+              if (x.NuevoRegistro == true) {
+                this.inspeccion.createInspeccionTecnico(x).subscribe(data => {});
+              }
+            });
+          }
+
+          if (this.model.lstObservador.length > 0) {
+            this.model.lstObservador.forEach((x: any) => {
+              x.inspeccion_id = id;
+
+              if (x.NuevoRegistro == true) {
+                this.inspeccion.createInspeccionObservador(x).subscribe(data => {});
+              }
+            });
+          }
+
+          Swal.fire({
+            title: 'Crear Inspección',
+            text: response.mensaje,
+            allowOutsideClick: false,
+            showConfirmButton: true,
+            icon: 'success'
+          }).then((result: any) => {
+            this.modal = false;
+            this.reload();
+          })
         }
-
-        if (this.model.lstInspector.length > 0) {
-          this.model.lstInspector.forEach((x: any) => {
-            x.inspeccion_id = id;
-
-            if (x.NuevoRegistro == true) {
-              this.inspeccion.createInspeccionInspector(x).subscribe(data => {});
-            }
-          });
-        }
-
-        if (this.model.lstTecnicos.length > 0) {
-          this.model.lstTecnicos.forEach((x: any) => {
-            x.inspeccion_id = id;
-
-            if (x.NuevoRegistro == true) {
-              this.inspeccion.createInspeccionTecnico(x).subscribe(data => {});
-            }
-          });
-        }
-
-        if (this.model.lstObservador.length > 0) {
-          this.model.lstObservador.forEach((x: any) => {
-            x.inspeccion_id = id;
-
-            if (x.NuevoRegistro == true) {
-              this.inspeccion.createInspeccionObservador(x).subscribe(data => {});
-            }
-          });
-        }
-
-        Swal.fire({
-          title: 'Crear Inspección',
-          text: response.mensaje,
-          allowOutsideClick: false,
-          showConfirmButton: true,
-          icon: 'success'
-        }).then((result: any) => {
-          this.modal = false;
-          this.reload();
-        })
-      }
-    })
+      });
+    }
   }
 
   actualizarInspeccion() {
+    let error = false;
+    let error_msg = "";
+
     this.model.varInspeccion.usuario = this.currentUser.usuario;
     
-    this.inspeccion.updateInspeccion(this.model.varInspeccion).subscribe(data => {
-      let response: any = this.api.ProcesarRespuesta(data);
-      if (response.tipo == 0) {
-        if (this.model.lstParticular.length > 0) {
-          this.model.lstParticular.forEach((x: any) => {
-            x.inspeccion_id = this.model.varInspeccion.inspeccion_id;
+    if (this.model.varInspeccion.nombre_inspeccion == "") {
+      error = true;
+      error_msg = '* Nombre inspección<br/>';
+    }
+    if (this.model.varInspeccion.codigo == "") {
+      error = true;
+      error_msg += '* Código<br />';
+    }
+    if (this.model.varInspeccion.unidad == 0) {
+      error = true;
+      error_msg += '* UMA<br />';
+    }
+    if (this.model.varInspeccion.codigo == "") {
+      error = true;
+      error_msg += '* Aspecto a inspeccionar<br />';
+    }
+    if (this.model.varInspeccion.responsable_id == 0) {
+      error = true;
+      error_msg += '* Responsable<br />';
+    }
+    if (this.model.varInspeccion.cargo_resp == "") {
+      error = true;
+      error_msg += '* Cargo<br />';
+    }
+    if (this.model.varInspeccion.insp_general_id == 0) {
+      error = true;
+      error_msg += '* Inspector General<br />';
+    }
+    if (this.model.varInspeccion.inspector_lider_id == 0) {
+      error = true;
+      error_msg += '* Inspector Líder<br />';
+    }
+    if (this.model.varInspeccion.objetivo == "") {
+      error = true;
+      error_msg += '* Objetivo de la Inspección<br />';
+    }
+    if (this.model.varInspeccion.alcance == "") {
+      error = true;
+      error_msg += '* Alcance de la Inspección<br />';
+    }
+    if (this.model.varInspeccion.tipo_inspeccion_id == 0) {
+      error = true;
+      error_msg += '* Tipo Inspección<br />';
+    }
+    if (this.model.varCriterios.length == 0) {
+      error = true;
+      error_msg += '* En forma general<br />';
+    }
+    if (this.model.lstParticular.length == 0) {
+      error = true;
+      error_msg += '* En forma particular<br />';
+    }
+    if (this.model.lstInspector.length == 0) {
+      error = true;
+      error_msg += '* Equipos Inspector<br />';
+    }
+    if (this.model.varInspeccion.fecha_inicio == null) {
+      error = true;
+      error_msg += '* Fecha Inicio<br />';
+    }
+    if (this.model.varInspeccion.hora_inicio == "") {
+      error = true;
+      error_msg += '* Hora Inicio<br />';
+    }
+    if (this.model.varInspeccion.fecha_cierre == null) {
+      error = true;
+      error_msg += '* Fecha Cierre<br />';
+    }
+    if (this.model.varInspeccion.hora_termino == "") {
+      error = true;
+      error_msg += '* Hora Cierre<br />';
+    }
+    if (this.model.varInspeccion.observaciones == "") {
+      error = true;
+      error_msg += '* Observaciones<br />';
+    }
 
-            if (x.NuevoRegistro == true) {
-              this.inspeccion.createInspeccionParticular(x).subscribe(data => {});
-            }
-            else {
-              this.inspeccion.updateInspeccionParticular(x).subscribe(data => {});
-            }
-          });
+    if (error == true) {
+      Swal.fire({
+        title: 'Error Inspección',
+        html: '<div class="align-left"><b>Requiere llenar los campos:</b><br />' + error_msg + '</div>',
+        allowOutsideClick: false,
+        showConfirmButton: true,
+        icon: 'error'
+      })
+    }
+    else {
+      this.inspeccion.updateInspeccion(this.model.varInspeccion).subscribe(data => {
+        let response: any = this.api.ProcesarRespuesta(data);
+        if (response.tipo == 0) {
+          if (this.model.varCriterios.length > 0) {
+            this.model.varCriterios.forEach((x: any) => {
+              x.inspeccion_id = this.model.varInspeccion.inspeccion_id;
+
+              if (x.NuevoRegistro == true) {
+                this.inspeccion.createInspeccionCriterio(x).subscribe(data => {});
+              }
+              else {
+                this.inspeccion.updateInspeccionCriterio(x).subscribe(data => {});
+              }
+            });
+          }
+
+          if (this.model.lstParticular.length > 0) {
+            this.model.lstParticular.forEach((x: any) => {
+              x.inspeccion_id = this.model.varInspeccion.inspeccion_id;
+
+              if (x.NuevoRegistro == true) {
+                this.inspeccion.createInspeccionParticular(x).subscribe(data => {});
+              }
+              else {
+                this.inspeccion.updateInspeccionParticular(x).subscribe(data => {});
+              }
+            });
+          }
+
+          if (this.model.lstInspector.length > 0) {
+            this.model.lstInspector.forEach((x: any) => {
+              x.inspeccion_id = this.model.varInspeccion.inspeccion_id;
+
+              if (x.NuevoRegistro == true) {
+                this.inspeccion.createInspeccionInspector(x).subscribe(data => {});
+              }
+              else {
+                this.inspeccion.updateInspeccionInspector(x).subscribe(data => {});
+              }
+            });
+          }
+
+          if (this.model.lstTecnicos.length > 0) {
+            this.model.lstTecnicos.forEach((x: any) => {
+              x.inspeccion_id = this.model.varInspeccion.inspeccion_id;
+
+              if (x.NuevoRegistro == true) {
+                this.inspeccion.createInspeccionTecnico(x).subscribe(data => {});
+              }
+              else {
+                this.inspeccion.updateInspeccionTecnico(x).subscribe(data => {});
+              }
+            });
+          }
+
+          if (this.model.lstObservador.length > 0) {
+            this.model.lstObservador.forEach((x: any) => {
+              x.inspeccion_id = this.model.varInspeccion.inspeccion_id;
+
+              if (x.NuevoRegistro == true) {
+                this.inspeccion.createInspeccionObservador(x).subscribe(data => {});
+              }
+              else {
+                this.inspeccion.updateInspeccionObservador(x).subscribe(data => {});
+              }
+            });
+          }
+
+          Swal.fire({
+            title: 'Actualizar Inspección',
+            text: response.mensaje,
+            allowOutsideClick: false,
+            showConfirmButton: true,
+            icon: 'success'
+          }).then((result: any) => {
+            this.modal = false;
+            this.reload();
+          })
         }
-
-        if (this.model.lstInspector.length > 0) {
-          this.model.lstInspector.forEach((x: any) => {
-            x.inspeccion_id = this.model.varInspeccion.inspeccion_id;
-
-            if (x.NuevoRegistro == true) {
-              this.inspeccion.createInspeccionInspector(x).subscribe(data => {});
-            }
-            else {
-              this.inspeccion.updateInspeccionInspector(x).subscribe(data => {});
-            }
-          });
-        }
-
-        if (this.model.lstTecnicos.length > 0) {
-          this.model.lstTecnicos.forEach((x: any) => {
-            x.inspeccion_id = this.model.varInspeccion.inspeccion_id;
-
-            if (x.NuevoRegistro == true) {
-              this.inspeccion.createInspeccionTecnico(x).subscribe(data => {});
-            }
-            else {
-              this.inspeccion.updateInspeccionTecnico(x).subscribe(data => {});
-            }
-          });
-        }
-
-        if (this.model.lstObservador.length > 0) {
-          this.model.lstObservador.forEach((x: any) => {
-            x.inspeccion_id = this.model.varInspeccion.inspeccion_id;
-
-            if (x.NuevoRegistro == true) {
-              this.inspeccion.createInspeccionObservador(x).subscribe(data => {});
-            }
-            else {
-              this.inspeccion.updateInspeccionObservador(x).subscribe(data => {});
-            }
-          });
-        }
-
-        Swal.fire({
-          title: 'Actualizar Inspección',
-          text: response.mensaje,
-          allowOutsideClick: false,
-          showConfirmButton: true,
-          icon: 'success'
-        }).then((result: any) => {
-          this.modal = false;
-          this.reload();
-        })
-      }
-    })
+      })
+    }
   }
 
   crearPlanInspeccion() {

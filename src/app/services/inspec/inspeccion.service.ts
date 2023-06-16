@@ -20,6 +20,10 @@ export class InspeccionService {
   private apiGetTipoInspeccion = this.api.getBaseUrl + "inspec/inspeccion/getTipoInspeccion"
   private apiCreateInspeccion = this.api.getBaseUrl + "inspec/inspeccion/crearInspeccion";
   private apiUpdateInspeccion = this.api.getBaseUrl + "inspec/inspeccion/actualizarInspeccion";
+  private apiGetInspeccionCriterios = this.api.getBaseUrl + "inspec/inspeccion/getInspeccionCriterios";
+  private apiCreateInspeccionCriterio = this.api.getBaseUrl + "inspec/inspeccion/crearInspeccionCriterio";
+  private apiUpdateInspeccionCriterio = this.api.getBaseUrl + "inspec/inspeccion/actualizarInspeccionCriterio";
+  private apiDeleteInspeccionCriterio = this.api.getBaseUrl + "inspec/inspeccion/eliminarInspeccionCriterio";
   private apiGetInspeccionInspectores = this.api.getBaseUrl + "inspec/inspeccion/getInspeccionInspectores";
   private apiCreateInspeccionInspector = this.api.getBaseUrl + "inspec/inspeccion/crearInspeccionInspector";
   private apiUpdateInspeccionInspector = this.api.getBaseUrl + "inspec/inspeccion/actualizarInspeccionInspector";
@@ -95,6 +99,26 @@ export class InspeccionService {
 
   updateInspeccion(data: any): Observable<any> {
     return this.http.post<any>(this.apiUpdateInspeccion, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  getInspeccionCriterios(data: any): Observable<any> {
+    return this.http.post<any>(this.apiGetInspeccionCriterios, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  createInspeccionCriterio(data: any): Observable<any> {
+    return this.http.post<any>(this.apiCreateInspeccionCriterio, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  updateInspeccionCriterio(data: any): Observable<any> {
+    return this.http.post<any>(this.apiUpdateInspeccionCriterio, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  deleteInspeccionCriterio(data: any): Observable<any> {
+    return this.http.post<any>(this.apiDeleteInspeccionCriterio, JSON.stringify(data), this.api.getHttpOptions('g'))
     .pipe(retry(1), catchError(this.api.errorHandle));
   }
 

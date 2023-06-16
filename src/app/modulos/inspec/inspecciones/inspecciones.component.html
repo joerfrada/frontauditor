@@ -45,17 +45,17 @@
         <div class="form-body">
             <div class="row">
                 <div class="input-group">
-                    <label>Nombre Inspección</label>
+                    <label>Nombre Inspección <span class="form-required">(*)</span></label>
                     <input type="text" class="form-control" [(ngModel)]="model.varInspeccion.nombre_inspeccion" [disabled]="model.IsLectura">
                 </div>
                 <div class="input-group">
-                    <label>Código</label>
+                    <label>Código <span class="form-required">(*)</span></label>
                     <input type="text" class="form-control"[(ngModel)]="model.varInspeccion.codigo"  [disabled]="model.IsLectura">
                 </div>
             </div>
             <div class="row">
                 <div class="input-group">
-                    <label>UMA</label>
+                    <label>UMA <span class="form-required">(*)</span></label>
                     <input type="text" class="form-control" (click)="saveUnidad()" [(ngModel)]="model.varInspeccion.unidad" [disabled]="model.IsLectura">
                 </div>
                 <div class="input-group">
@@ -65,58 +65,87 @@
             </div>
             <div class="row">
                 <div class="input-group">
-                    <label>Aspecto a inspeccionar</label>
+                    <label>Aspecto a inspeccionar <span class="form-required">(*)</span></label>
                     <textarea class="form-control" rows="4" [(ngModel)]="model.varInspeccion.aspecto"  [disabled]="model.IsLectura"></textarea>
                 </div>
             </div>
             <div class="row">
                 <div class="input-group">
-                    <label>Responsable</label>
+                    <label>Responsable <span class="form-required">(*)</span></label>
                     <input type="text" class="form-control" placeholder="Seleccionar..." [(ngModel)]="model.varInspeccion.responsable" (click)="saveResponsable()" [disabled]="model.IsLectura">
                 </div>
                 <div class="input-group">
-                    <label>Cargo</label>
+                    <label>Cargo <span class="form-required">(*)</span></label>
                     <input type="text" class="form-control" [(ngModel)]="model.varInspeccion.cargo_resp"  [disabled]="model.IsLectura">
                 </div>
             </div>
             <div class="row">
                 <div class="input-group">
-                    <label>Inspector General / Jefe Oficina Regional Inspección y Control</label>
+                    <label>Inspector General / Jefe Oficina Regional Inspección y Control <span class="form-required">(*)</span></label>
                     <input type="text" class="form-control" placeholder="Seleccionar..." [(ngModel)]="model.varInspeccion.inspector_general" (click)="saveInspectorGeneral()" [disabled]="model.IsLectura">
                 </div>
                 <div class="input-group">
-                    <label>Inspector Líder</label>
+                    <label>Inspector Líder <span class="form-required">(*)</span></label>
                     <input type="text" class="form-control" placeholder="Seleccionar..." [(ngModel)]="model.varInspeccion.inspector_lider" (click)="saveInspectorLider()" [disabled]="model.IsLectura">
                 </div>
             </div>
             <div class="row">
                 <div class="input-group">
-                    <label>Objetivo de la inspección</label>
+                    <label>Objetivo de la inspección <span class="form-required">(*)</span></label>
                     <textarea class="form-control" rows="4" [(ngModel)]="model.varInspeccion.objetivo" [disabled]="model.IsLectura"></textarea>
                 </div>
             </div>
             <div class="row">
                 <div class="input-group">
-                    <label>Alcance de la inspección</label>
+                    <label>Alcance de la inspección <span class="form-required">(*)</span></label>
                     <textarea class="form-control" rows="4" [(ngModel)]="model.varInspeccion.alcance"  [disabled]="model.IsLectura"></textarea>
                 </div>
             </div>
             <div class="row">
                 <div class="input-group">
-                    <label>Tipo Inspección</label>
+                    <label>Tipo Inspección <span class="form-required">(*)</span></label>
                     <input type="text" class="form-control" placeholder="Seleccionar..." [(ngModel)]="model.varInspeccion.tipo_inspeccion" (click)="saveTipoInspeccion()" [disabled]="model.IsLectura">
                 </div>
             </div>
             <div class="line-col"></div>
             <div class="col col100 title-row">CRITERIO DE LA INSPECCIÓN</div>
-            <div class="col col100 subtitle-row">En forma general</div>
             <div class="row">
                 <div class="input-group">
-                    <label>Criterio</label>
-                    <input type="text" class="form-control" placeholder="Seleccionar..." title="{{ model.varInspeccion.criterio }}" [(ngModel)]="model.varInspeccion.criterio" (click)="saveCriteriosGeneral()" [disabled]="model.IsLectura">
+                    <label style="color: #3F518D">En forma general <span class="form-required">(*)</span></label>
                 </div>
             </div>
-            <div class="col col100 subtitle-row">En forma particular</div>
+            <div class="form-table">
+                <div class="table-content">
+                    <table class="table flex-table">
+                        <thead>
+                            <tr>
+                                <th>Criterio</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="scroll">
+                            <tr *ngFor="let item of model.varCriterios; let i = index">
+                                <td><input type="text" class="form-control" placeholder="Seleccionar..." title="{{ item.criterio }}" [(ngModel)]="item.criterio" (click)="saveCriterios(i)" [disabled]="model.IsLectura"></td>
+                                <td *ngIf="model.IsLectura == false">
+                                    <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="model.varCriterios[i].NuevoRegistro" (click)="deleteCriterio(i)"></i>
+                                    <i class="fa fa-1m5x fa-trash pointer noselect" style="color: red !important;" *ngIf="model.varCriterios[i].EliminarRegistro" (click)="eliminarCriterio(item, i)"></i>
+                                </td>
+                            </tr>
+                            <tr class="add_row_full" *ngIf="model.IsLectura == false">
+                                <button type="button" class="btn btn-primary button" (click)="addCriterio()">Agregar</button>
+                            </tr>
+                            <tr *ngIf="model.varCriterios?.length == 0 && model.IsLectura == true">
+                                <div class="dbempty">No hay registros.</div>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <label style="color: #3F518D">En forma particular <span class="form-required">(*)</span></label>
+                </div>
+            </div>
             <div class="form-table">
                 <div class="table-content">
                     <table class="table flex-table">
@@ -129,7 +158,7 @@
                         </thead>
                         <tbody class="scroll">
                             <tr *ngFor="let item of model.lstParticular; let i = index">
-                                <td><input type="text" class="form-control" placeholder="Seleccionar..." title="{{ item.criterio }}" [(ngModel)]="item.criterio" (click)="saveCriterios(i)" [disabled]="model.IsLectura"></td>
+                                <td><input type="text" class="form-control" placeholder="Seleccionar..." title="{{ item.criterio }}" [(ngModel)]="item.criterio" (click)="saveCriteriosParticular(i)" [disabled]="model.IsLectura"></td>
                                 <td><input type="text" class="form-control" placeholder="Seleccionar..." title="{{ item.proceso }}" [(ngModel)]="item.procesos" (click)="saveProcesosParticular(i)" [disabled]="model.IsLectura"></td>
                                 <td *ngIf="model.IsLectura == false">
                                     <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="model.lstParticular[i].NuevoRegistro" (click)="deleteParticular(i)"></i>
@@ -139,11 +168,18 @@
                             <tr class="add_row_full" *ngIf="model.IsLectura == false">
                                 <button type="button" class="btn btn-primary button" (click)="addParticular()">Agregar</button>
                             </tr>
+                            <tr *ngIf="model.lstParticular?.length == 0 && model.IsLectura == true">
+                                <div class="dbempty">No hay registros.</div>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-            <div class="col col100 subtitle-row">Equipos Inspector</div>
+            <div class="row">
+                <div class="input-group">
+                    <label style="color: #3F518D">Equipos Inspector <span class="form-required">(*)</span></label>
+                </div>
+            </div>
             <div class="form-table">
                 <div class="table-content">
                     <table class="table flex-table">
@@ -166,11 +202,14 @@
                             <tr class="add_row_full" *ngIf="model.IsLectura == false">
                                 <button type="button" class="btn btn-primary button" (click)="addInspector()">Agregar</button>
                             </tr>
+                            <tr *ngIf="model.lstInspector?.length == 0 && model.IsLectura == true">
+                                <div class="dbempty">No hay registros.</div>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-            <div class="col col100 subtitle-row">Equipos Técnicos</div>
+            <div class="col col100 subtitle-row">Expertos Técnicos</div>
             <div class="form-table">
                 <div class="table-content">
                     <table class="table flex-table">
@@ -192,6 +231,9 @@
                             </tr>
                             <tr class="add_row_full" *ngIf="model.IsLectura == false">
                                 <button type="button" class="btn btn-primary button" (click)="addTecnico()">Agregar</button>
+                            </tr>
+                            <tr *ngIf="model.lstTecnicos?.length == 0 && model.IsLectura == true">
+                                <div class="dbempty">No hay registros.</div>
                             </tr>
                         </tbody>
                     </table>
@@ -218,17 +260,20 @@
                             <tr class="add_row_full" *ngIf="model.IsLectura == false">
                                 <button type="button" class="btn btn-primary button" (click)="addObservador()">Agregar</button>
                             </tr>
+                            <tr *ngIf="model.lstObservador?.length == 0 && model.IsLectura == true">
+                                <div class="dbempty">No hay registros.</div>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
             <div class="row">
                 <div class="input-group">
-                    <label>Fecha Inicio Reunión Apertura</label>
+                    <label>Fecha Inicio Reunión Apertura <span class="form-required">(*)</span></label>
                     <input type="date" class="form-control" [(ngModel)]="model.varInspeccion.fecha_inicio"  [disabled]="model.IsLectura">
                 </div>
                 <div class="input-group">
-                    <label>Hora Inicio</label>
+                    <label>Hora Inicio <span class="form-required">(*)</span></label>
                     <select class="form-control" [(ngModel)]="model.varInspeccion.hora_inicio" [disabled]="model.IsLectura">
                         <option value="" selected="selected">Seleccionar...</option>
                         <option value="00:00">00:00</option>
@@ -284,11 +329,11 @@
             </div>
             <div class="row">
                 <div class="input-group">
-                    <label>Fecha Cierre Reunión Apertura</label>
+                    <label>Fecha Cierre Reunión Apertura <span class="form-required">(*)</span></label>
                     <input type="date" [(ngModel)]="model.varInspeccion.fecha_cierre" class="form-control" [disabled]="model.IsLectura">
                 </div>
                 <div class="input-group">
-                    <label>Hora Cierre</label>
+                    <label>Hora Cierre <span class="form-required">(*)</span></label>
                     <select class="form-control" [(ngModel)]="model.varInspeccion.hora_termino"  [disabled]="model.IsLectura">
                         <option value="" selected="selected">Seleccionar...</option>
                         <option value="00:00">00:00</option>
@@ -342,6 +387,12 @@
                     </select>
                 </div>
             </div>
+            <div class="row">
+                <div class="input-group">
+                    <label>Observaciones <span class="form-required">(*)</span></label>
+                    <textarea class="form-control" rows="3" [(ngModel)]="model.varInspeccion.observaciones" [disabled]="model.IsLectura"></textarea>
+                </div>
+            </div>
         </div>
     </div>
     <div role="footer">
@@ -356,7 +407,7 @@
         <div role="body">
             <div class="filter-content">
                 <button type="button" class="btn btn-primary" (click)="openFormPlan()"><i class="fa fa-plus"></i></button>
-                <input type="search" placeholder="Buscar...">
+                <input type="search" placeholder="Buscar..." (keyup)="searchPlan($event)" (search)="clearSearchPlan($event)">
             </div>
             <div class="table-content">
                 <table class="table flex-table">
@@ -424,7 +475,7 @@
     <div role="body">
         <div class="filter-content">
             <button type="button" class="btn btn-primary" (click)="openFormActividad()"><i class="fa fa-plus"></i></button>
-            <input type="search" placeholder="Buscar...">
+            <input type="search" placeholder="Buscar..." (keyup)="searchActividad($event)" (search)="clearSearchActividad($event)">
         </div>
         <div class="table-content">
             <table class="table flex-table">

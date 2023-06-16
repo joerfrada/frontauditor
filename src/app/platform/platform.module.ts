@@ -22,6 +22,7 @@ import { InspeccionesComponent } from '../modulos/inspec/inspecciones/inspeccion
 import { AnotacionesComponent } from '../modulos/inspec/anotaciones/anotaciones.component';
 import { TimePickerComponent } from '../views/time-picker/time-picker.component';
 import { SelectUserModalComponent } from '../views/select-user-modal/select-user-modal.component';
+import { InformePlanInspeccionComponent } from '../modulos/informes/informe-plan-inspeccion/informe-plan-inspeccion.component';
 
 
 @NgModule({
@@ -42,7 +43,8 @@ import { SelectUserModalComponent } from '../views/select-user-modal/select-user
     InspeccionesComponent,
     AnotacionesComponent,
     TimePickerComponent,
-    SelectUserModalComponent
+    SelectUserModalComponent,
+    InformePlanInspeccionComponent,
   ],
   imports: [
     CommonModule,

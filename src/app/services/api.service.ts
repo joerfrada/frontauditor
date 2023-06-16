@@ -12,6 +12,7 @@ export class ApiService {
   private url = "http://localhost/";
   // private url = "https://auditorigefa.fac.mil.co:6443/";
   private baseurl = this.url + "apiauditor/api/";
+  private informe = this.url + "apiauditor/informe/";
   public url_image = this.url + "apiauditor/public/secad/Personal/Fotos/";
 
   constructor() { }
@@ -56,6 +57,10 @@ export class ApiService {
 
   get getBaseUrl() {
     return this.baseurl;
+  }
+
+  get getInforme() {
+    return this.informe;
   }
 
   /* Error Exceptions */
