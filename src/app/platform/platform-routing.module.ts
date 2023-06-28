@@ -26,7 +26,7 @@ const routes: Routes = [
     { path: 'param/unidades', component: UnidadesComponent },
     { path: 'param/listas', component: ListasDinamicasComponent },
     { path: 'inspec/inspecciones', component: InspeccionesComponent },
-    { path: 'inspec/anotaciones', component: AnotacionesComponent },
+    { path: 'inspec/hallazgos', component: AnotacionesComponent },
     { path: 'informe/plan-inspeccion', component: InformePlanInspeccionComponent }
   ]}
 ];

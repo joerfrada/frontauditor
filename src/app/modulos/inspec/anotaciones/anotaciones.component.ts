@@ -1,10 +1,534 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { ApiService } from '../../../services/api.service';
+import { UserService } from '../../../services/admin/user.service';
+import { AnotacionService } from '../../../services/inspec/anotacion.service';
+import { Permiso } from 'src/app/modelos/permiso.model';
+
+declare var Swal:any;
+
+export class Model {
+  title: any = "";
+  titleModal: any = "";
+  isCrear: any;
+
+  IsLectura: any;
+
+  lstTipoHallazgo: any = [];
+
+  varHallazgo: any = {
+    hallazgo_id: 0,
+    inspeccion_id: 0,
+    codigo: "",
+    nombre_inspeccion: "",
+    tipo_hallazgo_id: 0,
+    codificacion: "",
+    tema_catalogacion_id: 0,
+    codigo_tema: "",
+    tema_catalogacion: "",
+    fecha: new Date(),
+    criterio_id: "",
+    proceso: "",
+    subproceso: "",
+    descripcion_evidencia: "",
+    usuario: "",
+    archivo: ""
+  }
+
+  varCorreccion: any = [];
+  varMejoramiento: any = [];
+  varOrden: any = [];
+}
 
 @Component({
   selector: 'app-anotaciones',
   templateUrl: './anotaciones.component.html',
   styleUrls: ['./anotaciones.component.scss']
 })
-export class AnotacionesComponent {
+export class AnotacionesComponent implements OnInit {
+
+  model = new Model();
+  permiso = new Permiso();
+
+  varhistorial: any = [];
+  varhistorialTemp: any = [];
+
+  array: any = [];
+
+  modal: any;
+
+  file: any;
+
+  tipo: any;
+  codigo: any;
+  consecutivo: any;
+
+  selectModal: any;
+  selectCriterioModal: any;
+
+  inputform: any;
+  indexform: any;
+
+  lstInspeccion: any = [];
+  lstCodigoTema: any = [];
+  lstCriterios: any = [];
+  lstDependenciasLDAP: any = [];
+  lstFuncionariosLDAP: any = [];
+
+  currentUser: any;
+
+  constructor(private router: Router, private api: ApiService, private usuario: UserService, private anotacion: AnotacionService) {
+    this.currentUser = JSON.parse(localStorage.getItem("currentUser") as any);
+  }
+
+  ngOnInit(): void {
+    this.getPermisos();
+    this.getAnotaciones();
+    this.getInspecciones();
+    this.getTipoHallazgo();
+    this.getTemaCatalogacion();
+  }
+
+  reload() {
+    let currentUrl = this.router.url;
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+      this.router.navigate([currentUrl]);
+    });
+  }
+
+  search(e: any) {
+    let filtro = e.target.value.trim().toLowerCase();
+    if (filtro.length == 0) {
+      this.varhistorial = this.varhistorialTemp;
+    }
+    else {
+      this.varhistorial = this.varhistorialTemp.filter((item: any) => {
+        if (item.nombre_inspeccion.toString().toLowerCase().indexOf(filtro) !== -1 ||
+            item.codificacion_anota.toString().toLowerCase().indexOf(filtro) !== -1) {
+            return true;
+        }
+        return false;
+      });
+    }
+  }
+
+  clearSearch(e: any) {
+    if (e.target.value == "") {
+      this.varhistorial = this.varhistorialTemp;
+    }
+  }
+
+  getPermisos() {
+    let json = {
+      usuario: this.currentUser.email,
+      cod_modulo: 'IN'
+    }
+    this.usuario.getPermisos(json).subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        this.permiso.consultar = response.result.consultar;
+        this.permiso.crear = response.result.crear;
+        this.permiso.actualizar = response.result.actualizar;
+        this.permiso.eliminar = response.result.eliminar;
+      }
+    })
+  }
+
+  getAnotaciones() {
+    this.anotacion.getAnotaciones().subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        this.varhistorial = response.result;
+        this.varhistorialTemp = response.result;
+      }
+    });
+  }
+
+  getInspecciones() {
+    this.anotacion.getInspecciones().subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        response.result.forEach((x: any) => {
+          x.item1 = x.codigo;
+          x.item2 = x.nombre_inspeccion;
+          x.item3 = null;
+        });
+        this.lstInspeccion = response.result;
+      }
+    });
+  }
+
+  getDepedenciasLDAP() {
+    this.anotacion.getDependenciasLDAP().subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        response.result.forEach((x: any) => {
+          x.id = x.IdDependencia;
+          x.item1 = x.Nombre;
+          x.item2 = null;
+          x.item3 = null;
+        });
+        this.lstDependenciasLDAP = response.result;
+      }
+    });
+  }
+
+  getFuncionariosLDAP() {
+    this.anotacion.getFuncionariosLDAP().subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        response.result.forEach((x: any) => {
+          x.item1 = x.Name;
+          x.item2 = null;
+          x.item3 = null;
+        });
+        this.lstFuncionariosLDAP = response.result;
+      }
+    });
+  }
+
+  getTipoHallazgo() {
+    this.anotacion.getTipoAnotacion().subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        this.model.lstTipoHallazgo = response.result;
+      }
+    });
+  }
+
+  getTemaCatalogacion() {
+    this.anotacion.getTemaCatalogacion().subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        response.result.forEach((x: any) => {
+          x.item1 = x.codigo_tema;
+          x.item2 = x.tema_catalogacion;
+          x.item3 = null;
+        });
+        this.lstCodigoTema = response.result;
+      }
+    });
+  }
+
+  closeSelectModal(bol: any) {
+    this.selectModal = bol;
+    this.reload();
+  }
+
+  closeSelectCriterioModal(bol: any) {
+    this.selectCriterioModal = bol;
+    this.reload();
+  }
+
+  openAnotacion() {
+    this.modal = true;
+    this.model.title = 'Crear Hallazgo';
+    this.model.isCrear = true;
+    this.model.IsLectura = false;
+    this.model.varHallazgo = new Model().varHallazgo;
+    this.model.varCorreccion = [];
+    this.model.varMejoramiento = [];
+    this.model.varOrden = [];
+
+    this.getDepedenciasLDAP();
+    // this.getFuncionariosLDAP();
+
+    setTimeout(() => {
+      this.changeTipoHallazgo(0);
+    }, 100);
+  }
+
+  closeAnotacion(bol: any) {
+    this.modal = bol;
+    this.reload();
+  }
+
+  editAnotacion(data: any) {
+    // this.modal = true;
+    this.model.title = 'Actualizar Hallazgo';
+    this.model.isCrear = false;
+    this.model.IsLectura = false;
+
+    this.model.varHallazgo.hallazgo_id = data.hallazgo_id;
+    this.model.varHallazgo.inspeccion_id = data.inspeccion_id;
+  }
+
+  uploadFile(event: any) {
+    this.file = event.target.files[0];
+    this.model.varHallazgo.archivo = event.target.files[0].name;
+  }
+
+  changeTipoHallazgo(id: any) {
+    if (id == 0) this.tipo = '-';
+    else if (id == 746) this.tipo = 'AR';
+    else if (id == 747) this.tipo = 'I';
+    else if (id == 748) this.tipo = 'IR';
+    else if (id == 749) this.tipo = 'IV';
+    else if (id == 750) this.tipo = 'R';
+    else if (id == 751) this.tipo = 'O';
+
+    let nextHallazgo = this.consecutivo + 1;
+    switch (nextHallazgo) {
+      case 1:
+        this.model.varHallazgo.codificacion = this.codigo + "-" + this.tipo + "000" + nextHallazgo.toString();
+        break;
+      case 2:
+        this.model.varHallazgo.codificacion = this.codigo + "-" + this.tipo + "00" + nextHallazgo.toString();
+        break;
+      case 3:
+        this.model.varHallazgo.codificacion = this.codigo + "-" + this.tipo + "0" + nextHallazgo.toString();
+        break;
+      case 4:
+        this.model.varHallazgo.codificacion = this.codigo + "-" + this.tipo + nextHallazgo.toString();
+        break;
+    }
+  }
+
+  addCorreccion() {
+    this.model.varCorreccion.push({ correcion_id:0, hallazgo_id: 0, responsable_id: 0, responsable: "", NuevoRegistro: true, EliminarRegistro: false });
+  }
+
+  deleteCorreccion(index: any) {
+    this.model.varCorreccion.splice(index, 1);
+  }
+
+  addMejoramiento() {
+    this.model.varMejoramiento.push({ mejoramiento_id:0, hallazgo_id: 0, responsable_id: 0, responsable: "", NuevoRegistro: true, EliminarRegistro: false });
+  }
+
+  deleteMejoramiento(index: any) {
+    this.model.varMejoramiento.splice(index, 1);
+  }
+
+  addOrden() {
+    this.model.varOrden.push({ orden_id:0, hallazgo_id: 0, responsable_id: 0, responsable: "", NuevoRegistro: true, EliminarRegistro: false });
+  }
+
+  deleteOrden(index: any) {
+    this.model.varOrden.splice(index, 1);
+  }
+
+  saveInspeccion() {
+    this.array = this.lstInspeccion;
+    this.inputform = 'inspeccion';
+    this.selectModal = true;
+    this.model.titleModal = 'Inspección';
+  }
+
+  saveCodigoTema() {
+    this.array = this.lstCodigoTema;
+    this.inputform = 'codigo-tema';
+    this.selectModal = true;
+    this.model.titleModal = 'Código Tema';
+  }
+
+  saveCriterio() {
+    this.array = this.lstCriterios;
+    this.inputform = 'criterio';
+    this.selectCriterioModal = true;
+    this.model.titleModal = 'Criterio que se incumple';
+  }
+
+  saveDependencias(index: any, i: any) {
+    this.array = this.lstDependenciasLDAP;
+    this.inputform = 'dependencias' + i.toString();
+    this.indexform = index;
+    this.selectModal = true;
+    if (i == 1) this.model.titleModal = 'Responsable Corrección';
+    else if (i == 2) this.model.titleModal = 'Responsable de Plan Mejoramiento';
+    else if (i == 3) this.model.titleModal = 'Responsable Orden';
+  }
+
+  dataform(inputform: any, data: any) {
+    if (inputform == 'inspeccion') {
+      this.selectModal = false;
+      this.model.varHallazgo.inspeccion_id = data.inspeccion_id;
+      this.model.varHallazgo.codigo = data.codigo;
+      this.model.varHallazgo.nombre_inspeccion = data.nombre_inspeccion;
+
+      this.anotacion.getConsecutivoHallazgo({ inspeccion_id: data.inspeccion_id }).subscribe(data1 => {
+        let response: any = this.api.ProcesarRespuesta(data1);
+        if (response.tipo == 0) {
+          this.codigo = response.result[0].codigo;
+          this.consecutivo = response.result[0].conthallazgo;
+        }
+      });
+
+      this.anotacion.getCriteriosInspeccion({ inspeccion_id: data.inspeccion_id }).subscribe(data1 => {
+        let response: any = this.api.ProcesarRespuesta(data1);
+        if (response.tipo == 0) {
+          response.result.forEach((x: any) => {
+            x.item1 = x.criterio;
+            x.item2 = x.proceso;
+            x.item3 = x.subproceso;
+          });
+
+          this.lstCriterios = response.result;
+        }
+      });
+    }
+
+    if (inputform == 'dependencias1') {
+      this.selectModal = false;
+      this.model.varCorreccion[this.indexform].responsable_id = data.id;
+      this.model.varCorreccion[this.indexform].responsable = data.Nombre;
+    }
+
+    if (inputform == 'dependencias2') {
+      this.selectModal = false;
+      this.model.varMejoramiento[this.indexform].responsable_id = data.id;
+      this.model.varMejoramiento[this.indexform].responsable = data.Nombre;
+    }
+
+    if (inputform == 'dependencias3') {
+      this.selectModal = false;
+      this.model.varOrden[this.indexform].responsable_id = data.id;
+      this.model.varOrden[this.indexform].responsable = data.Nombre;
+    }
+
+    if (inputform == 'codigo-tema') {
+      this.selectModal = false;
+      this.model.varHallazgo.tema_catalogacion_id = data.tema_catalogacion_id;
+      this.model.varHallazgo.codigo_tema = data.codigo_tema;
+      this.model.varHallazgo.tema_catalogacion = data.tema_catalogacion;
+    }
+
+    if (inputform == 'criterio') {
+      this.selectCriterioModal = false;
+      this.model.varHallazgo.criterio_id = data.criterio_id;
+      this.model.varHallazgo.criterio = data.criterio;
+      this.model.varHallazgo.proceso = data.proceso;
+      this.model.varHallazgo.subproceso = data.subproceso;
+    }
+  }
+
+  crearAnotacion() {
+    this.model.varHallazgo.tipo_hallazgo_id = Number(this.model.varHallazgo.tipo_hallazgo_id);
+    this.model.varHallazgo.usuario = this.currentUser.usuario;
+
+    var formData: any = new FormData();
+    formData.append('modelo', JSON.stringify(this.model.varHallazgo));
+    formData.append('archivo', this.file);
+
+    this.anotacion.createAnotacion(formData).subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        let id = response.id;
+
+        if (this.model.varCorreccion.length > 0) {
+          this.model.varCorreccion.forEach((x: any) => {
+            x.hallazgo_id = id;
+            x.usuario = this.currentUser.usuario;
+
+            if (x.NuevoRegistro == true) {
+              this.anotacion.createAnotacionCorreccion(x).subscribe(data => {});
+            }
+          });
+        }
+
+        if (this.model.varMejoramiento.length > 0) {
+          this.model.varMejoramiento.forEach((x: any) => {
+            x.hallazgo_id = id;
+            x.usuario = this.currentUser.usuario;
+
+            if (x.NuevoRegistro == true) {
+              this.anotacion.createAnotacionMejoramiento(x).subscribe(data => {});
+            }
+          });
+        }
+
+        if (this.model.varOrden.length > 0) {
+          this.model.varOrden.forEach((x: any) => {
+            x.hallazgo_id = id;
+            x.usuario = this.currentUser.usuario;
+
+            if (x.NuevoRegistro == true) {
+              this.anotacion.createAnotacionOrden(x).subscribe(data => {});
+            }
+          });
+        }
+
+        Swal.fire({
+          title: 'Crear Hallazgo',
+          text: response.mensaje,
+          allowOutsideClick: false,
+          showConfirmButton: true,
+          icon: 'success'
+        }).then((result: any) => {
+          this.modal = false;
+          this.reload();
+        })
+      }
+    });
+  }
+
+  actualizarAnotacion() {
+    this.model.varHallazgo.tipo_hallazgo_id = Number(this.model.varHallazgo.tipo_hallazgo_id);
+    this.model.varHallazgo.usuario = this.currentUser.usuario;
+
+    var formData: any = new FormData();
+    formData.append('modelo', JSON.stringify(this.model.varHallazgo));
+    formData.append('archivo', this.file);
+
+    this.anotacion.createAnotacion(formData).subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        let id = response.id;
+
+        if (this.model.varCorreccion.length > 0) {
+          this.model.varCorreccion.forEach((x: any) => {
+            x.hallazgo_id = id;
+            x.usuario = this.currentUser.usuario;
+
+            if (x.NuevoRegistro == true) {
+              this.anotacion.createAnotacionCorreccion(x).subscribe(data => {});
+            }
+            else {
+              this.anotacion.updateAnotacionCorreccion(x).subscribe(data => {});
+            }
+          });
+        }
+
+        if (this.model.varMejoramiento.length > 0) {
+          this.model.varMejoramiento.forEach((x: any) => {
+            x.hallazgo_id = id;
+            x.usuario = this.currentUser.usuario;
+
+            if (x.NuevoRegistro == true) {
+              this.anotacion.createAnotacionMejoramiento(x).subscribe(data => {});
+            }
+            else {
+              this.anotacion.updateAnotacionMejoramiento(x).subscribe(data => {});
+            }
+          });
+        }
+
+        if (this.model.varOrden.length > 0) {
+          this.model.varOrden.forEach((x: any) => {
+            x.hallazgo_id = id;
+            x.usuario = this.currentUser.usuario;
+
+            if (x.NuevoRegistro == true) {
+              this.anotacion.createAnotacionOrden(x).subscribe(data => {});
+            }
+            else {
+              this.anotacion.updateAnotacionOrden(x).subscribe(data => {});
+            }
+          });
+        }
+
+        Swal.fire({
+          title: 'Actualizar Hallazgo',
+          text: response.mensaje,
+          allowOutsideClick: false,
+          showConfirmButton: true,
+          icon: 'success'
+        }).then((result: any) => {
+          this.modal = false;
+          this.reload();
+        })
+      }
+    });
+  }
 
 }

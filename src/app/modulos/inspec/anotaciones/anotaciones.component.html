@@ -1,1 +1,243 @@
-<p>anotaciones works!</p>
+<card [items]="'Inspecciones,Hallazgos'">
+    <div role="button" class="card-button" *ngIf="permiso.crear == 1">
+        <button type="button" class="btn btn-primary" (click)="openAnotacion()"><i class="fa fa-plus"></i></button>
+    </div>
+    <div role="body">
+        <div class="filter-content">
+            <input type="search" placeholder="Buscar..." (keyup)="search($event)" (search)="clearSearch($event)">
+        </div>
+        <div class="table-content">
+            <table class="table flex-table">
+                <thead>
+                    <tr>
+                        <th>Codificación hallazgo</th>
+                        <th>Descripción del hallazgo</th>
+                        <th>Nombre Inspección</th>
+                        <th>Código Tema</th>
+                        <th>Tema Catalogación</th>
+                        <th>Fecha hallazgo</th>
+                        <th>Tipo hallazgo</th>
+                        <!-- <th>Resumen del hallazgo</th> -->
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="scroll">
+                    <tr *ngFor="let item of varhistorial">
+                        <td>{{ item.codificacion }}</td>
+                        <td>{{ item.descripcion_evidencia }}</td>
+                        <td>{{ item.nombre_inspeccion }}</td>
+                        <td>{{ item.codigo_tema }}</td>
+                        <td>{{ item.tema_catalogacion }}</td>
+                        <td>{{ item.fecha }}</td>
+                        <td>{{ item.tipo_hallazgo }}</td>
+                        <!-- <td>N/A</td> -->
+                        <td class="buttons">
+                            <button type="button" class="btn btn-info" (click)="editAnotacion(item)"><i class="fa fa-pencil"> Editar</i></button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="varhistorial?.length == 0">
+                        <div class="dbempty">No hay registros.</div>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</card>
+
+<app-modal [title]="model.title" [show]="modal" [size]="'modal-lg2 modal-h90'" [scroll]="'modal-scroll'" (close)="closeAnotacion($event)">
+    <div role="body">
+        <div class="form-body">
+            <div class="row">
+                <div class="input-group">
+                    <label>Inspección <span class="form-required">(*)</span></label>
+                    <input type="text" class="form-control" placeholder="Seleccionar..." [(ngModel)]="model.varHallazgo.codigo" (click)="saveInspeccion()" [disabled]="model.IsLectura">
+                </div>
+                <div class="input-group">
+                    <label>Nombre Inspección</label>
+                    <input type="text" class="form-control" [(ngModel)]="model.varHallazgo.nombre_inspeccion" disabled>
+                </div>
+                <!-- <div class="input-group">
+                    <label>Línea Roja</label>
+                    <select class="form-select">
+                        <option value="0">Seleccionar...</option>
+                        <option value="1">Sí</option>
+                        <option value="2">No</option>
+                    </select>
+                </div> -->
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <label>Tipo de hallazgo <span class="form-required">(*)</span></label>
+                    <select [(ngModel)]="model.varHallazgo.tipo_hallazgo_id" class="form-select" (change)="changeTipoHallazgo(model.varHallazgo.tipo_hallazgo_id)">
+                        <option value="0">Seleccionar...</option>
+                        <option *ngFor="let item of model.lstTipoHallazgo" value="{{ item.tipo_hallazgo_id }}">{{ item.tipo_hallazgo}}</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Codificación de hallazgo</label>
+                    <input type="text" class="form-control" [(ngModel)]="model.varHallazgo.codificacion" disabled>
+                </div>
+                <div class="input-group">
+                    <label>Fecha hallazgo</label>
+                    <input type="date" class="form-control" [(ngModel)]="model.varHallazgo.fecha" [disabled]="model.IsLectura">
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <label>Código Tema <span class="form-required">(*)</span></label>
+                    <input type="text" class="form-control" placeholder="Seleccionar..." [(ngModel)]="model.varHallazgo.codigo_tema" (click)="saveCodigoTema()" [disabled]="model.IsLectura">
+                </div>
+                <div class="input-group">
+                    <label>Tema Catalogación</label>
+                    <input type="text" class="form-control" [(ngModel)]="model.varHallazgo.tema_catalogacion" disabled>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <label>Criterio que se incumple <span class="form-required">(*)</span></label>
+                    <input type="text" class="form-control" placeholder="Seleccionar..." [(ngModel)]="model.varHallazgo.criterio" (click)="saveCriterio()" [disabled]="model.IsLectura">
+                </div>
+                <div class="input-group">
+                    <label>Proceso</label>
+                    <input type="text" class="form-control" [(ngModel)]="model.varHallazgo.proceso" disabled>
+                </div>
+                <div class="input-group">
+                    <label>SubProceso</label>
+                    <input type="text" class="form-control" [(ngModel)]="model.varHallazgo.subproceso" disabled>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <label>Descripción del hallazgo <span class="form-required">(*)</span></label>
+                    <textarea class="form-control" rows="4" [(ngModel)]="model.varHallazgo.descripcion_evidencia" [disabled]="model.IsLectura"></textarea>
+                </div>
+                <!-- <div class="input-group">
+                    <label>¿Se reportó en una auditoria anterior? <span class="form-required">(*)</span></label>
+                    <textarea class="form-control" rows="4" [disabled]="model.IsLectura"></textarea>
+                </div> -->
+            </div>
+            <div class="line-col"></div>
+            <div class="row">
+                <div class="input-group">
+                    <label>Documentos</label>
+                    <button type="button" class="btn btn-info" (click)="fileUpload.click()" style="width: 200px !important;">Elegir archivos</button>
+                    <input type="file" #fileUpload (change)="uploadFile($event)">
+                    <span>{{ model.varHallazgo.archivo }}</span>
+                </div>
+            </div>
+            <div class="row" *ngIf="tipo == 'I' || tipo == 'IR' || tipo == 'IV'">
+                <div class="input-group">
+                    <label style="color: #3F518D">Responsable Corrección <span class="form-required">(*)</span></label>
+                </div>
+            </div>
+            <div class="form-table" *ngIf="tipo == 'I' || tipo == 'IR' || tipo == 'IV'">
+                <div class="table-content">
+                    <table class="table flex-table">
+                        <thead>
+                            <tr>
+                                <th>Responsable</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="scroll">
+                            <tr *ngFor="let item of model.varCorreccion; let i = index">
+                                <td><input type="text" class="form-control" placeholder="Seleccionar..." [(ngModel)]="item.responsable" (click)="saveDependencias(i, 1)" [disabled]="model.IsLectura"></td>
+                                <td *ngIf="model.IsLectura == false">
+                                    <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="model.varCorreccion[i].NuevoRegistro" (click)="deleteCorreccion(i)"></i>
+                                    <i class="fa fa-1m5x fa-trash pointer noselect" style="color: red !important;" *ngIf="model.varCorreccion[i].EliminarRegistro"></i>
+                                </td>
+                            </tr>
+                            <tr class="add_row_full" *ngIf="model.IsLectura == false">
+                                <button type="button" class="btn btn-primary button" (click)="addCorreccion()">Agregar</button>
+                            </tr>
+                            <tr *ngIf="model.varCorreccion.length == 0 && model.IsLectura == true">
+                                <div class="dbempty">No hay registros.</div>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row" *ngIf="tipo == 'I' || tipo == 'IR' || tipo == 'R'">
+                <div class="input-group">
+                    <label>Responsable Plan de Mejoramiento <span class="form-required">(*)</span></label>
+                </div>
+            </div>
+            <div class="form-table" *ngIf="tipo == 'I' || tipo == 'IR' || tipo == 'R'">
+                <div class="table-content">
+                    <table class="table flex-table">
+                        <thead>
+                            <tr>
+                                <th>Responsable</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="scroll">
+                            <tr *ngFor="let item of model.varMejoramiento; let i = index">
+                                <td><input type="text" class="form-control" placeholder="Seleccionar..." [(ngModel)]="item.responsable" (click)="saveDependencias(i, 2)" [disabled]="model.IsLectura"></td>
+                                <td *ngIf="model.IsLectura == false">
+                                    <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="model.varMejoramiento[i].NuevoRegistro" (click)="deleteMejoramiento(i)"></i>
+                                    <i class="fa fa-1m5x fa-trash pointer noselect" style="color: red !important;" *ngIf="model.varMejoramiento[i].EliminarRegistro"></i>
+                                </td>
+                            </tr>
+                            <tr class="add_row_full" *ngIf="model.IsLectura == false">
+                                <button type="button" class="btn btn-primary button" (click)="addMejoramiento()">Agregar</button>
+                            </tr>
+                            <tr *ngIf="model.varMejoramiento.length == 0 && model.IsLectura == true">
+                                <div class="dbempty">No hay registros.</div>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row" *ngIf="tipo == 'AR' || tipo == 'I' || tipo == 'IR' || tipo == 'IV' || tipo == 'R' || tipo == 'O'">
+                <div class="input-group">
+                    <label>Responsable Orden <span class="form-required">(*)</span></label>
+                </div>
+            </div>
+            <div class="form-table" *ngIf="tipo == 'AR' || tipo == 'I' || tipo == 'IR' || tipo == 'IV' || tipo == 'R' || tipo == 'O'">
+                <div class="table-content">
+                    <table class="table flex-table">
+                        <thead>
+                            <tr>
+                                <th>Responsable</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="scroll">
+                            <tr *ngFor="let item of model.varOrden; let i = index">
+                                <td><input type="text" class="form-control" placeholder="Seleccionar..." [(ngModel)]="item.responsable" (click)="saveDependencias(i, 3)" [disabled]="model.IsLectura"></td>
+                                <td *ngIf="model.IsLectura == false">
+                                    <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="model.varOrden[i].NuevoRegistro" (click)="deleteOrden(i)"></i>
+                                    <i class="fa fa-1m5x fa-trash pointer noselect" style="color: red !important;" *ngIf="model.varOrden[i].EliminarRegistro"></i>
+                                </td>
+                            </tr>
+                            <tr class="add_row_full" *ngIf="model.IsLectura == false">
+                                <button type="button" class="btn btn-primary button" (click)="addOrden()">Agregar</button>
+                            </tr>
+                            <tr *ngIf="model.varOrden.length == 0 && model.IsLectura == true">
+                                <div class="dbempty">No hay registros.</div>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div role="footer">
+        <button type="button" class="btn btn-danger" (click)="closeAnotacion(false)">Cerrar</button>
+        <button type="button" class="btn btn-primary" (click)="crearAnotacion()" *ngIf="model.isCrear == true">Guardar</button>
+        <button type="button" class="btn btn-primary" (click)="actualizarAnotacion()"  *ngIf="model.isCrear == false">Actualizar</button>
+    </div>
+</app-modal>
+
+<app-select-modal [title]="model.titleModal" [show]="selectModal" [size]="'modal-lg modal-h70'" [array]="array" [arrayTemp]="array" (output)="dataform(inputform, $event)" (close)="closeSelectModal($event)">
+    <div role="footer">
+        <button type="button" class="btn btn-danger" (click)="closeSelectModal(false)">Cerrar</button>
+    </div>
+</app-select-modal>
+
+<app-select-modal [title]="model.titleModal" [titleHeader]="'Criterio,Proceso,SubProceso'" [show]="selectCriterioModal" [size]="'modal-lg modal-h70'" [array]="array" [arrayTemp]="array" (output)="dataform(inputform, $event)" (close)="closeSelectCriterioModal($event)">
+    <div role="footer">
+        <button type="button" class="btn btn-danger" (click)="closeSelectCriterioModal(false)">Cerrar</button>
+    </div>
+</app-select-modal>

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { PlatformRoutingModule } from './platform-routing.module';
 import { PlatformComponent } from './platform.component';
@@ -50,6 +50,7 @@ import { InformePlanInspeccionComponent } from '../modulos/informes/informe-plan
     CommonModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     PlatformRoutingModule,
     LayoutModule
   ]
