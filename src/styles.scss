@@ -181,7 +181,7 @@ label {
     margin-bottom: 1rem;
 }
 
-.form-control {
+.form-control, .form-control-text {
     display: block;
     width: 100%;
     height: calc(1.5em + 0.75rem + 2px);
@@ -239,6 +239,11 @@ label {
   
 .form-control:disabled, .form-control[readonly] {
     background-color: #e9ecef;
+    opacity: 1;
+}
+
+.form-control-text:disabled {
+    background-color: white;
     opacity: 1;
 }
   
@@ -332,6 +337,7 @@ fieldset:disabled a.btn {
     color: #fff;
     background-color: #007bff;
     border-color: #007bff;
+    cursor: not-allowed;
 }
 
 .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active,
@@ -369,6 +375,7 @@ fieldset:disabled a.btn {
     color: #fff;
     background-color: #6c757d;
     border-color: #6c757d;
+    cursor: not-allowed;
 }
 
 .btn-secondary:not(:disabled):not(.disabled):active, .btn-secondary:not(:disabled):not(.disabled).active,
@@ -406,6 +413,7 @@ fieldset:disabled a.btn {
     color: #fff;
     background-color: #28a745;
     border-color: #28a745;
+    cursor: not-allowed;
 }
 
 .btn-success:not(:disabled):not(.disabled):active, .btn-success:not(:disabled):not(.disabled).active,
@@ -443,6 +451,7 @@ fieldset:disabled a.btn {
     color: #fff;
     background-color: #17a2b8;
     border-color: #17a2b8;
+    cursor: not-allowed;
 }
 
 .btn-info:not(:disabled):not(.disabled):active, .btn-info:not(:disabled):not(.disabled).active,
@@ -480,6 +489,7 @@ fieldset:disabled a.btn {
     color: #212529;
     background-color: #ffc107;
     border-color: #ffc107;
+    cursor: not-allowed;
 }
 
 .btn-warning:not(:disabled):not(.disabled):active, .btn-warning:not(:disabled):not(.disabled).active,
@@ -517,6 +527,7 @@ fieldset:disabled a.btn {
     color: #fff;
     background-color: #dc3545;
     border-color: #dc3545;
+    cursor: not-allowed;
 }
 
 .btn-danger:not(:disabled):not(.disabled):active, .btn-danger:not(:disabled):not(.disabled).active,
@@ -554,6 +565,7 @@ fieldset:disabled a.btn {
     color: #212529;
     background-color: #f8f9fa;
     border-color: #f8f9fa;
+    cursor: not-allowed;
 }
 
 .btn-light:not(:disabled):not(.disabled):active, .btn-light:not(:disabled):not(.disabled).active,
@@ -591,6 +603,7 @@ fieldset:disabled a.btn {
     color: #fff;
     background-color: #343a40;
     border-color: #343a40;
+    cursor: not-allowed;
 }
 
 .btn-dark:not(:disabled):not(.disabled):active, .btn-dark:not(:disabled):not(.disabled).active,
@@ -628,6 +641,7 @@ fieldset:disabled a.btn {
     color: #212529;
     background-color: #d6d4d4;
     border-color: #d6d4d4;
+    cursor: not-allowed;
 }
 
 .btn-gray:not(:disabled):not(.disabled):active, .btn-gray:not(:disabled):not(.disabled).active,
@@ -983,6 +997,10 @@ input[type="button"].btn-block {
 
 .modal-lg2 {
     width: 90vw;
+}
+
+.modal-lg3 {
+    width: 98vw;
 }
 
 .modal-h30 {

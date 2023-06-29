@@ -11,10 +11,14 @@ export class Model {
   title: any = "";
   titleModal: any = "";
   isCrear: any;
+  isSaved = false;
 
   IsLectura: any;
 
   lstTipoHallazgo: any = [];
+
+  hallazgo_id: any;
+  hallazgo_causa_raiz_id: any;
 
   varHallazgo: any = {
     hallazgo_id: 0,
@@ -38,6 +42,23 @@ export class Model {
   varCorreccion: any = [];
   varMejoramiento: any = [];
   varOrden: any = [];
+
+  varHCausa: any = {
+    descripcion_evidencia: "",
+    codigo: "",
+    nombre_inspeccion: ""
+  }
+
+  varHActividad: any = {
+    hallazgo_causa_raiz_id: 0,
+    hallazgo_id: 0,
+    causa_raiz: "",
+    usuario: ""
+  }
+
+  lstArchivo: any = [];
+  lstCausa: any = [];
+  lstActividad: any = [];
 }
 
 @Component({
@@ -64,7 +85,10 @@ export class AnotacionesComponent implements OnInit {
   consecutivo: any;
 
   selectModal: any;
+  selectUserModal: any;
   selectCriterioModal: any;
+  causaModal: any;
+  actividadModal: any;
 
   inputform: any;
   indexform: any;
@@ -178,9 +202,8 @@ export class AnotacionesComponent implements OnInit {
       let response: any = this.api.ProcesarRespuesta(data);
       if (response.tipo == 0) {
         response.result.forEach((x: any) => {
-          x.item1 = x.Name;
-          x.item2 = null;
-          x.item3 = null;
+          x.id = x.IdUserLDAP;
+          x.item = x.Name;
         });
         this.lstFuncionariosLDAP = response.result;
       }
@@ -212,12 +235,14 @@ export class AnotacionesComponent implements OnInit {
 
   closeSelectModal(bol: any) {
     this.selectModal = bol;
-    this.reload();
+  }
+
+  closeSelectUserModal(bol: any) {
+    this.selectUserModal = bol;
   }
 
   closeSelectCriterioModal(bol: any) {
     this.selectCriterioModal = bol;
-    this.reload();
   }
 
   openAnotacion() {
@@ -231,7 +256,6 @@ export class AnotacionesComponent implements OnInit {
     this.model.varOrden = [];
 
     this.getDepedenciasLDAP();
-    // this.getFuncionariosLDAP();
 
     setTimeout(() => {
       this.changeTipoHallazgo(0);
@@ -243,14 +267,107 @@ export class AnotacionesComponent implements OnInit {
     this.reload();
   }
 
+  getAnotacionCorreccion(id: any) {
+    this.anotacion.getAnotacionCorreccion({ hallazgo_id: id }).subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        response.result.forEach((x: any) => {
+          x.NuevoRegistro = false;
+          x.EliminarRegistro = true;
+        });
+        this.model.varCorreccion = response.result;
+      }
+    });
+  }
+
+  getAnotacionMejoramiento(id: any) {
+    this.anotacion.getAnotacionMejoramiento({ hallazgo_id: id }).subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        response.result.forEach((x: any) => {
+          x.NuevoRegistro = false;
+          x.EliminarRegistro = true;
+        });
+        this.model.varMejoramiento = response.result;
+      }
+    });
+  }
+
+  getAnotacionOrden(id: any) {
+    this.anotacion.getAnotacionOrden({ hallazgo_id: id }).subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        response.result.forEach((x: any) => {
+          x.NuevoRegistro = false;
+          x.EliminarRegistro = true;
+        });
+        this.model.varOrden = response.result;
+      }
+    });
+  }
+
   editAnotacion(data: any) {
-    // this.modal = true;
+    this.consecutivo
+    this.modal = true;
     this.model.title = 'Actualizar Hallazgo';
     this.model.isCrear = false;
     this.model.IsLectura = false;
 
     this.model.varHallazgo.hallazgo_id = data.hallazgo_id;
     this.model.varHallazgo.inspeccion_id = data.inspeccion_id;
+    this.model.varHallazgo.codigo = data.codigo;
+    this.model.varHallazgo.nombre_inspeccion = data.nombre_inspeccion;
+    this.model.varHallazgo.tipo_hallazgo_id = data.tipo_hallazgo_id;
+    this.model.varHallazgo.codificacion = data.codificacion;
+    this.model.varHallazgo.fecha = data.fecha;
+    this.model.varHallazgo.tema_catalogacion_id = data.tema_catalogacion_id;
+    this.model.varHallazgo.codigo_tema = data.codigo_tema;
+    this.model.varHallazgo.tema_catalogacion = data.tema_catalogacion;
+    this.model.varHallazgo.criterio_id = data.criterio_id;
+    this.model.varHallazgo.criterio = data.criterio;
+    this.model.varHallazgo.proceso = data.proceso;
+    this.model.varHallazgo.subproceso = data.subproceso;
+    this.model.varHallazgo.descripcion_evidencia = data.descripcion_evidencia;
+
+    this.anotacion.getAnotacionArchivo({ hallazgo_id: data.hallazgo_id }).subscribe(data1 => {
+      let response: any = this.api.ProcesarRespuesta(data1);
+      if (response.tipo == 0) {
+        response.result.forEach((x: any) => {
+          x.nombre = x.archivo.substr(0, x.archivo.indexOf('.'));
+          x.link = this.api.url_file + x.archivo;
+        });
+        this.model.lstArchivo = response.result;
+      }
+    });
+
+    this.anotacion.getConsecutivoHallazgo({ inspeccion_id: data.inspeccion_id }).subscribe(data1 => {
+      let response: any = this.api.ProcesarRespuesta(data1);
+      if (response.tipo == 0) {
+        this.codigo = response.result[0].codigo;
+        this.consecutivo = response.result[0].conthallazgo;
+      }
+    });
+
+    this.anotacion.getCriteriosInspeccion({ inspeccion_id: data.inspeccion_id }).subscribe(data1 => {
+      let response: any = this.api.ProcesarRespuesta(data1);
+      if (response.tipo == 0) {
+        response.result.forEach((x: any) => {
+          x.item1 = x.criterio;
+          x.item2 = x.proceso;
+          x.item3 = x.subproceso;
+        });
+
+        this.lstCriterios = response.result;
+      }
+    });
+
+    this.getAnotacionCorreccion(data.hallazgo_id);
+    this.getAnotacionMejoramiento(data.hallazgo_id);
+    this.getAnotacionOrden(data.hallazgo_id);
+
+    setTimeout(() => {
+      this.changeTipoHallazgo(data.tipo_hallazgo_id);
+    }, 100);
   }
 
   uploadFile(event: any) {
@@ -339,6 +456,14 @@ export class AnotacionesComponent implements OnInit {
     else if (i == 3) this.model.titleModal = 'Responsable Orden';
   }
 
+  saveResponsable(index: any) {
+    this.array = this.lstFuncionariosLDAP;
+    this.inputform = 'funcionarios';
+    this.indexform = index;
+    this.selectUserModal = true;
+    this.model.titleModal = 'Responsable';
+  }
+
   dataform(inputform: any, data: any) {
     if (inputform == 'inspeccion') {
       this.selectModal = false;
@@ -384,6 +509,12 @@ export class AnotacionesComponent implements OnInit {
       this.selectModal = false;
       this.model.varOrden[this.indexform].responsable_id = data.id;
       this.model.varOrden[this.indexform].responsable = data.Nombre;
+    }
+
+    if (inputform == 'funcionarios') {
+      this.selectUserModal = false;
+      this.model.lstActividad[this.indexform].responsable_id = data.id;
+      this.model.lstActividad[this.indexform].responsable = data.Name;
     }
 
     if (inputform == 'codigo-tema') {
@@ -470,11 +601,11 @@ export class AnotacionesComponent implements OnInit {
     formData.append('modelo', JSON.stringify(this.model.varHallazgo));
     formData.append('archivo', this.file);
 
-    this.anotacion.createAnotacion(formData).subscribe(data => {
+    this.anotacion.updateAnotacion(formData).subscribe(data => {
       let response: any = this.api.ProcesarRespuesta(data);
-      if (response.tipo == 0) {
-        let id = response.id;
+      let id = this.model.varHallazgo.hallazgo_id;
 
+      if (response.tipo == 0) {
         if (this.model.varCorreccion.length > 0) {
           this.model.varCorreccion.forEach((x: any) => {
             x.hallazgo_id = id;
@@ -527,6 +658,182 @@ export class AnotacionesComponent implements OnInit {
           this.modal = false;
           this.reload();
         })
+      }
+    });
+  }
+
+  getAnotacionCausaRaizInd(id: any) {
+    this.anotacion.getAnotacionCausaRaiz({ hallazgo_id: id }).subscribe(data => {
+      let response = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        if (response.result.length > 0) {
+          this.model.isSaved = true;
+          this.model.isCrear = false;
+        }
+        else {
+          this.model.isCrear = true;
+        }
+
+        response.result.forEach((x: any) => {
+          x.NuevoRegistro = false;
+          x.EliminarRegistro = true;
+        });
+        this.model.lstCausa = response.result;
+      }
+    });
+  }
+
+  getAnotacionActividadInd(id: any) {
+    this.anotacion.getAnotacionActividad({ hallazgo_causa_raiz_id: id}).subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        if (response.result.length > 0) {
+          this.model.isSaved = true;
+          this.model.isCrear = false;
+        }
+        else {
+          this.model.isCrear = true;
+        }
+
+        response.result.forEach((x: any) => {
+          x.NuevoRegistro = false;
+          x.EliminarRegistro = true;
+        });
+        this.model.lstActividad = response.result;
+      }
+    });
+  }
+
+  openCausa(data: any) {
+    this.causaModal = true;
+    this.model.IsLectura = false;
+
+    this.model.hallazgo_id = data.hallazgo_id;
+
+    this.model.varHCausa.descripcion_evidencia = data.descripcion_evidencia;
+    this.model.varHCausa.codigo = data.codigo;
+    this.model.varHCausa.nombre_inspeccion = data.nombre_inspeccion;
+
+    this.getAnotacionCausaRaizInd(data.hallazgo_id);
+
+    this.getFuncionariosLDAP();
+  }
+
+  closeCausa(bol: any) {
+    this.causaModal = bol;
+    this.reload();
+  }
+
+  openActividad(data: any) {
+    this.actividadModal = true;
+    this.model.IsLectura = false;
+
+    this.model.hallazgo_causa_raiz_id = data.hallazgo_causa_raiz_id;
+
+    this.model.varHActividad.hallazgo_causa_raiz_id = data.hallazgo_causa_raiz_id;
+    this.model.varHActividad.hallazgo_id = data.hallazgo_id;
+    this.model.varHActividad.causa_raiz = data.causa_raiz;
+    this.model.varHActividad.usuario = this.currentUser.usuario;
+
+    this.getAnotacionActividadInd(data.hallazgo_causa_raiz_id);
+  }
+
+  closeActividad(bol: any) {
+    this.actividadModal = bol;
+  }
+
+  addCausa() {
+    this.model.lstCausa.push({ hallazgo_causa_raiz_id: 0, hallazgo_id: 0, causa_raiz: "", usuario: this.currentUser.usuario, NuevoRegistro: true, EliminarRegistro: false });
+  }
+
+  deleteCausa(index: any) {
+    this.model.lstCausa.splice(index, 1);
+  }
+
+  addActividad() {
+    this.model.lstActividad.push({ hallazgo_actividad_id: 0, hallazgo_causa_raiz_id: 0, descripcion: "", entregable: "", cantidad_entregable: 0, fecha_inicio: null, fecha_termino: null, responsable_id: 0, responsable: "", usuario: this.currentUser.usuario, NuevoRegistro: true, EliminarRegistro: false });
+  }
+
+  deleteActividad(index: any) {
+    this.model.lstActividad.splice(index, 1);
+  }
+
+  crearCausa() {
+    if (this.model.lstCausa.length > 0) {
+      this.model.lstCausa.forEach((x: any) => {
+        x.hallazgo_id = this.model.hallazgo_id;
+        
+        if (x.NuevoRegistro == true) {
+          this.anotacion.createAnotacionCausaRaiz(x).subscribe(data => {});
+        }
+      });
+
+      this.getAnotacionCausaRaizInd(this.model.hallazgo_id);
+    }
+  }
+
+  actualizarCausa() {
+    if (this.model.lstCausa.length > 0) {
+      this.model.lstCausa.forEach((x: any) => {
+        x.hallazgo_id = this.model.hallazgo_id;
+        x.usuario = this.currentUser.usuario;
+        
+        if (x.NuevoRegistro == true) {
+          this.anotacion.createAnotacionCausaRaiz(x).subscribe(data => {});
+        }
+        else {
+          this.anotacion.updateAnotacionCausaRaiz(x).subscribe(data => {});
+        }
+      });
+
+      this.getAnotacionCausaRaizInd(this.model.hallazgo_id);
+    }
+  }
+
+  openActividadDescripcion(dato: any, index: any) {
+    Swal.fire({
+      title: 'Descripción',
+      input: 'textarea',
+      inputValue: dato.descripcion,
+      inputPlaceholder: 'Ingresa aquí...',
+      allowOutsideClick: false,
+      showConfirmButton: true,
+      confirmButtonText: 'Guardar'
+    }).then((result: any ) => {
+      if (result.value) {
+        this.model.lstActividad[index].descripcion = result.value
+      }
+    })
+  }
+
+  guardarActividad() {
+    this.anotacion.updateAnotacionCausaRaiz(this.model.varHActividad).subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        if (this.model.lstActividad.length > 0) {
+          this.model.lstActividad.forEach((x: any) => {
+            x.hallazgo_causa_raiz_id = this.model.hallazgo_causa_raiz_id;
+            x.usuario = this.currentUser.usuario;
+    
+            if (x.NuevoRegistro == true) {
+              this.anotacion.createAnotacionActividad(x).subscribe(data => {});
+            }
+            else {
+              this.anotacion.updateAnotacionActividad(x).subscribe(data => {});
+            }
+          });
+    
+          Swal.fire({
+            title: 'Actualizar Causa Raíz',
+            text: response.mensaje,
+            allowOutsideClick: false,
+            showConfirmButton: true,
+            icon: 'success'
+          }).then((result: any) => {
+            this.actividadModal = false;
+            this.getAnotacionCausaRaizInd({ hallazgo_id: this.model.varHActividad.hallazgo_id });
+          })
+        }
       }
     });
   }

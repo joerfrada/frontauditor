@@ -17,7 +17,7 @@
                         <th>Tema Catalogación</th>
                         <th>Fecha hallazgo</th>
                         <th>Tipo hallazgo</th>
-                        <!-- <th>Resumen del hallazgo</th> -->
+                        <th>Resumen del hallazgo</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -30,9 +30,11 @@
                         <td>{{ item.tema_catalogacion }}</td>
                         <td>{{ item.fecha }}</td>
                         <td>{{ item.tipo_hallazgo }}</td>
-                        <!-- <td>N/A</td> -->
                         <td class="buttons">
-                            <button type="button" class="btn btn-info" (click)="editAnotacion(item)"><i class="fa fa-pencil"> Editar</i></button>
+                            <button type="button" class="btn btn-info" (click)="openCausa(item)"><i class="fa fa-cogs"></i></button>
+                        </td>
+                        <td class="buttons">
+                            <button type="button" class="btn btn-info" (click)="editAnotacion(item)"><i class="fa fa-pencil"></i></button>
                         </td>
                     </tr>
                     <tr *ngIf="varhistorial?.length == 0">
@@ -125,9 +127,28 @@
                     <span>{{ model.varHallazgo.archivo }}</span>
                 </div>
             </div>
+            <div class="form-table" *ngIf="model.lstArchivo.length != 0">
+                <div class="table-content">
+                    <table class="table flex-table">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Descargar</th>
+                            </tr>
+                        </thead>
+                        <tbody class="scroll">
+                            <tr *ngFor="let item of model.lstArchivo">
+                                <td>{{ item.nombre }}</td>
+                                <td><button type="button" class="btn btn-info"><a href="{{ item.link }}"><i class="fa fa-download"></i></a></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="line-col"></div>
             <div class="row" *ngIf="tipo == 'I' || tipo == 'IR' || tipo == 'IV'">
                 <div class="input-group">
-                    <label style="color: #3F518D">Responsable Corrección <span class="form-required">(*)</span></label>
+                    <label>Responsable Corrección <span class="form-required">(*)</span></label>
                 </div>
             </div>
             <div class="form-table" *ngIf="tipo == 'I' || tipo == 'IR' || tipo == 'IV'">
@@ -241,3 +262,125 @@
         <button type="button" class="btn btn-danger" (click)="closeSelectCriterioModal(false)">Cerrar</button>
     </div>
 </app-select-modal>
+
+<app-modal [title]="'Detalle Hallazgo'" [show]="causaModal" [size]="'modal-lg1 modal-h90'" [scroll]="'modal-scroll'" (close)="closeCausa($event)">
+    <div role="body">
+        <div class="form-body">
+            <div class="row">
+                <div class="input-group">
+                    <label>Hallazgo:</label>
+                    <textarea class="form-control-text" style="height: 150px !important;" [(ngModel)]="model.varHCausa.descripcion_evidencia" disabled></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <label>Inspección Código:</label>
+                    <input type="text" class="form-control-text" [(ngModel)]="model.varHCausa.codigo" disabled>
+                </div>
+                <div class="input-group">
+                    <label>Nombre Inspección</label>
+                    <input type="text" class="form-control-text" [(ngModel)]="model.varHCausa.nombre_inspeccion" disabled>
+                </div>
+            </div>
+            <div class="line-col"></div>
+            <div class="col col100 title-row">Causa Raíz</div>
+            <div class="table-content">
+                <table class="table flex-table">
+                    <thead>
+                        <tr>
+                            <th>Causa Raíz</th>
+                            <th></th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of model.lstCausa; let i = index">
+                            <td>
+                                <input type="text" class="form-control" placeholder="Ingresa aquí..." title="{{ item.causa_raiz }}" [(ngModel)]="item.causa_raiz" [disabled]="model.IsLectura">
+                            </td>
+                            <td class="buttons">
+                                <button class="btn btn-info" *ngIf="model.lstCausa[i].NuevoRegistro != true" (click)="openActividad(item)"><i class="fa fa-pencil"></i></button>
+                                <button class="btn btn-secondary" *ngIf="model.lstCausa[i].NuevoRegistro" disabled><i class="fa fa-pencil"></i></button>
+                            </td>
+                            <td *ngIf="model.IsLectura == false">
+                                <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="model.lstCausa[i].NuevoRegistro" (click)="deleteCausa(i)"></i>
+                                <i class="fa fa-1m5x fa-trash pointer noselect" style="color: red !important;" *ngIf="model.lstCausa[i].EliminarRegistro"></i>
+                            </td>
+                        </tr>
+                        <tr class="add_row_full" *ngIf="model.IsLectura == false">
+                            <button type="button" class="btn btn-primary button" (click)="addCausa()">Agregar</button>
+                        </tr>
+                        <tr *ngIf="model.lstCausa.length == 0 && model.IsLectura == true">
+                            <div class="dbempty">No hay registros.</div>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div role="footer">
+        <button type="button" class="btn btn-danger" (click)="closeCausa(false)">Cerrar</button>
+        <button type="button" class="btn btn-primary" (click)="crearCausa()" *ngIf="model.isCrear == true">Guardar</button>
+        <button type="button" class="btn btn-primary" (click)="actualizarCausa()" *ngIf="model.isCrear == false">Actualizar</button>
+    </div>
+</app-modal>
+
+<app-modal [title]="'Editar Causa Raíz'" [show]="actividadModal" [size]="'modal-lg3 modal-h90'" [scroll]="'modal-scroll'" (close)="closeActividad($event)">
+    <div role="body">
+        <div class="form-body">
+            <div class="row">
+                <div class="input-group">
+                    <label>Causa del incumplimiento:</label>
+                    <textarea class="form-control" style="height: 150px !important;" [(ngModel)]="model.varHActividad.causa_raiz"></textarea>
+                </div>
+            </div>
+            <div class="line-col"></div>
+            <div class="col col100 title-row">Actividad</div>
+            <div class="table-content">
+                <table class="table flex-table">
+                    <thead>
+                        <tr>
+                            <th>Descripción</th>
+                            <th>Entregable</th>
+                            <th>Cantidad Entregable</th>
+                            <th>Fecha Inicio</th>
+                            <th>Fecha Termino</th>
+                            <th>Responsable</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="scroll">
+                        <tr *ngFor="let item of model.lstActividad; let i = index">
+                            <td><button type="button" class="btn btn-info" (click)="openActividadDescripcion(item, i)"><i class="fa fa-pencil"></i></button></td>
+                            <td><input type="text" class="form-control" placeholder="Ingresa aquí..." title="{{ item.entregable }}" [(ngModel)]="item.entregable" [disabled]="model.IsLectura"></td>
+                            <td><input type="number" class="form-control" [(ngModel)]="item.cantidad_entregable" [disabled]="model.IsLectura"></td>
+                            <td><input type="date" class="form-control" [(ngModel)]="item.fecha_inicio" [disabled]="model.IsLectura"></td>
+                            <td><input type="date" class="form-control" [(ngModel)]="item.fecha_termino" [disabled]="model.IsLectura"></td>
+                            <td><input type="text" class="form-control" placeholder="Seleccionar..." title="{{ item.responsable }}" [(ngModel)]="item.responsable" (click)="saveResponsable(i)" [disabled]="model.IsLectura"></td>
+                            <td *ngIf="model.IsLectura == false">
+                                <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="model.lstActividad[i].NuevoRegistro" (click)="deleteActividad(i)"></i>
+                                <i class="fa fa-1m5x fa-trash pointer noselect" style="color: red !important;" *ngIf="model.lstActividad[i].EliminarRegistro"></i>
+                            </td>
+                        </tr>
+                        <tr class="add_row_full" *ngIf="model.IsLectura == false">
+                            <button type="button" class="btn btn-primary button" (click)="addActividad()">Agregar</button>
+                        </tr>
+                        <tr *ngIf="model.lstActividad.length == 0 && model.IsLectura == true">
+                            <div class="dbempty">No hay registros.</div>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div role="footer">
+        <button type="button" class="btn btn-danger" (click)="closeActividad(false)">Cerrar</button>
+        <button type="button" class="btn btn-primary" (click)="guardarActividad()">Actualizar</button>
+    </div>
+</app-modal>
+
+<app-select-user-modal [title]="model.titleModal" [show]="selectUserModal" [size]="'modal-lg'" [array]="array" [arrayTemp]="array" (output)="dataform(inputform, $event)" (close)="closeSelectUserModal($event)">
+    <div role="footer">
+        <button type="button" class="btn btn-danger" (click)="closeSelectUserModal(false)">Cerrar</button>
+    </div>
+</app-select-user-modal>

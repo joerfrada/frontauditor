@@ -24,12 +24,22 @@ export class AnotacionService {
   private apiGetCriteriosInspeccion = this.api.getBaseUrl + "inspec/anotacion/getCriteriosInspeccion";
   private apiCreateAnotacion = this.api.getBaseUrl + "inspec/anotacion/crearAnotacion";
   private apiUpdateAnotacion = this.api.getBaseUrl + "inspec/anotacion/actualizarAnotacion";
+  private apiGetAnotacionArchivo = this.api.getBaseUrl + "inspec/anotacion/getAnotacionArchivo";
+  private apiGetAnotacionCorreccion = this.api.getBaseUrl + "inspec/anotacion/getAnotacionCorreccion";
   private apiCreateAnotacionCorreccion = this.api.getBaseUrl + "inspec/anotacion/crearAnotacionCorreccion";
   private apiUpdateAnotacionCorrecion = this.api.getBaseUrl + "inspec/anotacion/actualizarAnotacionCorreccion";
+  private apiGetAnotacionMejoramiento = this.api.getBaseUrl + "inspec/anotacion/getAnotacionMejoramiento";
   private apiCreateAnotacionMejoramiento = this.api.getBaseUrl + "inspec/anotacion/crearAnotacionMejoramiento";
   private apiUpdateAnotacionMejoramiento = this.api.getBaseUrl + "inspec/anotacion/actualizarAnotacionMejoramiento";
+  private apiGetAnotacionOrden = this.api.getBaseUrl + "inspec/anotacion/getAnotacionOrden";
   private apiCreateAnotacionOrden = this.api.getBaseUrl + "inspec/anotacion/crearAnotacionOrden";
   private apiUpdateAnotacionOrden = this.api.getBaseUrl + "inspec/anotacion/actualizarAnotacionOrden";
+  private apiGetAnotacionCausaRaiz = this.api.getBaseUrl + "inspec/anotacion/getAnotacionCausaRaiz";
+  private apiCreateAnotacionCausaRaiz = this.api.getBaseUrl + "inspec/anotacion/crearAnotacionCausaRaiz";
+  private apiUpdateAnotacionCausaRaiz = this.api.getBaseUrl + "inspec/anotacion/actualizarAnotacionCausaRaiz";
+  private apiGetAnotacionActividad = this.api.getBaseUrl + "inspec/anotacion/getAnotacionActividad";
+  private apiCreateAnotacionActividad = this.api.getBaseUrl + "inspec/anotacion/crearAnotacionActividad";
+  private apiUpdateAnotacionActividad = this.api.getBaseUrl + "inspec/anotacion/actualizarAnotacionActividad";
 
   constructor(private http: HttpClient, private api: ApiService) { }
 
@@ -108,33 +118,83 @@ export class AnotacionService {
     .pipe(retry(1), catchError(this.api.errorHandle));
   }
 
+  getAnotacionArchivo(data: any): Observable<any> {
+    return this.http.post<any>(this.apiGetAnotacionArchivo, data, this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  getAnotacionCorreccion(data: any): Observable<any> {
+    return this.http.post<any>(this.apiGetAnotacionCorreccion, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
   createAnotacionCorreccion(data: any): Observable<any> {
-    return this.http.post<any>(this.apiCreateAnotacionCorreccion, data)
+    return this.http.post<any>(this.apiCreateAnotacionCorreccion, JSON.stringify(data), this.api.getHttpOptions('g'))
     .pipe(retry(1), catchError(this.api.errorHandle));
   }
 
   updateAnotacionCorreccion(data: any): Observable<any> {
-    return this.http.post<any>(this.apiUpdateAnotacionCorrecion, data)
+    return this.http.post<any>(this.apiUpdateAnotacionCorrecion, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  getAnotacionMejoramiento(data: any): Observable<any> {
+    return this.http.post<any>(this.apiGetAnotacionMejoramiento, JSON.stringify(data), this.api.getHttpOptions('g'))
     .pipe(retry(1), catchError(this.api.errorHandle));
   }
 
   createAnotacionMejoramiento(data: any): Observable<any> {
-    return this.http.post<any>(this.apiCreateAnotacionMejoramiento, data)
+    return this.http.post<any>(this.apiCreateAnotacionMejoramiento, JSON.stringify(data), this.api.getHttpOptions('g'))
     .pipe(retry(1), catchError(this.api.errorHandle));
   }
 
   updateAnotacionMejoramiento(data: any): Observable<any> {
-    return this.http.post<any>(this.apiUpdateAnotacionMejoramiento, data)
+    return this.http.post<any>(this.apiUpdateAnotacionMejoramiento, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  getAnotacionOrden(data: any): Observable<any> {
+    return this.http.post<any>(this.apiGetAnotacionOrden, JSON.stringify(data), this.api.getHttpOptions('g'))
     .pipe(retry(1), catchError(this.api.errorHandle));
   }
 
   createAnotacionOrden(data: any): Observable<any> {
-    return this.http.post<any>(this.apiCreateAnotacionOrden, data)
+    return this.http.post<any>(this.apiCreateAnotacionOrden, JSON.stringify(data), this.api.getHttpOptions('g'))
     .pipe(retry(1), catchError(this.api.errorHandle));
   }
 
   updateAnotacionOrden(data: any): Observable<any> {
-    return this.http.post<any>(this.apiUpdateAnotacionOrden, data)
+    return this.http.post<any>(this.apiUpdateAnotacionOrden, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  getAnotacionCausaRaiz(data: any): Observable<any> {
+    return this.http.post<any>(this.apiGetAnotacionCausaRaiz, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  createAnotacionCausaRaiz(data: any): Observable<any> {
+    return this.http.post<any>(this.apiCreateAnotacionCausaRaiz, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  updateAnotacionCausaRaiz(data: any): Observable<any> {
+    return this.http.post<any>(this.apiUpdateAnotacionCausaRaiz, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  getAnotacionActividad(data: any): Observable<any> {
+    return this.http.post<any>(this.apiGetAnotacionActividad, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  createAnotacionActividad(data: any): Observable<any> {
+    return this.http.post<any>(this.apiCreateAnotacionActividad, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  updateAnotacionActividad(data: any): Observable<any> {
+    return this.http.post<any>(this.apiUpdateAnotacionActividad, JSON.stringify(data), this.api.getHttpOptions('g'))
     .pipe(retry(1), catchError(this.api.errorHandle));
   }
 }
