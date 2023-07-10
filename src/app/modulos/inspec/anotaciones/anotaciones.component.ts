@@ -33,6 +33,7 @@ export class Model {
     fecha: new Date(),
     criterio_id: "",
     proceso: "",
+    proceso_id: 0,
     subproceso: "",
     descripcion_evidencia: "",
     usuario: "",
@@ -326,6 +327,7 @@ export class AnotacionesComponent implements OnInit {
     this.model.varHallazgo.criterio_id = data.criterio_id;
     this.model.varHallazgo.criterio = data.criterio;
     this.model.varHallazgo.proceso = data.proceso;
+    this.model.varHallazgo.proceso_id = data.proceso_id;
     this.model.varHallazgo.subproceso = data.subproceso;
     this.model.varHallazgo.descripcion_evidencia = data.descripcion_evidencia;
 
@@ -529,6 +531,7 @@ export class AnotacionesComponent implements OnInit {
       this.model.varHallazgo.criterio_id = data.criterio_id;
       this.model.varHallazgo.criterio = data.criterio;
       this.model.varHallazgo.proceso = data.proceso;
+      this.model.varHallazgo.proceso_id = data.proceso_id;
       this.model.varHallazgo.subproceso = data.subproceso;
     }
   }
