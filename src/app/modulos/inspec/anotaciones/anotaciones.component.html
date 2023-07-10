@@ -283,13 +283,13 @@
                 </div>
             </div>
             <div class="line-col"></div>
-            <div class="col col100 title-row">Causa Raíz</div>
+            <div class="col col100 title-row">Causa del incumplimiento</div>
             <div class="table-content">
                 <table class="table flex-table">
                     <thead>
                         <tr>
-                            <th>Causa Raíz</th>
-                            <th></th>
+                            <th>Causa del incumplimiento</th>
+                            <th>Actividades</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -304,7 +304,7 @@
                             </td>
                             <td *ngIf="model.IsLectura == false">
                                 <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="model.lstCausa[i].NuevoRegistro" (click)="deleteCausa(i)"></i>
-                                <i class="fa fa-1m5x fa-trash pointer noselect" style="color: red !important;" *ngIf="model.lstCausa[i].EliminarRegistro"></i>
+                                <i class="fa fa-1m5x fa-trash pointer noselect" style="color: red !important;" *ngIf="model.lstCausa[i].EliminarRegistro" (click)="eliminarAnotacionCausaRaiz(i, item)"></i>
                             </td>
                         </tr>
                         <tr class="add_row_full" *ngIf="model.IsLectura == false">
@@ -359,7 +359,7 @@
                             <td><input type="text" class="form-control" placeholder="Seleccionar..." title="{{ item.responsable }}" [(ngModel)]="item.responsable" (click)="saveResponsable(i)" [disabled]="model.IsLectura"></td>
                             <td *ngIf="model.IsLectura == false">
                                 <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="model.lstActividad[i].NuevoRegistro" (click)="deleteActividad(i)"></i>
-                                <i class="fa fa-1m5x fa-trash pointer noselect" style="color: red !important;" *ngIf="model.lstActividad[i].EliminarRegistro"></i>
+                                <i class="fa fa-1m5x fa-trash pointer noselect" style="color: red !important;" *ngIf="model.lstActividad[i].EliminarRegistro" (click)="eliminarAnotacionActividad(i, item)"></i>
                             </td>
                         </tr>
                         <tr class="add_row_full" *ngIf="model.IsLectura == false">

@@ -37,9 +37,11 @@ export class AnotacionService {
   private apiGetAnotacionCausaRaiz = this.api.getBaseUrl + "inspec/anotacion/getAnotacionCausaRaiz";
   private apiCreateAnotacionCausaRaiz = this.api.getBaseUrl + "inspec/anotacion/crearAnotacionCausaRaiz";
   private apiUpdateAnotacionCausaRaiz = this.api.getBaseUrl + "inspec/anotacion/actualizarAnotacionCausaRaiz";
+  private apiDeleteAnotacionCausaRaiz = this.api.getBaseUrl + "inspec/anotacion/eliminarAnotacionCausaRaiz";
   private apiGetAnotacionActividad = this.api.getBaseUrl + "inspec/anotacion/getAnotacionActividad";
   private apiCreateAnotacionActividad = this.api.getBaseUrl + "inspec/anotacion/crearAnotacionActividad";
   private apiUpdateAnotacionActividad = this.api.getBaseUrl + "inspec/anotacion/actualizarAnotacionActividad";
+  private apiDeleteAnotacionActividad = this.api.getBaseUrl + "inspec/anotacion/eliminarAnotacionActividad";
 
   constructor(private http: HttpClient, private api: ApiService) { }
 
@@ -183,6 +185,11 @@ export class AnotacionService {
     .pipe(retry(1), catchError(this.api.errorHandle));
   }
 
+  deleteAnotacionCausaRaiz(data: any): Observable<any> {
+    return this.http.post<any>(this.apiDeleteAnotacionCausaRaiz, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
   getAnotacionActividad(data: any): Observable<any> {
     return this.http.post<any>(this.apiGetAnotacionActividad, JSON.stringify(data), this.api.getHttpOptions('g'))
     .pipe(retry(1), catchError(this.api.errorHandle));
@@ -195,6 +202,11 @@ export class AnotacionService {
 
   updateAnotacionActividad(data: any): Observable<any> {
     return this.http.post<any>(this.apiUpdateAnotacionActividad, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  deleteAnotacionActividad(data: any): Observable<any> {
+    return this.http.post<any>(this.apiDeleteAnotacionActividad, JSON.stringify(data), this.api.getHttpOptions('g'))
     .pipe(retry(1), catchError(this.api.errorHandle));
   }
 }

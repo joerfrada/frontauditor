@@ -789,7 +789,16 @@ export class AnotacionesComponent implements OnInit {
         }
       });
 
-      this.getAnotacionCausaRaizInd(this.model.hallazgo_id);
+      Swal.fire({
+        title: 'Actualizar Causa del incumplimiento',
+        text: 'Ha actualizado exitosamente',
+        allowOutsideClick: false,
+        showConfirmButton: true,
+        confirmButtonText: 'Aceptar',
+        icon: 'success'
+      }).then((result: any) => {
+        this.getAnotacionCausaRaizInd(this.model.hallazgo_id);
+      })
     }
   }
 
@@ -801,7 +810,10 @@ export class AnotacionesComponent implements OnInit {
       inputPlaceholder: 'Ingresa aquí...',
       allowOutsideClick: false,
       showConfirmButton: true,
-      confirmButtonText: 'Guardar'
+      showCancelButton: true,
+      confirmButtonText: 'Guardar',
+      cancelButtonText: 'Cancelar',
+      cancelButtonColor: "#ed1c24",
     }).then((result: any ) => {
       if (result.value) {
         this.model.lstActividad[index].descripcion = result.value
@@ -827,16 +839,62 @@ export class AnotacionesComponent implements OnInit {
           });
     
           Swal.fire({
-            title: 'Actualizar Causa Raíz',
+            title: 'Actualizar Actividad',
             text: response.mensaje,
             allowOutsideClick: false,
             showConfirmButton: true,
+            confirmButtonText: 'Aceptar',
             icon: 'success'
           }).then((result: any) => {
-            this.actividadModal = false;
             this.getAnotacionCausaRaizInd({ hallazgo_id: this.model.varHActividad.hallazgo_id });
           })
         }
+      }
+    });
+  }
+
+  eliminarAnotacionCausaRaiz(index: any, dato: any) {
+    Swal.fire({
+      title: 'Eliminar Causa del incumplimiento',
+      text: '¿Estás seguro que desea eliminar el registro?',
+      allowOutsideClick: false,
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar',
+      cancelButtonColor: "#ed1c24",
+      icon: 'question'
+    }).then((result: any) => {
+      if (result.dismiss != "cancel") {
+        this.anotacion.deleteAnotacionCausaRaiz({ hallazgo_causa_raiz_id: dato.hallazgo_causa_raiz_id }).subscribe(data => {
+          let response: any = this.api.ProcesarRespuesta(data);
+          if (response.tipo == 0) {
+            this.model.lstCausa.splice(index, 1);
+          }
+        });
+      }
+    });
+  }
+
+  eliminarAnotacionActividad(index: any, dato: any) {
+    Swal.fire({
+      title: 'Eliminar Actividad',
+      text: '¿Estás seguro que desea eliminar el registro?',
+      allowOutsideClick: false,
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar',
+      cancelButtonColor: "#ed1c24",
+      icon: 'question'
+    }).then((result: any) => {
+      if (result.dismiss != "cancel") {
+        this.anotacion.deleteAnotacionActividad({ hallazgo_actividad_id: dato.hallazgo_actividad_id }).subscribe(data => {
+          let response: any = this.api.ProcesarRespuesta(data);
+          if (response.tipo == 0) {
+            this.model.lstActividad.splice(index, 1);
+          }
+        });
       }
     });
   }
