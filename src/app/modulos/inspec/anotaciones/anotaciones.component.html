@@ -257,6 +257,12 @@
     </div>
 </app-select-modal>
 
+<app-select-codigo-modal [title]="model.titleModal" [show]="selectCodigoModal" [size]="'modal-lg modal-h70'" [array]="array" [arrayTemp]="array" (output)="dataform(inputform, $event)" (close)="closeSelectCodigoModal($event)">
+    <div role="footer">
+        <button type="button" class="btn btn-danger" (click)="closeSelectCodigoModal(false)">Cerrar</button>
+    </div>
+</app-select-codigo-modal>
+
 <app-select-modal [title]="model.titleModal" [titleHeader]="'Criterio,Proceso,SubProceso'" [show]="selectCriterioModal" [size]="'modal-lg modal-h70'" [array]="array" [arrayTemp]="array" (output)="dataform(inputform, $event)" (close)="closeSelectCriterioModal($event)">
     <div role="footer">
         <button type="button" class="btn btn-danger" (click)="closeSelectCriterioModal(false)">Cerrar</button>
@@ -325,7 +331,7 @@
     </div>
 </app-modal>
 
-<app-modal [title]="'Editar Causa Raíz'" [show]="actividadModal" [size]="'modal-lg3 modal-h90'" [scroll]="'modal-scroll'" (close)="closeActividad($event)">
+<app-modal [title]="'Editar Causa del incumplimiento'" [show]="actividadModal" [size]="'modal-lg3 modal-h90'" [scroll]="'modal-scroll'" (close)="closeActividad($event)">
     <div role="body">
         <div class="form-body">
             <div class="row">

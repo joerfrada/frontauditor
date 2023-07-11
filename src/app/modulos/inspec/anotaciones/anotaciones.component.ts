@@ -88,6 +88,7 @@ export class AnotacionesComponent implements OnInit {
   selectModal: any;
   selectUserModal: any;
   selectCriterioModal: any;
+  selectCodigoModal: any;
   causaModal: any;
   actividadModal: any;
 
@@ -244,6 +245,10 @@ export class AnotacionesComponent implements OnInit {
 
   closeSelectCriterioModal(bol: any) {
     this.selectCriterioModal = bol;
+  }
+
+  closeSelectCodigoModal(bol: any) {
+    this.selectCodigoModal = bol;
   }
 
   openAnotacion() {
@@ -437,7 +442,7 @@ export class AnotacionesComponent implements OnInit {
   saveCodigoTema() {
     this.array = this.lstCodigoTema;
     this.inputform = 'codigo-tema';
-    this.selectModal = true;
+    this.selectCodigoModal = true;
     this.model.titleModal = 'Código Tema';
   }
 
@@ -520,7 +525,7 @@ export class AnotacionesComponent implements OnInit {
     }
 
     if (inputform == 'codigo-tema') {
-      this.selectModal = false;
+      this.selectCodigoModal = false;
       this.model.varHallazgo.tema_catalogacion_id = data.tema_catalogacion_id;
       this.model.varHallazgo.codigo_tema = data.codigo_tema;
       this.model.varHallazgo.tema_catalogacion = data.tema_catalogacion;
