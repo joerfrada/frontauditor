@@ -10,6 +10,7 @@ export class SelectCodigoModalComponent implements OnInit {
   @ViewChild('input', { static: false }) private input!: ElementRef;
 
   @Input() title?: string;
+  @Input() titleHeader?: string;
   @Input() show?: Boolean;
   @Input() array?: any;
   @Input() arrayTemp?: any;
@@ -17,9 +18,13 @@ export class SelectCodigoModalComponent implements OnInit {
   @Output() close = new EventEmitter<Boolean>();
   @Output() output = new EventEmitter<any>();
 
+  arrTitle: any = [];
+
   constructor() { }
 
   ngOnInit(): void {
+    if (this.titleHeader == undefined) this.arrTitle.length = 0;
+    else this.arrTitle = this.titleHeader?.split(',');
   }
 
   closeModal() {

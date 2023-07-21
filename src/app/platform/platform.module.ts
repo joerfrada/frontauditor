@@ -24,6 +24,7 @@ import { TimePickerComponent } from '../views/time-picker/time-picker.component'
 import { SelectUserModalComponent } from '../views/select-user-modal/select-user-modal.component';
 import { InformePlanInspeccionComponent } from '../modulos/informes/informe-plan-inspeccion/informe-plan-inspeccion.component';
 import { SelectCodigoModalComponent } from '../views/select-codigo-modal/select-codigo-modal.component';
+import { SelectUnidadModalComponent } from '../views/select-unidad-modal/select-unidad-modal.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { SelectCodigoModalComponent } from '../views/select-codigo-modal/select-
     SelectUserModalComponent,
     InformePlanInspeccionComponent,
     SelectCodigoModalComponent,
+    SelectUnidadModalComponent,
   ],
   imports: [
     CommonModule,

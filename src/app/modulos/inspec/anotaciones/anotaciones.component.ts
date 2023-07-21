@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ApiService } from '../../../services/api.service';
 import { UserService } from '../../../services/admin/user.service';
 import { AnotacionService } from '../../../services/inspec/anotacion.service';
+import { InspeccionService } from '../../../services/inspec/inspeccion.service';
 import { Permiso } from 'src/app/modelos/permiso.model';
 
 declare var Swal:any;
@@ -10,6 +11,7 @@ declare var Swal:any;
 export class Model {
   title: any = "";
   titleModal: any = "";
+  titleHeaders: any = "";
   isCrear: any;
   isSaved = false;
 
@@ -86,9 +88,12 @@ export class AnotacionesComponent implements OnInit {
   consecutivo: any;
 
   selectModal: any;
+  selectInspeccionModal: any;
   selectUserModal: any;
   selectCriterioModal: any;
   selectCodigoModal: any;
+  selectUnidadModal: any;
+  selectUnidadActividadModal: any;
   causaModal: any;
   actividadModal: any;
 
@@ -100,10 +105,13 @@ export class AnotacionesComponent implements OnInit {
   lstCriterios: any = [];
   lstDependenciasLDAP: any = [];
   lstFuncionariosLDAP: any = [];
+  lstUnidades: any = [];
+
+  tipo_hallazgo: any;
 
   currentUser: any;
 
-  constructor(private router: Router, private api: ApiService, private usuario: UserService, private anotacion: AnotacionService) {
+  constructor(private router: Router, private api: ApiService, private usuario: UserService, private anotacion: AnotacionService, private inspeccion: InspeccionService) {
     this.currentUser = JSON.parse(localStorage.getItem("currentUser") as any);
   }
 
@@ -113,6 +121,7 @@ export class AnotacionesComponent implements OnInit {
     this.getInspecciones();
     this.getTipoHallazgo();
     this.getTemaCatalogacion();
+    this.getUnidadDependencias();
   }
 
   reload() {
@@ -235,8 +244,25 @@ export class AnotacionesComponent implements OnInit {
     });
   }
 
+  getUnidadDependencias() {
+    this.inspeccion.getUnidadDependencias().subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        response.result.forEach((x: any) => {
+          x.item1 = x.unidad;
+          x.item2 = x.dependencia;
+        });
+        this.lstUnidades = response.result;
+      }
+    });
+  }
+
   closeSelectModal(bol: any) {
     this.selectModal = bol;
+  }
+
+  closeSelectInspeccionModal(bol: any) {
+    this.selectInspeccionModal = bol;
   }
 
   closeSelectUserModal(bol: any) {
@@ -249,6 +275,14 @@ export class AnotacionesComponent implements OnInit {
 
   closeSelectCodigoModal(bol: any) {
     this.selectCodigoModal = bol;
+  }
+
+  closeSelectUnidadModal(bol: any) {
+    this.selectUnidadModal = bol;
+  }
+
+  closeSelectUnidadActividadModal(bol: any) {
+    this.selectUnidadActividadModal = bol;
   }
 
   openAnotacion() {
@@ -435,8 +469,9 @@ export class AnotacionesComponent implements OnInit {
   saveInspeccion() {
     this.array = this.lstInspeccion;
     this.inputform = 'inspeccion';
-    this.selectModal = true;
+    this.selectInspeccionModal = true;
     this.model.titleModal = 'Inspección';
+    this.model.titleHeaders = 'Código,Nombre Inspección'
   }
 
   saveCodigoTema() {
@@ -444,6 +479,7 @@ export class AnotacionesComponent implements OnInit {
     this.inputform = 'codigo-tema';
     this.selectCodigoModal = true;
     this.model.titleModal = 'Código Tema';
+    this.model.titleHeaders = 'Código,Tema Catalogación';
   }
 
   saveCriterio() {
@@ -471,9 +507,28 @@ export class AnotacionesComponent implements OnInit {
     this.model.titleModal = 'Responsable';
   }
 
+  saveUnidad(index: any, i: any) {
+    this.array = this.lstUnidades;
+    this.inputform = 'dependencias' + i.toString();
+    this.indexform = index;
+    this.selectUnidadModal = true;
+    if (i == 1) this.model.titleModal = 'Responsable Corrección';
+    else if (i == 2) this.model.titleModal = 'Responsable de Plan Mejoramiento';
+    else if (i == 3) this.model.titleModal = 'Responsable Orden';
+    else if (i == 4) this.model.titleModal = 'Responsable Actividad';
+  }
+
+  saveUnidadActividad(index: any) {
+    this.array = this.lstUnidades;
+    this.inputform = 'dependencias-actividad';
+    this.indexform = index;
+    this.selectUnidadActividadModal = true;
+    this.model.titleModal = 'Responsable Actividad';
+  }
+
   dataform(inputform: any, data: any) {
     if (inputform == 'inspeccion') {
-      this.selectModal = false;
+      this.selectInspeccionModal = false;
       this.model.varHallazgo.inspeccion_id = data.inspeccion_id;
       this.model.varHallazgo.codigo = data.codigo;
       this.model.varHallazgo.nombre_inspeccion = data.nombre_inspeccion;
@@ -501,21 +556,31 @@ export class AnotacionesComponent implements OnInit {
     }
 
     if (inputform == 'dependencias1') {
-      this.selectModal = false;
-      this.model.varCorreccion[this.indexform].responsable_id = data.id;
-      this.model.varCorreccion[this.indexform].responsable = data.Nombre;
+      this.selectUnidadModal = false;
+      this.model.varCorreccion[this.indexform].responsable_id = data.unidad_id;
+      this.model.varCorreccion[this.indexform].unidad = data.unidad;
+      this.model.varCorreccion[this.indexform].dependencia = data.dependencia;
     }
 
     if (inputform == 'dependencias2') {
-      this.selectModal = false;
-      this.model.varMejoramiento[this.indexform].responsable_id = data.id;
-      this.model.varMejoramiento[this.indexform].responsable = data.Nombre;
+      this.selectUnidadModal = false;
+      this.model.varMejoramiento[this.indexform].responsable_id = data.unidad_id;
+      this.model.varMejoramiento[this.indexform].unidad = data.unidad;
+      this.model.varMejoramiento[this.indexform].dependencia = data.dependencia;
     }
 
     if (inputform == 'dependencias3') {
-      this.selectModal = false;
-      this.model.varOrden[this.indexform].responsable_id = data.id;
-      this.model.varOrden[this.indexform].responsable = data.Nombre;
+      this.selectUnidadModal = false;
+      this.model.varOrden[this.indexform].responsable_id = data.unidad_id;
+      this.model.varOrden[this.indexform].unidad = data.unidad;
+      this.model.varOrden[this.indexform].dependencia = data.dependencia;
+    }
+
+    if (inputform == 'dependencias-actividad') {
+      this.selectUnidadActividadModal = false;
+      this.model.lstActividad[this.indexform].responsable_id = data.unidad_id;
+      this.model.lstActividad[this.indexform].unidad = data.unidad;
+      this.model.lstActividad[this.indexform].dependencia = data.dependencia;
     }
 
     if (inputform == 'funcionarios') {
@@ -742,6 +807,8 @@ export class AnotacionesComponent implements OnInit {
     this.model.varHActividad.hallazgo_id = data.hallazgo_id;
     this.model.varHActividad.causa_raiz = data.causa_raiz;
     this.model.varHActividad.usuario = this.currentUser.usuario;
+
+    this.tipo_hallazgo = data.tipo_hallazgo;
 
     this.getAnotacionActividadInd(data.hallazgo_causa_raiz_id);
   }

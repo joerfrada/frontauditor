@@ -1,11 +1,11 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 
 @Component({
-  selector: 'app-select-modal',
-  templateUrl: './select-modal.component.html',
-  styleUrls: ['./select-modal.component.scss']
+  selector: 'app-select-unidad-modal',
+  templateUrl: './select-unidad-modal.component.html',
+  styleUrls: ['./select-unidad-modal.component.scss']
 })
-export class SelectModalComponent implements OnInit {
+export class SelectUnidadModalComponent {
 
   @ViewChild('input', { static: false }) private input!: ElementRef;
 
@@ -42,23 +42,9 @@ export class SelectModalComponent implements OnInit {
     }
     else {
       this.array = this.arrayTemp.filter((x: any) => {
-        if (x.item2 == null || x.item3 == null) {
-          if (x.item1.toString().toLowerCase().indexOf(filter) !== -1) {
-            return true;
-          }
-        }
-        else if (x.item3 == null) {
-          if (x.item1.toString().toLowerCase().indexOf(filter) !== -1 ||
-              x.item2.toString().toLowerCase().indexOf(filter) !== -1) {
-            return true;
-          }
-        }
-        else if (x.item2 != null || x.item3 != null) {
-          if (x.item1.toString().toLowerCase().indexOf(filter) !== -1 ||
-              x.item2.toString().toLowerCase().indexOf(filter) !== -1 ||
-              x.item3.toString().toLowerCase().indexOf(filter) !== -1) {
-            return true;
-          }
+        if (x.item1.toString().toLowerCase().indexOf(filter) !== -1 ||
+            x.item2.toString().toLowerCase().indexOf(filter) !== -1) {
+          return true;
         }
         return false;
       });

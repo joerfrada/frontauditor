@@ -162,7 +162,7 @@
                         </thead>
                         <tbody class="scroll">
                             <tr *ngFor="let item of model.varCorreccion; let i = index">
-                                <td><input type="text" class="form-control" placeholder="Seleccionar..." [(ngModel)]="item.responsable" (click)="saveDependencias(i, 1)" [disabled]="model.IsLectura"></td>
+                                <td><input type="text" class="form-control" placeholder="Seleccionar..." [(ngModel)]="item.dependencia" (click)="saveUnidad(i, 1)" [disabled]="model.IsLectura"></td>
                                 <td *ngIf="model.IsLectura == false">
                                     <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="model.varCorreccion[i].NuevoRegistro" (click)="deleteCorreccion(i)"></i>
                                     <i class="fa fa-1m5x fa-trash pointer noselect" style="color: red !important;" *ngIf="model.varCorreccion[i].EliminarRegistro"></i>
@@ -178,7 +178,7 @@
                     </table>
                 </div>
             </div>
-            <div class="row" *ngIf="tipo == 'I' || tipo == 'IR' || tipo == 'R'">
+            <div class="row" *ngIf="tipo == 'I' || tipo == 'IR' || tipo == 'IV' || tipo == 'R'">
                 <div class="input-group">
                     <label>Responsable Plan de Mejoramiento <span class="form-required">(*)</span></label>
                 </div>
@@ -194,7 +194,7 @@
                         </thead>
                         <tbody class="scroll">
                             <tr *ngFor="let item of model.varMejoramiento; let i = index">
-                                <td><input type="text" class="form-control" placeholder="Seleccionar..." [(ngModel)]="item.responsable" (click)="saveDependencias(i, 2)" [disabled]="model.IsLectura"></td>
+                                <td><input type="text" class="form-control" placeholder="Seleccionar..." [(ngModel)]="item.dependencia" (click)="saveUnidad(i, 2)" [disabled]="model.IsLectura"></td>
                                 <td *ngIf="model.IsLectura == false">
                                     <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="model.varMejoramiento[i].NuevoRegistro" (click)="deleteMejoramiento(i)"></i>
                                     <i class="fa fa-1m5x fa-trash pointer noselect" style="color: red !important;" *ngIf="model.varMejoramiento[i].EliminarRegistro"></i>
@@ -210,7 +210,7 @@
                     </table>
                 </div>
             </div>
-            <div class="row" *ngIf="tipo == 'AR' || tipo == 'I' || tipo == 'IR' || tipo == 'IV' || tipo == 'R' || tipo == 'O'">
+            <div class="row" *ngIf="tipo == 'O'">
                 <div class="input-group">
                     <label>Responsable Orden <span class="form-required">(*)</span></label>
                 </div>
@@ -226,7 +226,7 @@
                         </thead>
                         <tbody class="scroll">
                             <tr *ngFor="let item of model.varOrden; let i = index">
-                                <td><input type="text" class="form-control" placeholder="Seleccionar..." [(ngModel)]="item.responsable" (click)="saveDependencias(i, 3)" [disabled]="model.IsLectura"></td>
+                                <td><input type="text" class="form-control" placeholder="Seleccionar..." [(ngModel)]="item.dependencia" (click)="saveUnidad(i, 3)" [disabled]="model.IsLectura"></td>
                                 <td *ngIf="model.IsLectura == false">
                                     <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="model.varOrden[i].NuevoRegistro" (click)="deleteOrden(i)"></i>
                                     <i class="fa fa-1m5x fa-trash pointer noselect" style="color: red !important;" *ngIf="model.varOrden[i].EliminarRegistro"></i>
@@ -257,7 +257,13 @@
     </div>
 </app-select-modal>
 
-<app-select-codigo-modal [title]="model.titleModal" [show]="selectCodigoModal" [size]="'modal-lg modal-h70'" [array]="array" [arrayTemp]="array" (output)="dataform(inputform, $event)" (close)="closeSelectCodigoModal($event)">
+<app-select-modal [title]="model.titleModal" [titleHeader]="'Código,Nombre Inspección'" [show]="selectInspeccionModal" [size]="'modal-lg modal-h70'" [array]="array" [arrayTemp]="array" (output)="dataform(inputform, $event)" (close)="closeSelectInspeccionModal($event)">
+    <div role="footer">
+        <button type="button" class="btn btn-danger" (click)="closeSelectInspeccionModal(false)">Cerrar</button>
+    </div>
+</app-select-modal>
+
+<app-select-codigo-modal [title]="model.titleModal" [titleHeader]="'Código,Tema Catalogación'" [show]="selectCodigoModal" [size]="'modal-lg modal-h70'" [array]="array" [arrayTemp]="array" (output)="dataform(inputform, $event)" (close)="closeSelectCodigoModal($event)">
     <div role="footer">
         <button type="button" class="btn btn-danger" (click)="closeSelectCodigoModal(false)">Cerrar</button>
     </div>
@@ -266,6 +272,12 @@
 <app-select-modal [title]="model.titleModal" [titleHeader]="'Criterio,Proceso,SubProceso'" [show]="selectCriterioModal" [size]="'modal-lg modal-h70'" [array]="array" [arrayTemp]="array" (output)="dataform(inputform, $event)" (close)="closeSelectCriterioModal($event)">
     <div role="footer">
         <button type="button" class="btn btn-danger" (click)="closeSelectCriterioModal(false)">Cerrar</button>
+    </div>
+</app-select-modal>
+
+<app-select-modal [title]="'Unidad'" [titleHeader]="'Unidad,Dependencia'" [show]="selectUnidadModal" [size]="'modal-md modal-h70'" [array]="array" [arrayTemp]="array" (output)="dataform(inputform, $event)" (close)="closeSelectUnidadModal($event)">
+    <div role="footer">
+        <button type="button" class="btn btn-danger" (click)="closeSelectUnidadModal(false)">Cerrar</button>
     </div>
 </app-select-modal>
 
@@ -351,7 +363,7 @@
                             <th>Cantidad Entregable</th>
                             <th>Fecha Inicio</th>
                             <th>Fecha Termino</th>
-                            <th>Responsable</th>
+                            <th *ngIf="tipo_hallazgo != 'AR' && tipo_hallazgo != 'O'">Responsable</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -362,7 +374,7 @@
                             <td><input type="number" class="form-control" [(ngModel)]="item.cantidad_entregable" [disabled]="model.IsLectura"></td>
                             <td><input type="date" class="form-control" [(ngModel)]="item.fecha_inicio" [disabled]="model.IsLectura"></td>
                             <td><input type="date" class="form-control" [(ngModel)]="item.fecha_termino" [disabled]="model.IsLectura"></td>
-                            <td><input type="text" class="form-control" placeholder="Seleccionar..." title="{{ item.responsable }}" [(ngModel)]="item.responsable" (click)="saveResponsable(i)" [disabled]="model.IsLectura"></td>
+                            <td *ngIf="tipo_hallazgo != 'AR' && tipo_hallazgo != 'O'"><input type="text" class="form-control" placeholder="Seleccionar..." title="{{ item.dependencia }}" [(ngModel)]="item.dependencia" (click)="saveUnidadActividad(i)" [disabled]="model.IsLectura"></td>
                             <td *ngIf="model.IsLectura == false">
                                 <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="model.lstActividad[i].NuevoRegistro" (click)="deleteActividad(i)"></i>
                                 <i class="fa fa-1m5x fa-trash pointer noselect" style="color: red !important;" *ngIf="model.lstActividad[i].EliminarRegistro" (click)="eliminarAnotacionActividad(i, item)"></i>
@@ -384,6 +396,12 @@
         <button type="button" class="btn btn-primary" (click)="guardarActividad()">Actualizar</button>
     </div>
 </app-modal>
+
+<app-select-unidad-modal [title]="'Unidad'" [titleHeader]="'Unidad,Dependencia'" [show]="selectUnidadActividadModal" [size]="'modal-md modal-h70'" [array]="array" [arrayTemp]="array" (output)="dataform(inputform, $event)" (close)="closeSelectUnidadActividadModal($event)">
+    <div role="footer">
+        <button type="button" class="btn btn-danger" (click)="closeSelectUnidadActividadModal(false)">Cerrar</button>
+    </div>
+</app-select-unidad-modal>
 
 <app-select-user-modal [title]="model.titleModal" [show]="selectUserModal" [size]="'modal-lg'" [array]="array" [arrayTemp]="array" (output)="dataform(inputform, $event)" (close)="closeSelectUserModal($event)">
     <div role="footer">
