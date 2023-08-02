@@ -1,0 +1,88 @@
+a {
+    text-decoration: none;
+    color: white;
+}
+
+.table-content-1 {
+    overflow-x: auto;
+}
+
+.table1 {
+    .fa-check-circle {
+        color: green;
+    }
+
+    .fa-times-circle, .fa-trash {
+        color: red;
+    }
+
+    .fa-1m5x {
+        font-size: 1.3em;
+    }
+
+    .button {
+        font-size: 12px;
+        padding: 3px 8px;
+    }
+}
+
+// .table.table-condensed.table-striped {
+//     border-collapse: collapse;
+//     width: 1200px;
+//     overflow-x: scroll;
+//     display: block;
+// }
+
+.table-condensed.table-striped thead, .table-condensed.table-striped tbody {
+    display: block;
+}
+
+.table-condensed.table-striped tbody {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: calc(100vh - 310px);
+}
+
+// .table1>thead>tr>th {
+//     vertical-align: bottom;
+// }
+
+.table-condensed.table-striped td, .table-condensed.table-striped th {
+    min-width: 150px;
+    height: 25px;
+    overflow: hidden;
+    max-width: 150px;
+}
+
+.tablehead {
+    background-color: #3F518D;
+    color: #fff;
+}
+
+.table-condensed>thead.tablehead>tr>th {
+    padding: 10px;
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.table-condensed>tbody.tablebody>tr {
+    text-align: center;
+}
+
+.table-condensed>tbody.tablebody>tr>td {
+    padding: 5px 10px;
+    font-weight: 400;
+    font-size: 14px;
+}
+
+.table-striped>tbody>tr:nth-of-type(even) {
+    background-color: #e4e4e5;
+    min-width: 100%;
+    display: inline-block;
+}
+
+.table-striped>tbody>tr:nth-of-type(odd) {
+    background-color: #f6f6f6;
+    min-width: 100%;
+    display: inline-block;
+}

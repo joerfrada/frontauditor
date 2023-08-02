@@ -15,6 +15,8 @@ export class ApiService {
   private informe = this.url + "apiauditor/informe/";
   public url_image = this.url + "apiauditor/public/secad/Personal/Fotos/";
   public url_file = this.url + "apiauditor/public/files/";
+  public url_file_seg = this.url + "apiauditor/public/files/seguim/";
+  public url_export = this.url + "apiauditor/export/";
 
   constructor() { }
 

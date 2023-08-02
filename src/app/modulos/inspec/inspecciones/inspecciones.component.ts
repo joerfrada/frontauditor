@@ -1097,6 +1097,7 @@ export class InspeccionesComponent implements OnInit {
         html: '<div class="align-left"><b>Requiere llenar los campos:</b><br />' + error_msg + '</div>',
         allowOutsideClick: false,
         showConfirmButton: true,
+        confirmButtonText: 'Aceptar',
         icon: 'error'
       })
     }
@@ -1161,6 +1162,7 @@ export class InspeccionesComponent implements OnInit {
             text: response.mensaje,
             allowOutsideClick: false,
             showConfirmButton: true,
+            confirmButtonText: 'Aceptar',
             icon: 'success'
           }).then((result: any) => {
             this.modal = false;
@@ -1260,6 +1262,7 @@ export class InspeccionesComponent implements OnInit {
         html: '<div class="align-left"><b>Requiere llenar los campos:</b><br />' + error_msg + '</div>',
         allowOutsideClick: false,
         showConfirmButton: true,
+        confirmButtonText: 'Aceptar',
         icon: 'error'
       })
     }
@@ -1337,6 +1340,7 @@ export class InspeccionesComponent implements OnInit {
             text: response.mensaje,
             allowOutsideClick: false,
             showConfirmButton: true,
+            confirmButtonText: 'Aceptar',
             icon: 'success'
           }).then((result: any) => {
             this.modal = false;
@@ -1359,6 +1363,7 @@ export class InspeccionesComponent implements OnInit {
           text: response.mensaje,
           allowOutsideClick: false,
           showConfirmButton: true,
+          confirmButtonText: 'Aceptar',
           icon: 'success'
         }).then((result: any) => {
           this.f_planModal = false;
@@ -1379,6 +1384,7 @@ export class InspeccionesComponent implements OnInit {
           text: response.mensaje,
           allowOutsideClick: false,
           showConfirmButton: true,
+          confirmButtonText: 'Aceptar',
           icon: 'success'
         }).then((result: any) => {
           this.f_planModal = false;
@@ -1400,6 +1406,7 @@ export class InspeccionesComponent implements OnInit {
           text: response.mensaje,
           allowOutsideClick: false,
           showConfirmButton: true,
+          confirmButtonText: 'Aceptar',
           icon: 'success'
         }).then((result: any) => {
           this.f_actividadModal = false;
@@ -1421,6 +1428,7 @@ export class InspeccionesComponent implements OnInit {
           text: response.mensaje,
           allowOutsideClick: false,
           showConfirmButton: true,
+          confirmButtonText: 'Aceptar',
           icon: 'success'
         }).then((result: any) => {
           this.f_actividadModal = false;

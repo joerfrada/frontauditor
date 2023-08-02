@@ -103,6 +103,7 @@ body {
 ::-webkit-scrollbar {
     background-color: #f1f1f1;
     width: 10px;
+    height: 10px;
 }
 
 ::-webkit-scrollbar-track {
@@ -685,6 +686,11 @@ input[type="button"].btn-block {
     }
 }
 
+.filter-left {
+    background-color: #0069d9;
+    justify-content: space-around;
+}
+
 .filter-content input[type=search] {
     display: inline-block;      
     text-align: left;
@@ -777,6 +783,10 @@ input[type="button"].btn-block {
     flex: 1;
     overflow-y: auto; 
     display: block;
+}
+
+.flex-table-scroll {
+    overflow-x: auto;
 }
 
 .table-content table.flex-table tr {
@@ -977,6 +987,10 @@ input[type="button"].btn-block {
 
 .modal-md {
     width: 35vw;
+}
+
+.modal-md-1 {
+    width: 45vw;
 }
 
 .modal-lg {
@@ -1198,4 +1212,15 @@ input[type=file] {
 
 .align-left {
     text-align: left;
+}
+
+.label-archivo {
+    position: relative;
+    top: -25px;
+    left: 220px;
+}
+
+.cal {
+    width: 20px;
+    height: 20px;
 }

@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { PlatformRoutingModule } from './platform-routing.module';
 import { PlatformComponent } from './platform.component';
+import { NotnegativeDirective } from '../directives/notnegative.directive';
 import { LayoutModule } from '../layout/layout.module';
 import { CardComponent } from '../views/card/card.component';
 import { ModalComponent } from '../views/modal/modal.component';
@@ -25,10 +26,13 @@ import { SelectUserModalComponent } from '../views/select-user-modal/select-user
 import { InformePlanInspeccionComponent } from '../modulos/informes/informe-plan-inspeccion/informe-plan-inspeccion.component';
 import { SelectCodigoModalComponent } from '../views/select-codigo-modal/select-codigo-modal.component';
 import { SelectUnidadModalComponent } from '../views/select-unidad-modal/select-unidad-modal.component';
+import { InformeSeguimientoComponent } from '../modulos/informes/informe-seguimiento/informe-seguimiento.component';
+
 
 @NgModule({
   declarations: [
     PlatformComponent,
+    NotnegativeDirective,
     CardComponent,
     ModalComponent,
     SelectModalComponent,
@@ -48,6 +52,7 @@ import { SelectUnidadModalComponent } from '../views/select-unidad-modal/select-
     InformePlanInspeccionComponent,
     SelectCodigoModalComponent,
     SelectUnidadModalComponent,
+    InformeSeguimientoComponent,
   ],
   imports: [
     CommonModule,

@@ -124,7 +124,7 @@
                     <label>Documentos</label>
                     <button type="button" class="btn btn-info" (click)="fileUpload.click()" style="width: 200px !important;">Elegir archivos</button>
                     <input type="file" #fileUpload (change)="uploadFile($event)">
-                    <span>{{ model.varHallazgo.archivo }}</span>
+                    <span class="label-archivo">{{ model.varHallazgo.archivo }}</span>
                 </div>
             </div>
             <div class="form-table" *ngIf="model.lstArchivo.length != 0">
@@ -183,7 +183,7 @@
                     <label>Responsable Plan de Mejoramiento <span class="form-required">(*)</span></label>
                 </div>
             </div>
-            <div class="form-table" *ngIf="tipo == 'I' || tipo == 'IR' || tipo == 'R'">
+            <div class="form-table" *ngIf="tipo == 'I' || tipo == 'IR' || tipo == 'IV' || tipo == 'R'">
                 <div class="table-content">
                     <table class="table flex-table">
                         <thead>
@@ -215,7 +215,7 @@
                     <label>Responsable Orden <span class="form-required">(*)</span></label>
                 </div>
             </div>
-            <div class="form-table" *ngIf="tipo == 'AR' || tipo == 'I' || tipo == 'IR' || tipo == 'IV' || tipo == 'R' || tipo == 'O'">
+            <div class="form-table" *ngIf="tipo == 'O'">
                 <div class="table-content">
                     <table class="table flex-table">
                         <thead>

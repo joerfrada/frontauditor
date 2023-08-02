@@ -557,30 +557,30 @@ export class AnotacionesComponent implements OnInit {
 
     if (inputform == 'dependencias1') {
       this.selectUnidadModal = false;
-      this.model.varCorreccion[this.indexform].responsable_id = data.unidad_id;
+      this.model.varCorreccion[this.indexform].responsable_id = data.dependencia_id;
       this.model.varCorreccion[this.indexform].unidad = data.unidad;
-      this.model.varCorreccion[this.indexform].dependencia = data.dependencia;
+      this.model.varCorreccion[this.indexform].dependencia = data.unidad + ' /'  + data.dependencia;
     }
 
     if (inputform == 'dependencias2') {
       this.selectUnidadModal = false;
-      this.model.varMejoramiento[this.indexform].responsable_id = data.unidad_id;
+      this.model.varMejoramiento[this.indexform].responsable_id = data.dependencia_id;
       this.model.varMejoramiento[this.indexform].unidad = data.unidad;
-      this.model.varMejoramiento[this.indexform].dependencia = data.dependencia;
+      this.model.varMejoramiento[this.indexform].dependencia = data.unidad + ' / '  + data.dependencia;
     }
 
     if (inputform == 'dependencias3') {
       this.selectUnidadModal = false;
-      this.model.varOrden[this.indexform].responsable_id = data.unidad_id;
+      this.model.varOrden[this.indexform].responsable_id = data.dependencia_id;
       this.model.varOrden[this.indexform].unidad = data.unidad;
-      this.model.varOrden[this.indexform].dependencia = data.dependencia;
+      this.model.varOrden[this.indexform].dependencia = data.unidad + ' / '  + data.dependencia;
     }
 
     if (inputform == 'dependencias-actividad') {
       this.selectUnidadActividadModal = false;
-      this.model.lstActividad[this.indexform].responsable_id = data.unidad_id;
+      this.model.lstActividad[this.indexform].responsable_id = data.dependencia_id;
       this.model.lstActividad[this.indexform].unidad = data.unidad;
-      this.model.lstActividad[this.indexform].dependencia = data.dependencia;
+      this.model.lstActividad[this.indexform].dependencia = data.unidad + ' / '  + data.dependencia;
     }
 
     if (inputform == 'funcionarios') {
@@ -837,6 +837,7 @@ export class AnotacionesComponent implements OnInit {
     if (this.model.lstCausa.length > 0) {
       this.model.lstCausa.forEach((x: any) => {
         x.hallazgo_id = this.model.hallazgo_id;
+        x.usuario = this.currentUser.usuario;
         
         if (x.NuevoRegistro == true) {
           this.anotacion.createAnotacionCausaRaiz(x).subscribe(data => {});
@@ -918,7 +919,7 @@ export class AnotacionesComponent implements OnInit {
             confirmButtonText: 'Aceptar',
             icon: 'success'
           }).then((result: any) => {
-            this.getAnotacionCausaRaizInd({ hallazgo_id: this.model.varHActividad.hallazgo_id });
+            this.getAnotacionActividadInd(this.model.hallazgo_causa_raiz_id);
           })
         }
       }
