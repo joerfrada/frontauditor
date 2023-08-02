@@ -19,6 +19,7 @@ export class SeguimientoService {
   private apiGetSeguimientoArchivo = this.api.getBaseUrl + "seguim/seguimiento/getSeguimientoArchivo";
   private apiCreateSeguimientos = this.api.getBaseUrl + "seguim/seguimiento/crearSeguimientos";
   private apiUpdateSeguimientos = this.api.getBaseUrl + "seguim/seguimiento/actualizarSeguimientos";
+  private apiExportSeguimientos = this.api.getBaseUrl + "seguim/seguimiento/exportarSeguimientos";
 
   constructor(private http: HttpClient, private api: ApiService) { }
 
@@ -69,6 +70,11 @@ export class SeguimientoService {
 
   updateSeguimientos(data: any): Observable<any> {
     return this.http.post<any>(this.apiUpdateSeguimientos, data)
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  exportSeguimientos(): Observable<any> {
+    return this.http.get<any>(this.apiExportSeguimientos, this.api.getHttpOptions('g'))
     .pipe(retry(1), catchError(this.api.errorHandle));
   }
 }

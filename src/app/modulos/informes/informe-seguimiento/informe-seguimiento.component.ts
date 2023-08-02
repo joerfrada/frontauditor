@@ -4,6 +4,7 @@ import { ApiService } from '../../../services/api.service';
 import { UserService } from '../../../services/admin/user.service';
 import { SeguimientoService } from '../../../services/seguim/seguimiento.service';
 import { Permiso } from 'src/app/modelos/permiso.model';
+import { Utilidades } from '../../../helper/utilidades';
 import { Workbook } from 'exceljs';
 
 declare var Swal:any;
@@ -73,13 +74,43 @@ export class InformeSeguimientoComponent implements OnInit {
   lstCausa: any = [];
   lstActividad: any = [];
 
+  cells: any = [
+    "A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1", "I1", "J1", "K1", "L1", "M1", "N1", "O1", "P1", "Q1", "R1", "S1", "T1", "U1", "V1", "W1", "X1", "Y1"
+  ];
+
+  cellHeaders: any = [
+    "ID",
+    "Porcentaje",
+    "Código Inspección",
+    "Nombre Inspección",
+    "Tipo Inspección",
+    "Unidad",
+    "Dependencia",
+    "Código Hallazgo",
+    "Descripción Hallazgo",
+    "Fecha Hallazgo",
+    "Criterio que se incumple",
+    "Causa del Incumplimiento",
+    "Actividad",
+    "Entregable",
+    "Cantidad Entregable",
+    "Fecha Inicio",
+    "Fecha Término",
+    "Código Tema",
+    "Tema Catalogación",
+    "Fecha Seguimiento",
+    "Seguimiento",
+    "Días Restantes",
+    "Responsable",
+    "Fecha Concepto",
+    "Concepto Efectividad"
+  ];
+
   inputform: any;
 
   file: any;
 
   currentUser: any;
-
-  export_link: any;
 
   constructor(private router: Router, private api: ApiService, private usuario: UserService, private seguim: SeguimientoService) {
     this.currentUser = JSON.parse(localStorage.getItem("currentUser") as any);
@@ -92,8 +123,6 @@ export class InformeSeguimientoComponent implements OnInit {
     this.getTemaCatalogacion();
     this.getConceptoEfectividad();
     this.getHallazgos();
-
-    this.export_link = this.api.url_export + "seguimiento";
   }
 
   reload() {
@@ -452,26 +481,40 @@ export class InformeSeguimientoComponent implements OnInit {
       })
     }
     else {
-      var formData: any = new FormData();
-      formData.append('modelo', JSON.stringify(this.model.varSeguimiento));
-      formData.append('archivo', this.file);
+      let estado = this.varhistorialTemp.filter((x: any) => x.concepto_efectividad_id == this.model.varSeguimiento.concepto_efectividad_id);
 
-      this.seguim.createSeguimientos(formData).subscribe(data => {
-        let response: any = this.api.ProcesarRespuesta(data);
-        if (response.tipo == 0) {
-          Swal.fire({
-            title: 'Crear Seguimiento',
-            text: response.mensaje,
-            allowOutsideClick: false,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar',
-            icon: 'success'
-          }).then((result: any) => {
-            this.modal = false;
-            this.reload();
-          });
-        }
-      });
+      if (estado != 0) {
+        Swal.fire({
+          title: 'ADVERTENCIA',
+          text: 'No se puede crear seguimiento, ya existe un seguimiento mismo en proceso',
+          allowOutsideClick: false,
+          showConfirmButton: true,
+          confirmButtonText: 'Aceptar',
+          icon: 'warning'
+        });
+      }
+      else {
+        var formData: any = new FormData();
+        formData.append('modelo', JSON.stringify(this.model.varSeguimiento));
+        formData.append('archivo', this.file);
+
+        this.seguim.createSeguimientos(formData).subscribe(data => {
+          let response: any = this.api.ProcesarRespuesta(data);
+          if (response.tipo == 0) {
+            Swal.fire({
+              title: 'Crear Seguimiento',
+              text: response.mensaje,
+              allowOutsideClick: false,
+              showConfirmButton: true,
+              confirmButtonText: 'Aceptar',
+              icon: 'success'
+            }).then((result: any) => {
+              this.modal = false;
+              this.reload();
+            });
+          }
+        });
+      }
     }
   }
 
@@ -556,6 +599,48 @@ export class InformeSeguimientoComponent implements OnInit {
 
   exportarExcel() {
     var fs = require('file-saver');
+
+    let workbook = new Workbook();
+    let worksheet = workbook.addWorksheet('Hoja1');
+
+    worksheet.addRow(this.cellHeaders);
+
+    this.cells.forEach((h: any) => {
+      worksheet.getCell(h).alignment = { vertical: 'middle', horizontal: 'center' };
+    });
+
+    this.seguim.exportSeguimientos().subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        let result = response.result;
+        let datos: any = [];
+
+        result.forEach((row: any) => {
+          datos.push(Object.values(row));
+        });
+
+        datos.forEach((d: any) => {
+          worksheet.addRow(d);
+        });
+
+        let i = 1;
+
+        this.cellHeaders.forEach((h: any) => {
+          worksheet.getColumn(i).width = h.length * 2;
+          i++;
+        });
+
+        let uuid = Utilidades.getUniqueId(4);
+
+        workbook.xlsx.writeBuffer().then((data1) => {
+          let blob = new Blob([data1], { 
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+          });
+
+          fs.saveAs(blob, 'sgm-' + uuid + '.xlsx');
+        });
+      }
+    });
   }
 
 }
