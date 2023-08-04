@@ -75,7 +75,7 @@ export class InformeSeguimientoComponent implements OnInit {
   lstActividad: any = [];
 
   cells: any = [
-    "A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1", "I1", "J1", "K1", "L1", "M1", "N1", "O1", "P1", "Q1", "R1", "S1", "T1", "U1", "V1", "W1", "X1", "Y1"
+    "A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1", "I1", "J1", "K1", "L1", "M1", "N1", "O1", "P1", "Q1", "R1", "S1", "T1", "U1", "V1", "W1", "X1", "Y1", "Z1"
   ];
 
   cellHeaders: any = [
@@ -88,6 +88,7 @@ export class InformeSeguimientoComponent implements OnInit {
     "Dependencia",
     "Código Hallazgo",
     "Descripción Hallazgo",
+    "Tipo Hallazgo",
     "Fecha Hallazgo",
     "Criterio que se incumple",
     "Causa del Incumplimiento",
@@ -145,6 +146,7 @@ export class InformeSeguimientoComponent implements OnInit {
             item.unidad.toString().toLowerCase().indexOf(filtro) !== -1 ||
             item.dependencia.toString().toLowerCase().indexOf(filtro) !== -1 ||
             item.codificacion.toString().toLowerCase().indexOf(filtro) !== -1 ||
+            item.hallazgo.toString().toLowerCase().indexOf(filtro) !== -1 ||
             item.hallazgo.toString().toLowerCase().indexOf(filtro) !== -1 ||
             item.codigo_tema.toString().toLowerCase().indexOf(filtro) !== -1 ||
             item.tema_catalogacion.toString().toLowerCase().indexOf(filtro) !== -1 ||
@@ -384,13 +386,13 @@ export class InformeSeguimientoComponent implements OnInit {
       let dato = this.lstHallazgo.filter((x: any) => x.inspeccion_id == data.inspeccion_id)[0];
       if (dato != undefined) {
         setTimeout(() => {
-          this.model.varSeguimiento.hallazgo_id = dato.hallazgo_id;
-          this.model.varSeguimiento.codificacion = dato.codificacion;
+          // this.model.varSeguimiento.hallazgo_id = dato.hallazgo_id;
+          // this.model.varSeguimiento.codificacion = dato.codificacion;
           this.model.varSeguimiento.tema_catalogacion_id = dato.tema_catalogacion_id;
           this.model.varSeguimiento.codigo_tema = dato.codigo_tema;
           this.model.varSeguimiento.tema_catalogacion = dato.tema_catalogacion;
 
-          this.getAnotacionCausa(dato.hallazgo_id);
+          // this.getAnotacionCausa(dato.hallazgo_id);
         }, 10);
       }
       else {
@@ -435,6 +437,7 @@ export class InformeSeguimientoComponent implements OnInit {
     let error_msg = "";
 
     this.model.varSeguimiento.concepto_efectividad_id = Number(this.model.varSeguimiento.concepto_efectividad_id);
+    this.model.varSeguimiento.porcentaje = Number(this.model.varSeguimiento.porcentaje);
     this.model.varSeguimiento.usuario = this.currentUser.usuario;
 
     if (this.model.varSeguimiento.inspeccion_id == 0) {
@@ -461,7 +464,7 @@ export class InformeSeguimientoComponent implements OnInit {
       error = true;
       error_msg += '* Seguimiento<br/>';
     }
-    if (this.model.varSeguimiento.fecha_seguimiento == "") {
+    if (this.model.varSeguimiento.fecha_seguimiento == null) {
       error = true;
       error_msg += '* Fecha Seguimiento<br/>';
     }
@@ -523,6 +526,7 @@ export class InformeSeguimientoComponent implements OnInit {
     let error_msg = "";
 
     this.model.varSeguimiento.concepto_efectividad_id = Number(this.model.varSeguimiento.concepto_efectividad_id);
+    this.model.varSeguimiento.porcentaje = Number(this.model.varSeguimiento.porcentaje);
     this.model.varSeguimiento.usuario = this.currentUser.usuario;
 
     if (this.model.varSeguimiento.inspeccion_id == 0) {
@@ -549,14 +553,14 @@ export class InformeSeguimientoComponent implements OnInit {
       error = true;
       error_msg += '* Seguimiento<br/>';
     }
-    if (this.model.varSeguimiento.fecha_seguimiento == "") {
+    if (this.model.varSeguimiento.fecha_seguimiento == null) {
       error = true;
       error_msg += '* Fecha Seguimiento<br/>';
     }
-    if (this.model.varSeguimiento.porcentaje == 0) {
-      error = true;
-      error_msg += '* Avance Físico de Ejecución<br/>';
-    }
+    // if (this.model.varSeguimiento.porcentaje == 0) {
+    //   error = true;
+    //   error_msg += '* Avance Físico de Ejecución<br/>';
+    // }
 
     if (error == true) {
       Swal.fire({
@@ -641,6 +645,15 @@ export class InformeSeguimientoComponent implements OnInit {
         });
       }
     });
+  }
+
+  validarPorcentaje(event: any): any {
+    if (event.target.value > 100) {
+      let length = event.target.value.length;
+      event.target.value = event.target.value.slice(0, length - 1);
+      this.model.varSeguimiento.porcentaje = event.target.value;
+      return false;
+    }
   }
 
 }

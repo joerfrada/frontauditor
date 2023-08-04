@@ -6,6 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PlatformRoutingModule } from './platform-routing.module';
 import { PlatformComponent } from './platform.component';
 import { NotnegativeDirective } from '../directives/notnegative.directive';
+import { RestrictDirective } from '../directives/restrict.directive';
 import { LayoutModule } from '../layout/layout.module';
 import { CardComponent } from '../views/card/card.component';
 import { ModalComponent } from '../views/modal/modal.component';
@@ -33,6 +34,7 @@ import { InformeSeguimientoComponent } from '../modulos/informes/informe-seguimi
   declarations: [
     PlatformComponent,
     NotnegativeDirective,
+    RestrictDirective,
     CardComponent,
     ModalComponent,
     SelectModalComponent,
@@ -52,7 +54,7 @@ import { InformeSeguimientoComponent } from '../modulos/informes/informe-seguimi
     InformePlanInspeccionComponent,
     SelectCodigoModalComponent,
     SelectUnidadModalComponent,
-    InformeSeguimientoComponent,
+    InformeSeguimientoComponent
   ],
   imports: [
     CommonModule,

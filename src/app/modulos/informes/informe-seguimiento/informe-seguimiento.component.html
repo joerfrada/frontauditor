@@ -37,6 +37,7 @@
                         <th>Dependencia</th>
                         <th>Código Hallazgo</th>
                         <th>Descripción Hallazgo</th>
+                        <th>Tipo Hallazgo</th>
                         <th>Fecha Hallazgo</th>
                         <th>Código Tema</th>
                         <th>Tema Catalogación</th>
@@ -69,6 +70,7 @@
                         <td>{{ item.dependencia }}</td>
                         <td>{{ item.codificacion }}</td>
                         <td>{{ item.hallazgo }}</td>
+                        <td>{{ item.tipo_hallazgo }}</td>
                         <td>{{ item.fecha_hallazgo }}</td>
                         <td>{{ item.codigo_tema }}</td>
                         <td>{{ item.tema_catalogacion }}</td>
@@ -113,21 +115,8 @@
             </div>
             <div class="row">
                 <div class="input-group">
-                    <label>Fecha Concepto Efectividad</label>
-                    <input type="date" class="form-control" [(ngModel)]="model.varSeguimiento.fecha_concepto" [disabled]="model.IsLectura">
-                </div>
-                <div class="input-group">
-                    <label>Concepto Efectividad</label>
-                    <select [(ngModel)]="model.varSeguimiento.concepto_efectividad_id" class="form-control">
-                        <option value="0" selected="selected">Seleccionar...</option>
-                        <option *ngFor="let item of lstConcepto" value="{{ item.concepto_efectividad_id }}">{{ item.concepto_efectividad }}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row">
-                <div class="input-group">
                     <label>Código Hallazgo <span class="form-required">(*)</span></label>
-                    <input type="text" class="form-control" [(ngModel)]="model.varSeguimiento.codificacion" disabled>
+                    <input type="text" class="form-control" [(ngModel)]="model.varSeguimiento.codificacion" (click)="saveAnotacion()">
                 </div>
                 <div class="input-group">
                     <label>Causa del Incumplimiento <span class="form-required">(*)</span></label>
@@ -188,12 +177,25 @@
             <div class="line-col"></div>
             <div class="row">
                 <div class="input-group">
+                    <label>Fecha Concepto Efectividad</label>
+                    <input type="date" class="form-control" [(ngModel)]="model.varSeguimiento.fecha_concepto" [disabled]="model.IsLectura">
+                </div>
+                <div class="input-group">
+                    <label>Concepto Efectividad</label>
+                    <select [(ngModel)]="model.varSeguimiento.concepto_efectividad_id" class="form-control">
+                        <option value="0" selected="selected">Seleccionar...</option>
+                        <option *ngFor="let item of lstConcepto" value="{{ item.concepto_efectividad_id }}">{{ item.concepto_efectividad }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
                     <label>Responsable Seguimiento</label>
                     <input type="text" class="form-control" [(ngModel)]="model.varSeguimiento.responsable" disabled>
                 </div>
                 <div class="input-group">
                     <label>Avance Físico de Ejecución (Sólo Porcentaje) <span class="form-required"></span></label>
-                    <input type="number" class="form-control" min="0" max="100" [(ngModel)]="model.varSeguimiento.porcentaje" [disabled]="model.IsLectura" notnegative>
+                    <input type="number" class="form-control" min="0" max="100" maxlength="3" [(ngModel)]="model.varSeguimiento.porcentaje" (keyup)="validarPorcentaje($event)" [disabled]="model.IsLectura">
                 </div>
             </div>
         </div>
