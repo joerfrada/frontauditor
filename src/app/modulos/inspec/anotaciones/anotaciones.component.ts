@@ -436,7 +436,7 @@ export class AnotacionesComponent implements OnInit {
         if (response.tipo == 0) {
           this.consecutivo = response.result[0].conthallazgo;
           let nextHallazgo = this.consecutivo + 1;
-          this.model.varHallazgo.codificacion = this.codigo + "-" + this.tipo + Utilidades.pad(nextHallazgo.toString());
+          this.model.varHallazgo.codificacion = this.codigo + "-" + this.tipo + Utilidades.pad(nextHallazgo.toString(), 3);
         }
       });
     }
