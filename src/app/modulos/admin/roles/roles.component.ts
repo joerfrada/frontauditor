@@ -114,9 +114,6 @@ export class RolesComponent implements OnInit {
     this.rol.getRoles().subscribe(data => {
       let response: any = this.api.ProcesarRespuesta(data);
       if (response.tipo == 0) {
-        response.result.forEach((x: any) => {
-          x.rol_id = x.id;
-        })
         this.varhistorial = response.result;
         this.varhistorialTemp = response.result;
       }
@@ -180,6 +177,7 @@ export class RolesComponent implements OnInit {
   }
 
   updateRol() {
+    this.model.varRol.usuario = this.currentUser.usuario;
     this.rol.updateRol(this.model.varRol).subscribe(data => {
       let response: any = this.api.ProcesarRespuesta(data);
       if (response.tipo == 0) {
@@ -219,7 +217,7 @@ export class RolesComponent implements OnInit {
 
   openRolPrivilegios(dato: any) {
     this.rolPrivilegioModal = true;
-    this.model.title = "Roles Privilegios - " + dato.name;
+    this.model.title = "Roles Privilegios - " + dato.rol;
     this.model.IsLectura = false;
 
     this.rol_id = dato.rol_id;
@@ -233,7 +231,7 @@ export class RolesComponent implements OnInit {
 
   openRolDetalle(data: any) {
     this.rolModal = true;
-    this.model.title = 'Detalle Rol';
+    this.model.title = 'Detalle Rol -' + data.rol;
     this.model.IsLectura = true;
 
     this.model.varRol.rol_id = data.rol_id;
@@ -298,14 +296,14 @@ export class RolesComponent implements OnInit {
     if (this.varprivilegio.length > 0) {
       this.varprivilegio.forEach((x: any) => {
         x.rol_id = this.rol_id;
-        if (x.NuevoRegistro == true) {
-          x.usuario = this.currentUser.usuario;
+        x.usuario = this.currentUser.usuario;
+
+        if (x.NuevoRegistro == true) {  
           this.rol.createRolPrivilegios(x).subscribe(data => {
             this.api.ProcesarRespuesta(data);
           });
         }
         else {
-          x.usuario = this.currentUser.usuario;
           this.rol.updateRolPrivilegios(x).subscribe(data => {
             this.api.ProcesarRespuesta(data);
           });
