@@ -64,6 +64,7 @@ export class InformeSeguimientoComponent implements OnInit {
   selectHallazgoModal: any;
   selectCausaModal: any;
   selectActividadModal: any;
+  selectUserModal: any;
   infoModal: any;
 
   array: any = [];
@@ -71,8 +72,14 @@ export class InformeSeguimientoComponent implements OnInit {
   lstCodigoTema: any = [];
   lstConcepto: any = [];
   lstHallazgo: any = [];
+  lstHallazgoTemp: any = [];
   lstCausa: any = [];
   lstActividad: any = [];
+  lstEventos: any = [];
+  lstFuncionarios: any = [];
+
+  tipoHallazgo: any;
+  tipoHallazgo_codigo: any;
 
   cells: any = [
     "A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1", "I1", "J1", "K1", "L1", "M1", "N1", "O1", "P1", "Q1", "R1", "S1", "T1", "U1", "V1", "W1", "X1", "Y1", "Z1"
@@ -140,21 +147,10 @@ export class InformeSeguimientoComponent implements OnInit {
     }
     else {
       this.varhistorial = this.varhistorialTemp.filter((item: any) => {
-        if (item.codigo_inspeccion.toString().toLowerCase().indexOf(filtro) !== -1 ||
+        if (item.seguimiento_id.toString().toLowerCase().indexOf(filtro) !== -1 ||
+            item.codigo_inspeccion.toString().toLowerCase().indexOf(filtro) !== -1 ||
             item.nombre_inspeccion.toString().toLowerCase().indexOf(filtro) !== -1 ||
-            item.tipo_inspeccion.toString().toLowerCase().indexOf(filtro) !== -1 ||
-            item.unidad.toString().toLowerCase().indexOf(filtro) !== -1 ||
-            item.dependencia.toString().toLowerCase().indexOf(filtro) !== -1 ||
-            item.codificacion.toString().toLowerCase().indexOf(filtro) !== -1 ||
-            item.hallazgo.toString().toLowerCase().indexOf(filtro) !== -1 ||
-            item.hallazgo.toString().toLowerCase().indexOf(filtro) !== -1 ||
-            item.codigo_tema.toString().toLowerCase().indexOf(filtro) !== -1 ||
-            item.tema_catalogacion.toString().toLowerCase().indexOf(filtro) !== -1 ||
-            item.criterio_hallazgo.toString().toLowerCase().indexOf(filtro) !== -1 ||
-            item.causa.toString().toLowerCase().indexOf(filtro) !== -1 ||
-            item.actividad.toString().toLowerCase().indexOf(filtro) !== -1 ||
-            item.seguimiento.toString().toLowerCase().indexOf(filtro) !== -1 ||
-            item.concepto_efectividad.toString().toLowerCase().indexOf(filtro) !== -1) {
+            item.unidad.toString().toLowerCase().indexOf(filtro) !== -1) {
             return true;
         }
         return false;
@@ -170,7 +166,7 @@ export class InformeSeguimientoComponent implements OnInit {
 
   getPermisos() {
     let json = {
-      usuario: this.currentUser.email,
+      usuario: this.currentUser.usuario,
       cod_modulo: 'RP'
     }
     this.usuario.getPermisos(json).subscribe(data => {
@@ -211,6 +207,20 @@ export class InformeSeguimientoComponent implements OnInit {
     });
   }
 
+  getFuncionarios() {
+    this.seguim.getFuncionarios().subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        response.result.forEach((x: any) => {
+          x.responsable_id = x.usuario_id;
+          x.responsable = x.nombre_completo;
+          x.item = x.Name;
+        });
+        this.lstFuncionarios = response.result;
+      }
+    });
+  }
+
   getTemaCatalogacion() {
     this.seguim.getTemaCatalogacion().subscribe(data => {
       let response: any = this.api.ProcesarRespuesta(data);
@@ -244,6 +254,7 @@ export class InformeSeguimientoComponent implements OnInit {
           x.item3 = null;
         });
         this.lstHallazgo = response.result;
+        this.lstHallazgoTemp = response.result;
       }
     });
   }
@@ -276,12 +287,58 @@ export class InformeSeguimientoComponent implements OnInit {
     });
   }
 
+  getEventos(id: any) {
+    this.seguim.getEventos({ seguimiento_id: id }).subscribe(data => {
+      let response: any = this.api.ProcesarRespuesta(data);
+      if (response.tipo == 0) {
+        response.result.forEach((x: any) => {
+          x.NuevoRegistro = false;
+          x.EliminarRegistro = true;
+        });
+        this.lstEventos = response.result;
+      }
+    });
+  }
+
+  addEvento() {
+    this.lstEventos.push({ evento_id: 0, seguimiento_id: 0, fecha_evento: null, descripcion: "", usuario: this.currentUser.usuario, NuevoRegistro: true, EliminarRegistro: false });
+  }
+
+  deleteEvento(index: any) {
+    this.lstEventos.splice(index, 1);
+  }
+
+  eliminarEvento(index: any, dato: any) {
+    Swal.fire({
+      title: 'Eliminar Evento',
+      text: '¿Estás seguro que desea eliminar el registro?',
+      allowOutsideClick: false,
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar',
+      cancelButtonColor: "#ed1c24",
+      icon: 'question'
+    }).then((result: any) => {
+      if (result.dismiss != "cancel") {
+        this.seguim.deleteEventos({ evento_id: dato.evento_id }).subscribe(data => {
+          let response: any = this.api.ProcesarRespuesta(data);
+          if (response.tipo == 0) {
+            this.lstEventos.splice(index, 1);
+          }
+        });
+      }
+    });
+  }
+
   openSeguimiento() {
     this.modal = true;
     this.model.varSeguimiento = new Model().varSeguimiento;
     this.model.title = "Crear Seguimiento";
     this.model.IsLectura = false;
     this.model.isCrear = true;
+
+    this.getFuncionarios();
   }
 
   closeSeguimiento(bol: any) {
@@ -297,6 +354,8 @@ export class InformeSeguimientoComponent implements OnInit {
 
     this.model.varSeguimiento = data;
 
+    this.getFuncionarios();
+
     this.seguim.getSeguimientoArchivo({ seguimiento_id: data.seguimiento_id }).subscribe(data1 => {
       let response: any = this.api.ProcesarRespuesta(data1);
       if (response.tipo == 0) {
@@ -307,6 +366,8 @@ export class InformeSeguimientoComponent implements OnInit {
         this.model.lstArchivo = response.result;
       }
     })
+
+    this.getEventos(data.seguimiento_id);
   }
 
   uploadFile(event: any) {
@@ -332,6 +393,10 @@ export class InformeSeguimientoComponent implements OnInit {
 
   closeSelectActividadModal(bol: any) {
     this.selectActividadModal = bol;
+  }
+
+  closeSelectUserModal(bol: any) {
+    this.selectUserModal = bol;
   }
 
   closeInfoModal(bol: any) {
@@ -373,6 +438,13 @@ export class InformeSeguimientoComponent implements OnInit {
     this.model.titleModal = 'Hallazgo Actividad';
   }
 
+  saveResponsable() {
+    this.array = this.lstFuncionarios;
+    this.inputform = 'responsable';
+    this.selectUserModal = true;
+    this.model.titleModal = 'Responsable';
+  }
+
   dataform(inputform: any, data: any) {
 
     if (inputform == 'inspeccion') {
@@ -380,8 +452,13 @@ export class InformeSeguimientoComponent implements OnInit {
       this.model.varSeguimiento.inspeccion_id = data.inspeccion_id;
       this.model.varSeguimiento.codigo_inspeccion = data.codigo;
       this.model.varSeguimiento.nombre_inspeccion = data.nombre_inspeccion;
-      this.model.varSeguimiento.responsable_id = data.inspector_lider_id == 0 ? 0 : data.inspector_lider_id;
-      this.model.varSeguimiento.responsable = data.inspector_lider_id == 0 ? "N/A" : data.inspector_lider;
+      // this.model.varSeguimiento.responsable_id = data.inspector_lider_id == 0 ? 0 : data.inspector_lider_id;
+      // this.model.varSeguimiento.responsable = data.inspector_lider_id == 0 ? "N/A" : data.inspector_lider;
+
+      this.lstHallazgo = this.lstHallazgoTemp.filter((x: any) => x.inspeccion_id == data.inspeccion_id);
+      this.model.varSeguimiento.codificacion = '';
+      this.model.varSeguimiento.causa = '';
+      this.model.varSeguimiento.actividad = '';
 
       let dato = this.lstHallazgo.filter((x: any) => x.inspeccion_id == data.inspeccion_id)[0];
       if (dato != undefined) {
@@ -389,8 +466,8 @@ export class InformeSeguimientoComponent implements OnInit {
           // this.model.varSeguimiento.hallazgo_id = dato.hallazgo_id;
           // this.model.varSeguimiento.codificacion = dato.codificacion;
           this.model.varSeguimiento.tema_catalogacion_id = dato.tema_catalogacion_id;
-          this.model.varSeguimiento.codigo_tema = dato.codigo_tema;
-          this.model.varSeguimiento.tema_catalogacion = dato.tema_catalogacion;
+          this.model.varSeguimiento.codigo_tema = (dato.tipo_hallazgo_cod == 'AR' || dato.tipo_hallazgo_cod == 'OR') ? "N/A" : dato.codigo_tema;
+          this.model.varSeguimiento.tema_catalogacion = (dato.tipo_hallazgo_cod == 'AR' || dato.tipo_hallazgo_cod == 'OR') ? "N/A" : dato.tema_catalogacion;
 
           // this.getAnotacionCausa(dato.hallazgo_id);
         }, 10);
@@ -413,6 +490,20 @@ export class InformeSeguimientoComponent implements OnInit {
       this.selectHallazgoModal = false;
       this.model.varSeguimiento.hallazgo_id = data.hallazgo_id;
       this.model.varSeguimiento.codificacion = data.codificacion;
+      this.tipoHallazgo_codigo = data.tipo_hallazgo_cod;
+
+      if (data.tipo_hallazgo_cod == 'AR' || data.tipo_hallazgo_cod == 'OR') {
+        this.model.varSeguimiento.hallazgo_causa_raiz_id = null;
+        this.model.varSeguimiento.causa = "N/A";
+        this.model.varSeguimiento.hallazgo_actividad_id = null;
+        this.model.varSeguimiento.actividad = "N/A";
+      }
+      else if (data.tipo_hallazgo_cod == 'IN' || data.tipo_hallazgo_cod == 'IR' || data.tipo_hallazgo_cod == 'EI' || data.tipo_hallazgo_cod == 'OR') {
+        this.model.varSeguimiento.hallazgo_causa_raiz_id = 0
+        this.model.varSeguimiento.causa = "";
+        this.model.varSeguimiento.hallazgo_actividad_id = 0;
+        this.model.varSeguimiento.actividad = "";
+      }
 
       this.getAnotacionCausa(data.hallazgo_id);
     }
@@ -429,6 +520,12 @@ export class InformeSeguimientoComponent implements OnInit {
       this.selectActividadModal = false;
       this.model.varSeguimiento.hallazgo_actividad_id = data.hallazgo_actividad_id;
       this.model.varSeguimiento.actividad = data.descripcion;
+    }
+
+    if (inputform == 'responsable') {
+      this.selectUserModal = false;
+      this.model.varSeguimiento.responsable_id = data.responsable_id;
+      this.model.varSeguimiento.responsable = data.responsable;
     }
   }
 
@@ -452,14 +549,14 @@ export class InformeSeguimientoComponent implements OnInit {
       error = true;
       error_msg += '* Código Hallazgo<br/>';
     }
-    if (this.model.varSeguimiento.hallazgo_causa_raiz_id == 0) {
-      error = true;
-      error_msg += '* Causa del Incumplimiento<br/>';
-    }
-    if (this.model.varSeguimiento.hallazgo_actividad_id == 0) {
-      error = true;
-      error_msg += '* Actividad / Descripción<br/>';
-    }
+    // if (this.model.varSeguimiento.hallazgo_causa_raiz_id == 0) {
+    //   error = true;
+    //   error_msg += '* Causa del Incumplimiento<br/>';
+    // }
+    // if (this.model.varSeguimiento.hallazgo_actividad_id == 0) {
+    //   error = true;
+    //   error_msg += '* Actividad / Descripción<br/>';
+    // }
     if (this.model.varSeguimiento.seguimiento == "") {
       error = true;
       error_msg += '* Seguimiento<br/>';
@@ -484,39 +581,111 @@ export class InformeSeguimientoComponent implements OnInit {
       })
     }
     else {
-      let estado = this.varhistorialTemp.filter((x: any) => x.concepto_efectividad_id == this.model.varSeguimiento.concepto_efectividad_id);
-
-      if (estado != 0) {
-        Swal.fire({
-          title: 'ADVERTENCIA',
-          text: 'No se puede crear seguimiento, ya existe un seguimiento mismo en proceso',
-          allowOutsideClick: false,
-          showConfirmButton: true,
-          confirmButtonText: 'Aceptar',
-          icon: 'warning'
-        });
-      }
-      else {
-        var formData: any = new FormData();
-        formData.append('modelo', JSON.stringify(this.model.varSeguimiento));
-        formData.append('archivo', this.file);
-
-        this.seguim.createSeguimientos(formData).subscribe(data => {
-          let response: any = this.api.ProcesarRespuesta(data);
-          if (response.tipo == 0) {
+      let existe = null;
+      if (this.tipoHallazgo_codigo == 'AR' || this.tipoHallazgo_codigo == 'OR') {
+        existe = this.varhistorialTemp.filter((x: any) => x.inspeccion_id == this.model.varSeguimiento.inspeccion_id && x.hallazgo_id == this.model.varSeguimiento.hallazgo_id);
+        if (existe.length == 1) {
+          Swal.fire({
+            title: 'ADVERTENCIA',
+            text: 'La combinación ya tiene un seguimiento',
+            allowOutsideClick: false,
+            showConfirmButton: true,
+            confirmButtonText: 'Aceptar',
+            icon: 'warning'
+          });
+        }
+        else {
+          existe = this.varhistorialTemp.filter((x: any) => x.inspeccion_id == this.model.varSeguimiento.inspeccion_id && x.hallazgo_id == this.model.varSeguimiento.hallazgo_id && x.hallazgo_causa_raiz_id == this.model.varSeguimiento.hallazgo_causa_raiz_id && x.hallazgo_actividad_id == this.model.varSeguimiento.hallazgo_actividad_id);
+          if (existe.length == 1) {
             Swal.fire({
-              title: 'Crear Seguimiento',
-              text: response.mensaje,
+              title: 'ADVERTENCIA',
+              text: 'La combinación ya tiene un seguimiento',
               allowOutsideClick: false,
               showConfirmButton: true,
               confirmButtonText: 'Aceptar',
-              icon: 'success'
-            }).then((result: any) => {
-              this.modal = false;
-              this.reload();
+              icon: 'warning'
             });
           }
-        });
+          else {
+            var formData: any = new FormData();
+            formData.append('modelo', JSON.stringify(this.model.varSeguimiento));
+            formData.append('archivo', this.file);
+    
+            this.seguim.createSeguimientos(formData).subscribe(data => {
+              let response: any = this.api.ProcesarRespuesta(data);
+              if (response.tipo == 0) {
+                if (this.lstEventos.length > 0) {
+                  this.lstEventos.forEach((x: any) => {
+                    x.seguimiento_id = response.id;
+                    x.usuario = this.currentUser.usuario;
+    
+                    if (x.NuevoRegistro == true) {
+                      this.seguim.createEventos(x).subscribe(data => {});
+                    }
+                  });
+                }
+    
+                Swal.fire({
+                  title: 'Crear Seguimiento',
+                  text: response.mensaje,
+                  allowOutsideClick: false,
+                  showConfirmButton: true,
+                  confirmButtonText: 'Aceptar',
+                  icon: 'success'
+                }).then((result: any) => {
+                  this.modal = false;
+                  this.reload();
+                });
+              }
+            });
+          }
+        }
+      }
+      else if (this.tipoHallazgo_codigo == 'IN' || this.tipoHallazgo_codigo == 'IR' || this.tipoHallazgo_codigo == 'EI' || this.tipoHallazgo_codigo == 'RE') {
+        existe = this.varhistorialTemp.filter((x: any) => x.inspeccion_id == this.model.varSeguimiento.inspeccion_id && x.hallazgo_id == this.model.varSeguimiento.hallazgo_id && x.hallazgo_causa_raiz_id == this.model.varSeguimiento.hallazgo_causa_raiz_id && x.hallazgo_actividad_id == this.model.varSeguimiento.hallazgo_actividad_id);
+        if (existe.length == 1) {
+          Swal.fire({
+            title: 'ADVERTENCIA',
+            text: 'La combinación ya tiene un seguimiento',
+            allowOutsideClick: false,
+            showConfirmButton: true,
+            confirmButtonText: 'Aceptar',
+            icon: 'warning'
+          });
+        }
+        else {
+          var formData: any = new FormData();
+          formData.append('modelo', JSON.stringify(this.model.varSeguimiento));
+          formData.append('archivo', this.file);
+  
+          this.seguim.createSeguimientos(formData).subscribe(data => {
+            let response: any = this.api.ProcesarRespuesta(data);
+            if (response.tipo == 0) {
+              if (this.lstEventos.length > 0) {
+                this.lstEventos.forEach((x: any) => {
+                  x.seguimiento_id = response.id;
+                  x.usuario = this.currentUser.usuario;
+  
+                  if (x.NuevoRegistro == true) {
+                    this.seguim.createEventos(x).subscribe(data => {});
+                  }
+                });
+              }
+  
+              Swal.fire({
+                title: 'Crear Seguimiento',
+                text: response.mensaje,
+                allowOutsideClick: false,
+                showConfirmButton: true,
+                confirmButtonText: 'Aceptar',
+                icon: 'success'
+              }).then((result: any) => {
+                this.modal = false;
+                this.reload();
+              });
+            }
+          });
+        }
       }
     }
   }
@@ -541,14 +710,14 @@ export class InformeSeguimientoComponent implements OnInit {
       error = true;
       error_msg += '* Código Hallazgo<br/>';
     }
-    if (this.model.varSeguimiento.hallazgo_causa_raiz_id == 0) {
-      error = true;
-      error_msg += '* Causa del Incumplimiento<br/>';
-    }
-    if (this.model.varSeguimiento.hallazgo_actividad_id == 0) {
-      error = true;
-      error_msg += '* Actividad / Descripción<br/>';
-    }
+    // if (this.model.varSeguimiento.hallazgo_causa_raiz_id == 0) {
+    //   error = true;
+    //   error_msg += '* Causa del Incumplimiento<br/>';
+    // }
+    // if (this.model.varSeguimiento.hallazgo_actividad_id == 0) {
+    //   error = true;
+    //   error_msg += '* Actividad / Descripción<br/>';
+    // }
     if (this.model.varSeguimiento.seguimiento == "") {
       error = true;
       error_msg += '* Seguimiento<br/>';
@@ -580,6 +749,16 @@ export class InformeSeguimientoComponent implements OnInit {
       this.seguim.updateSeguimientos(formData).subscribe(data => {
         let response: any = this.api.ProcesarRespuesta(data);
         if (response.tipo == 0) {
+          if (this.lstEventos.length > 0) {
+            this.lstEventos.forEach((x: any) => {
+              x.seguimiento_id = this.model.varSeguimiento.seguimiento_id;
+              x.usuario = this.currentUser.usuario;
+
+              if (x.NuevoRegistro == true) {
+                this.seguim.createEventos(x).subscribe(data => {});
+              }
+            });
+          }
           Swal.fire({
             title: 'Actualizar Seguimiento',
             text: response.mensaje,

@@ -80,7 +80,7 @@ export class InformePlanInspeccionComponent implements OnInit {
 
   getPermisos() {
     let json = {
-      usuario: this.currentUser.email,
+      usuario: this.currentUser.usuario,
       cod_modulo: 'RP'
     }
     this.usuario.getPermisos(json).subscribe(data => {

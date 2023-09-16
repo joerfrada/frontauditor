@@ -31,7 +31,9 @@
                         <td>{{ item.fecha }}</td>
                         <td>{{ item.tipo_hallazgo }}</td>
                         <td class="buttons">
-                            <button type="button" class="btn btn-info" (click)="openCausa(item)"><i class="fa fa-cogs"></i></button>
+                            <ng-container *ngIf="item.tipo_hallazgo_cod == 'IN' || item.tipo_hallazgo_cod == 'IR' || item.tipo_hallazgo_cod == 'EI' || item.tipo_hallazgo_codo == 'RE'">
+                                <button type="button" class="btn btn-info" (click)="openCausa(item)"><i class="fa fa-cogs"></i></button>
+                            </ng-container>
                         </td>
                         <td class="buttons">
                             <button type="button" class="btn btn-info" (click)="editAnotacion(item)"><i class="fa fa-pencil"></i></button>
@@ -70,7 +72,7 @@
             <div class="row">
                 <div class="input-group">
                     <label>Tipo de hallazgo <span class="form-required">(*)</span></label>
-                    <select [(ngModel)]="model.varHallazgo.tipo_hallazgo_id" class="form-select" (change)="changeTipoHallazgo(model.varHallazgo.tipo_hallazgo_id)">
+                    <select [(ngModel)]="model.varHallazgo.tipo_hallazgo_id" class="form-select" (change)="changeTipoHallazgo(model.varHallazgo.tipo_hallazgo_id, 1)">
                         <option value="0">Seleccionar...</option>
                         <option *ngFor="let item of model.lstTipoHallazgo" value="{{ item.tipo_hallazgo_id }}">{{ item.tipo_hallazgo}}</option>
                     </select>
@@ -84,9 +86,9 @@
                     <input type="date" class="form-control" [(ngModel)]="model.varHallazgo.fecha" [disabled]="model.IsLectura">
                 </div>
             </div>
-            <div class="row">
+            <div class="row" *ngIf="tipo == 'IN' || tipo == 'IR' || tipo == 'EI' || tipo == 'RE'">
                 <div class="input-group">
-                    <label>Código Tema <span class="form-required">(*)</span></label>
+                    <label>Código Tema</label>
                     <input type="text" class="form-control" placeholder="Seleccionar..." [(ngModel)]="model.varHallazgo.codigo_tema" (click)="saveCodigoTema()" [disabled]="model.IsLectura">
                 </div>
                 <div class="input-group">
@@ -146,12 +148,12 @@
                 </div>
             </div>
             <div class="line-col"></div>
-            <div class="row" *ngIf="tipo == 'I' || tipo == 'IR' || tipo == 'IV'">
+            <div class="row" *ngIf="tipo == 'IN' || tipo == 'IR' || tipo == 'EI'">
                 <div class="input-group">
                     <label>Responsable Corrección <span class="form-required">(*)</span></label>
                 </div>
             </div>
-            <div class="form-table" *ngIf="tipo == 'I' || tipo == 'IR' || tipo == 'IV'">
+            <div class="form-table" *ngIf="tipo == 'IN' || tipo == 'IR' || tipo == 'EI'">
                 <div class="table-content">
                     <table class="table flex-table">
                         <thead>
@@ -178,12 +180,12 @@
                     </table>
                 </div>
             </div>
-            <div class="row" *ngIf="tipo == 'I' || tipo == 'IR' || tipo == 'IV' || tipo == 'R'">
+            <div class="row" *ngIf="tipo == 'IN' || tipo == 'IR' || tipo == 'EI' || tipo == 'RE'">
                 <div class="input-group">
                     <label>Responsable Plan de Mejoramiento <span class="form-required">(*)</span></label>
                 </div>
             </div>
-            <div class="form-table" *ngIf="tipo == 'I' || tipo == 'IR' || tipo == 'IV' || tipo == 'R'">
+            <div class="form-table" *ngIf="tipo == 'IN' || tipo == 'IR' || tipo == 'EI' || tipo == 'RE'">
                 <div class="table-content">
                     <table class="table flex-table">
                         <thead>
@@ -302,37 +304,39 @@
             </div>
             <div class="line-col"></div>
             <div class="col col100 title-row">Causa del incumplimiento</div>
-            <div class="table-content">
-                <table class="table flex-table">
-                    <thead>
-                        <tr>
-                            <th>Causa del incumplimiento</th>
-                            <th>Actividades</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let item of model.lstCausa; let i = index">
-                            <td>
-                                <input type="text" class="form-control" placeholder="Ingresa aquí..." title="{{ item.causa_raiz }}" [(ngModel)]="item.causa_raiz" [disabled]="model.IsLectura">
-                            </td>
-                            <td class="buttons">
-                                <button class="btn btn-info" *ngIf="model.lstCausa[i].NuevoRegistro != true" (click)="openActividad(item)"><i class="fa fa-pencil"></i></button>
-                                <button class="btn btn-secondary" *ngIf="model.lstCausa[i].NuevoRegistro" disabled><i class="fa fa-pencil"></i></button>
-                            </td>
-                            <td *ngIf="model.IsLectura == false">
-                                <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="model.lstCausa[i].NuevoRegistro" (click)="deleteCausa(i)"></i>
-                                <i class="fa fa-1m5x fa-trash pointer noselect" style="color: red !important;" *ngIf="model.lstCausa[i].EliminarRegistro" (click)="eliminarAnotacionCausaRaiz(i, item)"></i>
-                            </td>
-                        </tr>
-                        <tr class="add_row_full" *ngIf="model.IsLectura == false">
-                            <button type="button" class="btn btn-primary button" (click)="addCausa()">Agregar</button>
-                        </tr>
-                        <tr *ngIf="model.lstCausa.length == 0 && model.IsLectura == true">
-                            <div class="dbempty">No hay registros.</div>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="form-table">
+                <div class="table-content">
+                    <table class="table flex-table">
+                        <thead>
+                            <tr>
+                                <th>Causa del incumplimiento</th>
+                                <th>Actividades</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of model.lstCausa; let i = index">
+                                <td>
+                                    <input type="text" class="form-control" placeholder="Ingresa aquí..." title="{{ item.causa_raiz }}" [(ngModel)]="item.causa_raiz" [disabled]="model.IsLectura">
+                                </td>
+                                <td class="buttons">
+                                    <button class="btn btn-info" *ngIf="model.lstCausa[i].NuevoRegistro != true" (click)="openActividad(item)"><i class="fa fa-pencil"></i></button>
+                                    <button class="btn btn-secondary" *ngIf="model.lstCausa[i].NuevoRegistro" disabled><i class="fa fa-pencil"></i></button>
+                                </td>
+                                <td *ngIf="model.IsLectura == false">
+                                    <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="model.lstCausa[i].NuevoRegistro" (click)="deleteCausa(i)"></i>
+                                    <i class="fa fa-1m5x fa-trash pointer noselect" style="color: red !important;" *ngIf="model.lstCausa[i].EliminarRegistro" (click)="eliminarAnotacionCausaRaiz(i, item)"></i>
+                                </td>
+                            </tr>
+                            <tr class="add_row_full" *ngIf="model.IsLectura == false">
+                                <button type="button" class="btn btn-primary button" (click)="addCausa()">Agregar</button>
+                            </tr>
+                            <tr *ngIf="model.lstCausa.length == 0 && model.IsLectura == true">
+                                <div class="dbempty">No hay registros.</div>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -354,40 +358,42 @@
             </div>
             <div class="line-col"></div>
             <div class="col col100 title-row">Actividad</div>
-            <div class="table-content">
-                <table class="table flex-table">
-                    <thead>
-                        <tr>
-                            <th>Descripción</th>
-                            <th>Entregable</th>
-                            <th>Cantidad Entregable</th>
-                            <th>Fecha Inicio</th>
-                            <th>Fecha Termino</th>
-                            <th *ngIf="tipo_hallazgo != 'AR' && tipo_hallazgo != 'O'">Responsable</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody class="scroll">
-                        <tr *ngFor="let item of model.lstActividad; let i = index">
-                            <td><button type="button" class="btn btn-info" (click)="openActividadDescripcion(item, i)"><i class="fa fa-pencil"></i></button></td>
-                            <td><input type="text" class="form-control" placeholder="Ingresa aquí..." title="{{ item.entregable }}" [(ngModel)]="item.entregable" [disabled]="model.IsLectura"></td>
-                            <td><input type="number" class="form-control" [(ngModel)]="item.cantidad_entregable" [disabled]="model.IsLectura"></td>
-                            <td><input type="date" class="form-control" [(ngModel)]="item.fecha_inicio" [disabled]="model.IsLectura"></td>
-                            <td><input type="date" class="form-control" [(ngModel)]="item.fecha_termino" [disabled]="model.IsLectura"></td>
-                            <td *ngIf="tipo_hallazgo != 'AR' && tipo_hallazgo != 'O'"><input type="text" class="form-control" placeholder="Seleccionar..." title="{{ item.dependencia }}" [(ngModel)]="item.dependencia" (click)="saveUnidadActividad(i)" [disabled]="model.IsLectura"></td>
-                            <td *ngIf="model.IsLectura == false">
-                                <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="model.lstActividad[i].NuevoRegistro" (click)="deleteActividad(i)"></i>
-                                <i class="fa fa-1m5x fa-trash pointer noselect" style="color: red !important;" *ngIf="model.lstActividad[i].EliminarRegistro" (click)="eliminarAnotacionActividad(i, item)"></i>
-                            </td>
-                        </tr>
-                        <tr class="add_row_full" *ngIf="model.IsLectura == false">
-                            <button type="button" class="btn btn-primary button" (click)="addActividad()">Agregar</button>
-                        </tr>
-                        <tr *ngIf="model.lstActividad.length == 0 && model.IsLectura == true">
-                            <div class="dbempty">No hay registros.</div>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="form-table">
+                <div class="table-content">
+                    <table class="table flex-table">
+                        <thead>
+                            <tr>
+                                <th>Descripción</th>
+                                <th>Entregable</th>
+                                <th>Cantidad Entregable</th>
+                                <th>Fecha Inicio</th>
+                                <th>Fecha Termino</th>
+                                <th *ngIf="tipo_hallazgo != 'AR' && tipo_hallazgo != 'OR'">Responsable</th>
+                                <th *ngIf="model.IsLectura == false">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="scroll">
+                            <tr *ngFor="let item of model.lstActividad; let i = index">
+                                <td><button type="button" class="btn btn-info" (click)="openActividadDescripcion(item, i)"><i class="fa fa-pencil"></i></button></td>
+                                <td><input type="text" class="form-control" placeholder="Ingresa aquí..." title="{{ item.entregable }}" [(ngModel)]="item.entregable" [disabled]="model.IsLectura"></td>
+                                <td><input type="number" class="form-control" [(ngModel)]="item.cantidad_entregable" [disabled]="model.IsLectura"></td>
+                                <td><input type="date" class="form-control" [(ngModel)]="item.fecha_inicio" [disabled]="model.IsLectura"></td>
+                                <td><input type="date" class="form-control" [(ngModel)]="item.fecha_termino" [disabled]="model.IsLectura"></td>
+                                <td *ngIf="tipo_hallazgo != 'AR' && tipo_hallazgo != 'OR'"><input type="text" class="form-control" placeholder="Seleccionar..." title="{{ item.dependencia }}" [(ngModel)]="item.dependencia" (click)="saveUnidadActividad(i)" [disabled]="model.IsLectura"></td>
+                                <td *ngIf="model.IsLectura == false">
+                                    <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="model.lstActividad[i].NuevoRegistro" (click)="deleteActividad(i)"></i>
+                                    <i class="fa fa-1m5x fa-trash pointer noselect" style="color: red !important;" *ngIf="model.lstActividad[i].EliminarRegistro" (click)="eliminarAnotacionActividad(i, item)"></i>
+                                </td>
+                            </tr>
+                            <tr class="add_row_full" *ngIf="model.IsLectura == false">
+                                <button type="button" class="btn btn-primary button" (click)="addActividad()">Agregar</button>
+                            </tr>
+                            <tr *ngIf="model.lstActividad.length == 0 && model.IsLectura == true">
+                                <div class="dbempty">No hay registros.</div>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

@@ -31,4 +31,8 @@ export class Utilidades {
         }
         return stringArr.join('-');
     }
+
+    public static pad(num: any) {
+        return String(num).padStart(3, '0');
+      }
 }

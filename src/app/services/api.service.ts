@@ -9,8 +9,8 @@ declare var Swal:any;
 })
 export class ApiService {
 
-  // private url = "http://localhost/";
-  private url = "https://auditorigefa.fac.mil.co:6443/";
+  private url = "http://localhost/";
+  // private url = "https://auditorigefa.fac.mil.co/";
   private baseurl = this.url + "apiauditor/api/";
   private informe = this.url + "apiauditor/informe/";
   public url_image = this.url + "apiauditor/public/secad/Personal/Fotos/";

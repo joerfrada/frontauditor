@@ -28,6 +28,7 @@
             <table class="table table-condensed table-striped">
                 <thead class="tablehead">
                     <tr>
+                        <th>ID</th>
                         <th>Estado</th>
                         <th>Porcentaje</th>
                         <th>Código Inspección</th>
@@ -48,6 +49,7 @@
                         <th>Cantidad Entregable</th>
                         <th>Fecha Inicio</th>
                         <th>Fecha Termino</th>
+                        <th>Responsable</th>
                         <th>Seguimiento</th>
                         <th>Fecha Seguimiento</th>
                         <th>Días Restantes</th>
@@ -58,9 +60,11 @@
                 </thead>
                 <tbody class="tablebody">
                     <tr *ngFor="let item of varhistorial">
+                        <td>{{ item.seguimiento_id }}</td>
                         <td>
-                            <div *ngIf="item.estado == 0"><img class="cal" src="../../../../assets/img/circle_green.png" alt=""></div>
-                            <div *ngIf="item.estado == 1"><img class="cal" src="../../../../assets/img/circle_red.png" alt=""></div>
+                            <div *ngIf="item.porcentaje > 90 && item.porcentaje <= 100"><img class="cal" src="../../../../assets/img/circle_green.png" alt=""></div>
+                            <div *ngIf="item.porcentaje > 50 && item.porcentaje <= 90"><img class="cal" src="../../../../assets/img/circle_yellow.png" alt=""></div>
+                            <div *ngIf="item.porcentaje >= 0 && item.porcentaje <= 50"><img class="cal" src="../../../../assets/img/circle_red.png" alt=""></div>
                         </td>
                         <td>{{ item.porcentaje }}%</td>
                         <td>{{ item.codigo_inspeccion }}</td>
@@ -81,6 +85,7 @@
                         <td>{{ item.cantidad_entregable }}</td>
                         <td>{{ item.fecha_inicio }}</td>
                         <td>{{ item.fecha_termino }}</td>
+                        <td>{{ item.responsable }}</td>
                         <td>{{ item.seguimiento }}</td>
                         <td>{{ item.fecha_seguimiento }}</td>
                         <td>{{ item.dias_restantes }}</td>
@@ -116,14 +121,14 @@
             <div class="row">
                 <div class="input-group">
                     <label>Código Hallazgo <span class="form-required">(*)</span></label>
-                    <input type="text" class="form-control" [(ngModel)]="model.varSeguimiento.codificacion" (click)="saveAnotacion()">
+                    <input type="text" class="form-control" placeholder="Seleccionar..." [(ngModel)]="model.varSeguimiento.codificacion" (click)="saveAnotacion()">
                 </div>
                 <div class="input-group">
-                    <label>Causa del Incumplimiento <span class="form-required">(*)</span></label>
+                    <label>Causa del Incumplimiento</label>
                     <input type="text" class="form-control" placeholder="Seleccionar..." [(ngModel)]="model.varSeguimiento.causa" (click)="saveCausa()" [disabled]="model.IsLectura">
                 </div>
                 <div class="input-group">
-                    <label>Actividad / Descripción <span class="form-required">(*)</span></label>
+                    <label>Actividad / Descripción</label>
                     <input type="text" class="form-control" placeholder="Seleccionar..." [(ngModel)]="model.varSeguimiento.actividad" (click)="saveActividad()" [disabled]="model.IsLectura">
                 </div>
             </div>
@@ -145,6 +150,37 @@
                 <div class="input-group">
                     <label>Tema Catalogación</label>
                     <input type="text" class="form-control" [(ngModel)]="model.varSeguimiento.tema_catalogacion" disabled>
+                </div>
+            </div>
+            <div class="line-col"></div>
+            <div class="col col100 title-row">Eventos</div>
+            <div class="form-table">
+                <div class="table-content">
+                    <table class="table flex-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha del evento</th>
+                                <th>Descripción del evento</th>
+                                <th *ngIf="model.IsLectura == false">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="scroll">
+                            <tr *ngFor="let item of lstEventos; let i = index">
+                                <td><input type="date" class="form-control" [(ngModel)]="item.fecha_evento" [disabled]="model.IsLectura"></td>
+                                <td><input type="text" class="form-control" placeholder="Ingresa aquí..." title="{{ item.descripcion }}" [(ngModel)]="item.descripcion" [disabled]="model.IsLectura"></td>
+                                <td *ngIf="model.IsLectura == false">
+                                    <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="lstEventos[i].NuevoRegistro" (click)="deleteEvento(i)"></i>
+                                    <i class="fa fa-1m5x fa-trash pointer noselect" style="color: red !important;" *ngIf="lstEventos[i].EliminarRegistro" (click)="eliminarEvento(i, item)"></i>
+                                </td>
+                            </tr>
+                            <tr class="add_row_full" *ngIf="model.IsLectura == false">
+                                <button type="button" class="btn btn-primary button" (click)="addEvento()">Agregar</button>
+                            </tr>
+                            <tr *ngIf="lstEventos?.length == 0 && model.IsLectura == true">
+                                <div class="dbempty">No hay registros.</div>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <div class="line-col"></div>
@@ -191,7 +227,7 @@
             <div class="row">
                 <div class="input-group">
                     <label>Responsable Seguimiento</label>
-                    <input type="text" class="form-control" [(ngModel)]="model.varSeguimiento.responsable" disabled>
+                    <input type="text" class="form-control" placeholder="Seleccionar..." [(ngModel)]="model.varSeguimiento.responsable" (click)="saveResponsable()">
                 </div>
                 <div class="input-group">
                     <label>Avance Físico de Ejecución (Sólo Porcentaje) <span class="form-required"></span></label>
@@ -236,6 +272,12 @@
         <button type="button" class="btn btn-danger" (click)="closeSelectActividadModal(false)">Cerrar</button>
     </div>
 </app-select-modal>
+
+<app-select-user-modal [title]="'Responsable'" [show]="selectUserModal" [size]="'modal-md modal-h70'" [array]="array" [arrayTemp]="array" (output)="dataform(inputform, $event)" (close)="closeSelectUserModal($event)">
+    <div role="footer">
+        <button type="button" class="btn btn-danger" (click)="closeSelectUserModal(false)">Cerrar</button>
+    </div>
+</app-select-user-modal>
 
 <app-modal [title]="'Ver Info'" [show]="infoModal" [size]="'modal-md-1 modal-h70'" [scroll]="'modal-scroll'" (close)="closeInfoModal($event)">
     <div role="body">

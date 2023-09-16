@@ -17,13 +17,14 @@ export class Model {
   foto: string | ArrayBuffer | null | undefined;
 
   varUsuario: any = {
-    id: 0,
+    usuario_id: 0,
     idpersonal: 0,
     idempresa: 0,
-    name: "",
+    nombre_completo: "",
     email: "",
     password: "",
-    passwordMatch: ""
+    passwordMatch: "",
+    usuario: ""
   }
 
   varPersona: any = {
@@ -74,13 +75,15 @@ export class Model {
     idescuadron: 0,
     foto: null,
     tipo_imagen: '',
-    active: 1,
+    active: true,
     idproceso: 0,
     idtipoident: 0,
     idcarreraprofesionmil: 0,
     idcargomil: 0,
     idespecialidadcertificacionmil: 0,
     idnivelcompetenciamil: 0,
+    usuario_id: "",
+    usuario: "",
   }
 
   varRol: any = [];
@@ -112,7 +115,7 @@ export class UsuariosComponent implements AfterViewInit {
   personalModal: any;
   empresaModal: any;
 
-  user_id: any;
+  usuario_id: any;
   usuario_menu_id: any;
   index: any;
   inputform: any;
@@ -161,7 +164,7 @@ export class UsuariosComponent implements AfterViewInit {
 
   constructor(private router: Router, private api: ApiService, private usuario: UserService, private perfil: PerfilService, private lista: ListasService) {
     this.currentUser = JSON.parse(localStorage.getItem("currentUser") as any);
-    this.user_id = this.currentUser.user_id;
+    this.usuario_id = this.currentUser.usuario_id;
   }
 
   ngAfterViewInit(): void {
@@ -583,8 +586,10 @@ export class UsuariosComponent implements AfterViewInit {
     this.model.varPersona.idcargomil = this.model.varPersona.idcargo;
     this.model.varPersona.idespecialidadcertificacionmil = this.model.varPersona.idespecialidadcertificacion;
     this.model.varPersona.idnivelcompetenciamil = this.model.varPersona.idnivelcompetencia;
+    this.model.varPersona.usuario_id = data.usuario_id;
+    this.model.varPersona.usuario = this.currentUser.usuario;
 
-    this.model.varUsuario.id = data.id;
+    this.model.varUsuario.usuario_id = data.usuario_id;
     this.model.varUsuario.idpersonal = data.IdPersonal;
 
     // if (data.existe_img == 1) {
@@ -666,12 +671,12 @@ export class UsuariosComponent implements AfterViewInit {
 
   openRol(dato: any) {
     this.rolModal = true;
-    this.model.title = "Asignar Rol - " + dato.name;
+    this.model.title = "Asignar Rol - " + dato.rol;
     this.model.IsLectura = false;
 
-    this.user_id = dato.id;
+    this.usuario_id = dato.usuario_id;
 
-    this.usuario.getUsuariosRolesById({user_id: dato.id}).subscribe(data => {
+    this.usuario.getUsuariosRolesById({usuario_id: dato.usuario_id}).subscribe(data => {
       let response: any = this.api.ProcesarRespuesta(data);
       if (response.tipo == 0) {
         response.result.forEach((x: any) => {
@@ -685,10 +690,10 @@ export class UsuariosComponent implements AfterViewInit {
 
   openRolDetalle(dato: any) {
     this.rolModal = true;
-    this.model.title = "Rol Detalle - " + dato.name;
+    this.model.title = "Rol Detalle - " + dato.rol;
     this.model.IsLectura = true;
 
-    this.usuario.getUsuariosRolesById({user_id: dato.id}).subscribe(data => {
+    this.usuario.getUsuariosRolesById({usuario_id: dato.usuario_id}).subscribe(data => {
       let response: any = this.api.ProcesarRespuesta(data);
       if (response.tipo == 0) {
         response.result.forEach((x: any) => {
@@ -706,7 +711,7 @@ export class UsuariosComponent implements AfterViewInit {
   }
 
   addRol() {
-    this.model.varRol.push({usuario_rol_id: 0, user_id: 0, rol_id: 0, rol_privilegio_id: 0, rol: "", modulo: "", nombre_pantalla: "", menu_id: null, activo: true, usuario: this.currentUser.usuario, NuevoRegistro: true, EliminarRegistro: false});
+    this.model.varRol.push({usuario_rol_id: 0, usuario_id: 0, rol_id: 0, rol_privilegio_id: 0, rol: "", modulo: "", nombre_pantalla: "", menu_id: null, activo: true, usuario: this.currentUser.usuario, NuevoRegistro: true, EliminarRegistro: false});
   }
 
   deleteRol(index: any) {
@@ -717,7 +722,7 @@ export class UsuariosComponent implements AfterViewInit {
     if (this.model.varRol.length > 0) {
       this.model.varRol.forEach((element: any) => {
         element.usuario = this.currentUser.usuario;
-        element.user_id = this.user_id;
+        element.usuario_id = this.usuario_id;
 
         if (element.NuevoRegistro == true) {
           this.usuario.createUsuariosRoles(element).subscribe(data1 => {});
@@ -728,7 +733,7 @@ export class UsuariosComponent implements AfterViewInit {
       });
       let menus_id = this.model.varRol.map((x: any) => x.menu_id).join(",");
       let json = {
-        user_id: this.user_id,
+        usuario_id: this.usuario_id,
         menu_id: menus_id == "" ? null : menus_id,
         usuario: this.currentUser.usuario
       }
@@ -832,6 +837,7 @@ export class UsuariosComponent implements AfterViewInit {
         text: 'Ya existe una persona en la base de datos con el mismo tipo de documento y número de documento.',
         allowOutsideClick: false,
         showConfirmButton: true,
+        confirmButtonText: 'Aceptar',
         icon: 'error'
       }).then((result: any) => {
         this.model.varUsuario.password = "";
@@ -845,6 +851,7 @@ export class UsuariosComponent implements AfterViewInit {
           text: 'Las contraseñas no coinciden. Por favor ingrese de nuevo.',
           allowOutsideClick: false,
           showConfirmButton: true,
+          confirmButtonText: 'Aceptar',
           icon: 'error'
         }).then((result: any) => {
           this.model.varUsuario.password = "";
@@ -859,8 +866,9 @@ export class UsuariosComponent implements AfterViewInit {
         this.model.varPersona.idtipodoc = this.model.varPersona.idtipodoc == '0' ? null : Number(this.model.varPersona.idtipodoc);
         // this.model.varPersona.idproceso = this.model.varPersona.idproceso == '0' ? null : Number(this.model.varPersona.idproceso);
 
-        this.model.varUsuario.name = this.model.varPersona.nombres + ' ' + this.model.varPersona.apellidos;
+        this.model.varUsuario.nombre_completo = this.model.varPersona.nombres + ' ' + this.model.varPersona.apellidos;
         this.model.varUsuario.email = this.model.varPersona.email;
+        this.model.varUsuario.usuario = this.currentUser.usuario;
 
         // if (this.model.varPersona.categoria == 'Civil') {
         //   this.model.varPersona.idempresa = this.model.varPersona.idempresa == '0' ? null : Number(this.model.varPersona.idempresa);
@@ -930,6 +938,7 @@ export class UsuariosComponent implements AfterViewInit {
               text: response.mensaje,
               allowOutsideClick: false,
               showConfirmButton: true,
+              confirmButtonText: 'Aceptar',
               icon: 'success'
             }).then((result: any) => {
               this.userModal = false;
@@ -1000,6 +1009,10 @@ export class UsuariosComponent implements AfterViewInit {
     //   this.model.varPersona.idescuadron = this.model.varPersona.idescuadron == '0' ? null : Number(this.model.varPersona.idescuadron);
     // }
 
+    this.model.varUsuario.nombre_completo = this.model.varPersona.nombres + ' ' + this.model.varPersona.apellidos;
+    this.model.varUsuario.email = this.model.varPersona.email;
+    this.model.varUsuario.usuario = this.currentUser.usuario;
+
     if (this.model.varUsuario.password != "") {
       if (this.model.varUsuario.password != this.model.varUsuario.passwordMatch) {
         Swal.fire({
@@ -1015,12 +1028,11 @@ export class UsuariosComponent implements AfterViewInit {
         })
       }
       else {
-        this.model.varUsuario.name = this.model.varPersona.nombres + ' ' + this.model.varPersona.apellidos;
-        this.model.varUsuario.email = this.model.varPersona.email;
-        
         this.perfil.updateChangePassword(this.model.varUsuario).subscribe(data => {});
       }
     }
+
+    // console.log(this.model.varUsuario);
 
     this.usuario.updatePersonal(this.model.varPersona).subscribe(data => {
       let response: any = this.api.ProcesarRespuesta(data);
@@ -1030,6 +1042,7 @@ export class UsuariosComponent implements AfterViewInit {
           text: response.mensaje,
           allowOutsideClick: false,
           showConfirmButton: true,
+          confirmButtonText: 'Aceptar',
           icon: 'success'
         }).then((result: any) => {
           this.userModal = false;
@@ -1058,7 +1071,7 @@ export class UsuariosComponent implements AfterViewInit {
 
   getPermisos() {
     let json = {
-      usuario: this.currentUser.email,
+      usuario: this.currentUser.usuario,
       cod_modulo: 'AD'
     }
     this.usuario.getPermisos(json).subscribe(data => {

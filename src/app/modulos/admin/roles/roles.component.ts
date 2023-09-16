@@ -12,8 +12,9 @@ export class Model {
   isEdit: any;
 
   varRol: any = {
-    id: 0,
-    name: ""
+    rol_id: 0,
+    rol: "",
+    usuario: ""
   }
 
   IsLectura: any;
@@ -74,7 +75,7 @@ export class RolesComponent implements OnInit {
     }
     else {
       this.varhistorial = this.varhistorialTemp.filter((item: any) => {
-        if (item.name.toString().toLowerCase().indexOf(filtro) !== -1) {
+        if (item.rol.toString().toLowerCase().indexOf(filtro) !== -1) {
             return true;
         }
         return false;
@@ -153,12 +154,13 @@ export class RolesComponent implements OnInit {
     this.model.isEdit = true;
     this.model.IsLectura = false;
 
-    this.model.varRol.id = data.id;
-    this.model.varRol.name = data.name;
+    this.model.varRol.rol_id = data.rol_id;
+    this.model.varRol.rol = data.rol;
     this.model.varRol.activo = (data.activo == 1) ? true : false;
   }
 
   saveRol() {
+    this.model.varRol.usuario = this.currentUser.usuario;
     this.rol.createRol(this.model.varRol).subscribe(data => {
       let response: any = this.api.ProcesarRespuesta(data);
       if (response.tipo == 0) {
@@ -234,14 +236,14 @@ export class RolesComponent implements OnInit {
     this.model.title = 'Detalle Rol';
     this.model.IsLectura = true;
 
-    this.model.varRol.id = data.id;
-    this.model.varRol.name = data.name;
+    this.model.varRol.rol_id = data.rol_id;
+    this.model.varRol.rol = data.rol;
     this.model.varRol.activo = data.activo == 1 ? true : false;
   }
 
   openPrivilegioDetalle(data: any) {
     this.rolPrivilegioModal = true;
-    this.model.title = "Roles Privilegios - " + data.name;
+    this.model.title = "Roles Privilegios - " + data.rol;
     this.model.IsLectura = true;
 
     this.openRolPrivilegiosById(data.rol_id);
@@ -342,7 +344,7 @@ export class RolesComponent implements OnInit {
 
   getPermisos() {
     let json = {
-      usuario: this.currentUser.email,
+      usuario: this.currentUser.usuario,
       cod_modulo: 'AD'
     }
     this.usuario.getPermisos(json).subscribe(data => {

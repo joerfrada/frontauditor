@@ -14,6 +14,7 @@
                         <th>Nombres</th>
                         <th>Apellidos</th>
                         <th>Usuario</th>
+                        <th>Activo</th>
                         <th *ngIf="permiso.consultar == 1">Detalle</th>
                         <th *ngIf="permiso.crear == 1 || permiso.actualizar == 1 || permiso.eliminar == 1">Acciones</th>
                     </tr>
@@ -24,6 +25,10 @@
                         <td>{{ item.Nombres }}</td>
                         <td>{{ item.Apellidos }}</td>
                         <td>{{ item.Email }}</td>
+                        <td>
+                            <i class="fa fa-1m5x fa-check-circle" *ngIf="item.Active == 1"></i>
+                            <i class="fa fa-1m5x fa-times-circle" *ngIf="item.Active == 0"></i>
+                        </td>
                         <td class="buttons" *ngIf="permiso.consultar == 1">
                             <button type="button" class="btn btn-secondary" (click)="openDetalle(item)"><i class="fa fa-eye"></i> Personal</button>
                             <button type="button" class="btn btn-secondary" (click)="openRolDetalle(item)"><i class="fa fa-eye"></i> Roles</button>
@@ -42,7 +47,7 @@
     </div>
 </card>
 
-<app-modal [title]="model.title" [show]="userModal" [size]="'modal-lg modal-h65'" [scroll]="'modal-scroll'" (close)="closeCrearModal($event)">
+<app-modal [title]="model.title" [show]="userModal" [size]="'modal-lg1 modal-h65'" [scroll]="'modal-scroll'" (close)="closeCrearModal($event)">
     <div role="body">
         <div class="form-body">
             <ng-container *ngIf="model.IsLectura == false">
@@ -90,6 +95,10 @@
                 <div class="input-group">
                     <label>Apellidos:</label>
                     <input type="text" class="form-control form-control-sm" [(ngModel)]="model.varPersona.apellidos" [disabled]="model.IsLectura">
+                </div>
+                <div class="input-group">
+                    <label>Activo:</label>
+                    <input type="checkbox" checked="checked" [(ngModel)]="model.varPersona.active" [disabled]="model.IsLectura">
                 </div>
             </div>
             <div class="row">

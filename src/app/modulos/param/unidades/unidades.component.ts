@@ -140,7 +140,7 @@ export class UnidadesComponent implements OnInit {
 
   getPermisos() {
     let json = {
-      usuario: this.currentUser.email,
+      usuario: this.currentUser.usuario,
       cod_modulo: 'AD'
     }
     this.usuario.getPermisos(json).subscribe(data => {

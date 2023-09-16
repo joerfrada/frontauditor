@@ -1,6 +1,6 @@
 export class Usuario {
-    public id?: number;
-    public name?: string;
+    public usuario_id?: number;
+    public nombre_completo?: string;
     public email?: string;
     public menus?: any;
 }

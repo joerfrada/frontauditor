@@ -17,8 +17,13 @@ export class SeguimientoService {
   private apiGetTemaCatalogacion = this.api.getBaseUrl + "seguim/seguimiento/getTemaCatalogacion";
   private apiGetConceptoEfectividad = this.api.getBaseUrl + "seguim/seguimiento/getConceptoEfectividad";
   private apiGetSeguimientoArchivo = this.api.getBaseUrl + "seguim/seguimiento/getSeguimientoArchivo";
+  private apiGetFuncionarios = this.api.getBaseUrl + "seguim/seguimiento/getFuncionarios";
   private apiCreateSeguimientos = this.api.getBaseUrl + "seguim/seguimiento/crearSeguimientos";
   private apiUpdateSeguimientos = this.api.getBaseUrl + "seguim/seguimiento/actualizarSeguimientos";
+  private apiGetEventos = this.api.getBaseUrl + "seguim/seguimiento/getEventos";
+  private apiCreateEventos = this.api.getBaseUrl + "seguim/seguimiento/crearEventos";
+  private apiUpdateEventos = this.api.getBaseUrl + "seguim/seguimiento/actualizarEventos";
+  private apiDeleteEvento = this.api.getBaseUrl + "seguim/seguimiento/eliminarEvento";
   private apiExportSeguimientos = this.api.getBaseUrl + "seguim/seguimiento/exportarSeguimientos";
 
   constructor(private http: HttpClient, private api: ApiService) { }
@@ -63,6 +68,11 @@ export class SeguimientoService {
     .pipe(retry(1), catchError(this.api.errorHandle));
   }
 
+  getFuncionarios(): Observable<any> {
+    return this.http.get<any>(this.apiGetFuncionarios, this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
   createSeguimientos(data: any): Observable<any> {
     return this.http.post<any>(this.apiCreateSeguimientos, data)
     .pipe(retry(1), catchError(this.api.errorHandle));
@@ -70,6 +80,26 @@ export class SeguimientoService {
 
   updateSeguimientos(data: any): Observable<any> {
     return this.http.post<any>(this.apiUpdateSeguimientos, data)
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  getEventos(data: any): Observable<any> {
+    return this.http.post<any>(this.apiGetEventos, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  createEventos(data: any): Observable<any> {
+    return this.http.post<any>(this.apiCreateEventos, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  updateEventos(data: any): Observable<any> {
+    return this.http.post<any>(this.apiUpdateEventos, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  deleteEventos(data: any): Observable<any> {
+    return this.http.post<any>(this.apiDeleteEvento, JSON.stringify(data), this.api.getHttpOptions('g'))
     .pipe(retry(1), catchError(this.api.errorHandle));
   }
 

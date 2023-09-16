@@ -55,16 +55,16 @@ export class HeaderComponent implements OnInit {
 
   openPerfil() {
     this.perfilModal = true;
-    this.model.title = 'Mi Perfil - ' + this.currentUser.name;
+    this.model.title = 'Mi Perfil - ' + this.currentUser.nombre_completo;
     this.model.varUsuario = new Model().varUsuario;
 
     $('.dropdown-menu').removeClass('dropdown-open');
 
-    this.perfil.getRoles({ user_id: this.currentUser.user_id }).subscribe(data => {
+    this.perfil.getRoles({ usuario_id: this.currentUser.usuario_id}).subscribe(data => {
       let response: any = this.api.ProcesarRespuesta(data);
       if (response.tipo == 0) {
         this.model.varRoles = response.result;
-        this.model.varUsuario.name = this.currentUser.name;
+        this.model.varUsuario.nombre_completo = this.currentUser.nombre_completo;
       }
     })
   }
@@ -88,7 +88,7 @@ export class HeaderComponent implements OnInit {
       })
     }
     else {
-      this.model.varUsuario.id = this.currentUser.user_id;
+      this.model.varUsuario.usuario_id = this.currentUser.usuario_id;
       this.model.varUsuario.email = this.currentUser.email;
 
       this.perfil.updateChangePassword(this.model.varUsuario).subscribe(data => {

@@ -209,7 +209,7 @@ export class InspeccionesComponent implements OnInit {
 
   getPermisos() {
     let json = {
-      usuario: this.currentUser.email,
+      usuario: this.currentUser.usuario,
       cod_modulo: 'IN'
     }
     this.usuario.getPermisos(json).subscribe(data => {
@@ -303,8 +303,8 @@ export class InspeccionesComponent implements OnInit {
       let response: any = this.api.ProcesarRespuesta(data);
       if (response.tipo == 0) {
         response.result.forEach((x: any) => {
-          x.id = x.IdUserLDAP;
-          x.item = x.Name;
+          x.id = x.usuario_id;
+          x.item = x.nombre_completo;
         });
         this.lstFuncionarios = response.result;
       }
@@ -314,8 +314,8 @@ export class InspeccionesComponent implements OnInit {
       let response: any = this.api.ProcesarRespuesta(data);
       if (response.tipo == 0) {
         response.result.forEach((x: any) => {
-          x.responsable_id = x.IdUserLDAP;
-          x.item = x.Name;
+          x.responsable_id = x.usuario_id;
+          x.item = x.nombre_completo;
         });
         this.lstResponsables = response.result;
       }
@@ -429,8 +429,8 @@ export class InspeccionesComponent implements OnInit {
       let response: any = this.api.ProcesarRespuesta(data);
       if (response.tipo == 0) {
         response.result.forEach((x: any) => {
-          x.id = x.IdUserLDAP;
-          x.item = x.Name;
+          x.id = x.usuario_id;
+          x.item = x.nombre_completo;
         });
         this.lstFuncionarios = response.result;
       }
@@ -734,7 +734,7 @@ export class InspeccionesComponent implements OnInit {
   }
 
   addObservador() {
-    this.model.lstObservador.push({ observador_id: 0, inspeccion_id: 0, user_id: 0, observador: "", NuevoRegistro: true, EliminarRegistro: false });
+    this.model.lstObservador.push({ observador_id: 0, inspeccion_id: 0, usuario_id: 0, observador: "", NuevoRegistro: true, EliminarRegistro: false });
   }
 
   deleteObservador(index: any) {
@@ -913,19 +913,19 @@ export class InspeccionesComponent implements OnInit {
     if (inputform == 'responsable') {
       this.selectUserModal = false;
       this.model.varInspeccion.responsable_id = data.responsable_id;
-      this.model.varInspeccion.responsable = data.Name;
+      this.model.varInspeccion.responsable = data.nombre_completo;
     }
 
     if (inputform == 'inspector-general') {
       this.selectUserModal = false;
-      this.model.varInspeccion.insp_general_id = data.id;
-      this.model.varInspeccion.inspector_general = data.Name;
+      this.model.varInspeccion.insp_general_id = data.usuario_id;
+      this.model.varInspeccion.inspector_general = data.nombre_completo;
     }
 
     if (inputform == 'inspector-lider') {
       this.selectUserModal = false;
-      this.model.varInspeccion.inspector_lider_id = data.id;
-      this.model.varInspeccion.inspector_lider = data.Name;
+      this.model.varInspeccion.inspector_lider_id = data.usuario_id;
+      this.model.varInspeccion.inspector_lider = data.nombre_completo;
     }
 
     if (inputform == 'criterio') {
@@ -942,14 +942,14 @@ export class InspeccionesComponent implements OnInit {
 
     if (inputform == 'grado-inspector') {
       this.selectUserModal = false;
-      this.model.lstInspector[this.indexform].grado_id = data.id;
-      this.model.lstInspector[this.indexform].grado = data.Name;
+      this.model.lstInspector[this.indexform].grado_id = data.usuario_id;
+      this.model.lstInspector[this.indexform].grado = data.nombre_completo;
     }
 
     if (inputform == 'grado-tecnico') {
       this.selectUserModal = false;
-      this.model.lstTecnicos[this.indexform].grado_id = data.id;
-      this.model.lstTecnicos[this.indexform].grado = data.Name;
+      this.model.lstTecnicos[this.indexform].grado_id = data.usuario_id;
+      this.model.lstTecnicos[this.indexform].grado = data.nombre_completo;
     }
 
     if (inputform == 'proceso-particular') {
@@ -972,8 +972,8 @@ export class InspeccionesComponent implements OnInit {
 
     if (inputform == 'observador') {
       this.selectUserModal = false;
-      this.model.lstObservador[this.indexform].user_id = data.id;
-      this.model.lstObservador[this.indexform].observador = data.Name;
+      this.model.lstObservador[this.indexform].usuario_id = data.usuario_id;
+      this.model.lstObservador[this.indexform].observador = data.nombre_completo;
     }
 
     if (inputform == 'inspeccion') {
@@ -997,14 +997,14 @@ export class InspeccionesComponent implements OnInit {
 
     if (inputform == 'actividad-inspeccionado') {
       this.selectUserModal = false;
-      this.model.varActividad.inspeccionado_id = data.id;
-      this.model.varActividad.inspeccionado = data.Name;
+      this.model.varActividad.inspeccionado_id = data.usuario_id;
+      this.model.varActividad.inspeccionado = data.nombre_completo;
     }
 
     if (inputform == 'actividad-inspector') {
       this.selectUserModal = false;
-      this.model.varActividad.inspector_id = data.id;
-      this.model.varActividad.inspector = data.Name;
+      this.model.varActividad.inspector_id = data.usuario_id
+      this.model.varActividad.inspector = data.nombre_completo;
     }
   }
 

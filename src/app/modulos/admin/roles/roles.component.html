@@ -18,7 +18,7 @@
                 </thead>
                 <tbody class="scroll">
                     <tr *ngFor="let item of varhistorial; let i = index">
-                        <td>{{ item.name }}</td>
+                        <td>{{ item.rol }}</td>
                         <td>
                             <i class="fa fa-1m5x fa-check-circle" *ngIf="item.activo == 1"></i>
                             <i class="fa fa-1m5x fa-times-circle" *ngIf="item.activo == 0"></i>
@@ -47,7 +47,7 @@
             <div class="row">
                 <div class="input-group">
                     <label>Rol:</label>
-                    <input type="text" class="form-control" [(ngModel)]="model.varRol.name" [disabled]="model.IsLectura">
+                    <input type="text" class="form-control" [(ngModel)]="model.varRol.rol" [disabled]="model.IsLectura">
                 </div>
                 <div class="input-group">
                     <label style="text-align: center;">Activo:</label>

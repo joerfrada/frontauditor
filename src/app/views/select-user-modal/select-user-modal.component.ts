@@ -28,6 +28,10 @@ export class SelectUserModalComponent implements OnInit {
     this.output.emit(data);
   }
 
+  refreshDato() {
+    this.array = this.arrayTemp;
+  }
+
   search(e: any) {
     let filter = e.target.value.trim().toLowerCase();
     if (filter.length == 0) {

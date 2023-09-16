@@ -5,6 +5,7 @@ import { UserService } from '../../../services/admin/user.service';
 import { AnotacionService } from '../../../services/inspec/anotacion.service';
 import { InspeccionService } from '../../../services/inspec/inspeccion.service';
 import { Permiso } from 'src/app/modelos/permiso.model';
+import { Utilidades } from 'src/app/helper/utilidades';
 
 declare var Swal:any;
 
@@ -155,7 +156,7 @@ export class AnotacionesComponent implements OnInit {
 
   getPermisos() {
     let json = {
-      usuario: this.currentUser.email,
+      usuario: this.currentUser.usuario,
       cod_modulo: 'IN'
     }
     this.usuario.getPermisos(json).subscribe(data => {
@@ -213,8 +214,8 @@ export class AnotacionesComponent implements OnInit {
       let response: any = this.api.ProcesarRespuesta(data);
       if (response.tipo == 0) {
         response.result.forEach((x: any) => {
-          x.id = x.IdUserLDAP;
-          x.item = x.Name;
+          x.id = x.usuario_id;
+          x.item = x.nombre_completo;
         });
         this.lstFuncionariosLDAP = response.result;
       }
@@ -346,8 +347,17 @@ export class AnotacionesComponent implements OnInit {
     });
   }
 
+  getConsecutivoHallazgo(data: any) {
+    this.anotacion.getConsecutivoHallazgo({ inspeccion_id: data.inspeccion_id, tipo_hallazgo_cod: data.tipo_hallazgo_cod }).subscribe(data1 => {
+      let response: any = this.api.ProcesarRespuesta(data1);
+      if (response.tipo == 0) {
+        this.consecutivo = response.result[0].conthallazgo;
+      }
+    });
+  }
+
+
   editAnotacion(data: any) {
-    this.consecutivo
     this.modal = true;
     this.model.title = 'Actualizar Hallazgo';
     this.model.isCrear = false;
@@ -370,6 +380,8 @@ export class AnotacionesComponent implements OnInit {
     this.model.varHallazgo.subproceso = data.subproceso;
     this.model.varHallazgo.descripcion_evidencia = data.descripcion_evidencia;
 
+    this.codigo = data.codigo;
+
     this.anotacion.getAnotacionArchivo({ hallazgo_id: data.hallazgo_id }).subscribe(data1 => {
       let response: any = this.api.ProcesarRespuesta(data1);
       if (response.tipo == 0) {
@@ -378,14 +390,6 @@ export class AnotacionesComponent implements OnInit {
           x.link = this.api.url_file + x.archivo;
         });
         this.model.lstArchivo = response.result;
-      }
-    });
-
-    this.anotacion.getConsecutivoHallazgo({ inspeccion_id: data.inspeccion_id }).subscribe(data1 => {
-      let response: any = this.api.ProcesarRespuesta(data1);
-      if (response.tipo == 0) {
-        this.codigo = response.result[0].codigo;
-        this.consecutivo = response.result[0].conthallazgo;
       }
     });
 
@@ -405,10 +409,6 @@ export class AnotacionesComponent implements OnInit {
     this.getAnotacionCorreccion(data.hallazgo_id);
     this.getAnotacionMejoramiento(data.hallazgo_id);
     this.getAnotacionOrden(data.hallazgo_id);
-
-    setTimeout(() => {
-      this.changeTipoHallazgo(data.tipo_hallazgo_id);
-    }, 100);
   }
 
   uploadFile(event: any) {
@@ -416,29 +416,29 @@ export class AnotacionesComponent implements OnInit {
     this.model.varHallazgo.archivo = event.target.files[0].name;
   }
 
-  changeTipoHallazgo(id: any) {
+  changeTipoHallazgo(id: any, t: any = 0) {
     if (id == 0) this.tipo = '-';
     else if (id == 746) this.tipo = 'AR';
-    else if (id == 747) this.tipo = 'I';
+    else if (id == 747) this.tipo = 'IN';
     else if (id == 748) this.tipo = 'IR';
-    else if (id == 749) this.tipo = 'IV';
-    else if (id == 750) this.tipo = 'R';
-    else if (id == 751) this.tipo = 'O';
+    else if (id == 749) this.tipo = 'EI';
+    else if (id == 750) this.tipo = 'RE';
+    else if (id == 751) this.tipo = 'OR';
 
-    let nextHallazgo = this.consecutivo + 1;
-    switch (nextHallazgo) {
-      case 1:
-        this.model.varHallazgo.codificacion = this.codigo + "-" + this.tipo + "000" + nextHallazgo.toString();
-        break;
-      case 2:
-        this.model.varHallazgo.codificacion = this.codigo + "-" + this.tipo + "00" + nextHallazgo.toString();
-        break;
-      case 3:
-        this.model.varHallazgo.codificacion = this.codigo + "-" + this.tipo + "0" + nextHallazgo.toString();
-        break;
-      case 4:
-        this.model.varHallazgo.codificacion = this.codigo + "-" + this.tipo + nextHallazgo.toString();
-        break;
+    if (t == 0) {
+      this.model.varHallazgo.codificacion = "";
+    }
+    else if (t == 1) {
+      let data = this.model.varHallazgo;
+      this.codigo = data.codigo;
+      this.anotacion.getConsecutivoHallazgo({ inspeccion_id: data.inspeccion_id, tipo_hallazgo_cod: this.tipo }).subscribe(data1 => {
+        let response: any = this.api.ProcesarRespuesta(data1);
+        if (response.tipo == 0) {
+          this.consecutivo = response.result[0].conthallazgo;
+          let nextHallazgo = this.consecutivo + 1;
+          this.model.varHallazgo.codificacion = this.codigo + "-" + this.tipo + Utilidades.pad(nextHallazgo.toString());
+        }
+      });
     }
   }
 
@@ -533,14 +533,6 @@ export class AnotacionesComponent implements OnInit {
       this.model.varHallazgo.codigo = data.codigo;
       this.model.varHallazgo.nombre_inspeccion = data.nombre_inspeccion;
 
-      this.anotacion.getConsecutivoHallazgo({ inspeccion_id: data.inspeccion_id }).subscribe(data1 => {
-        let response: any = this.api.ProcesarRespuesta(data1);
-        if (response.tipo == 0) {
-          this.codigo = response.result[0].codigo;
-          this.consecutivo = response.result[0].conthallazgo;
-        }
-      });
-
       this.anotacion.getCriteriosInspeccion({ inspeccion_id: data.inspeccion_id }).subscribe(data1 => {
         let response: any = this.api.ProcesarRespuesta(data1);
         if (response.tipo == 0) {
@@ -585,8 +577,8 @@ export class AnotacionesComponent implements OnInit {
 
     if (inputform == 'funcionarios') {
       this.selectUserModal = false;
-      this.model.lstActividad[this.indexform].responsable_id = data.id;
-      this.model.lstActividad[this.indexform].responsable = data.Name;
+      this.model.lstActividad[this.indexform].responsable_id = data.usuario_idid;
+      this.model.lstActividad[this.indexform].responsable = data.nombre_completo;
     }
 
     if (inputform == 'codigo-tema') {

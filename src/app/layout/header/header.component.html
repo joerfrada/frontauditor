@@ -13,7 +13,7 @@
             <li class="dropdown" (click)="toggleDropdown()">
                 <div class="profile">
                     <span class="profile-info">                        
-                        {{currentUser.name}}
+                        {{currentUser.nombre_completo}}
                         <small *ngIf="currentUser.es_empresa == 1">Empresa</small>
                         <small *ngIf="currentUser.es_empresa == 0">SECAD-FAC</small>
                     </span>
@@ -42,7 +42,7 @@
                     <div class="row">
                         <div class="input-group">
                             <label>Nombre:</label>
-                            <input type="text" class="form-control form-control-sm" [(ngModel)]="model.varUsuario.name">
+                            <input type="text" class="form-control form-control-sm" [(ngModel)]="model.varUsuario.nombre_completo">
                         </div>
                     </div>
                     <div class="row">

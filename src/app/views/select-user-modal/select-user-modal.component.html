@@ -8,6 +8,7 @@
             <div class="modal-body">
                 <div class="filter-content">
                     <input type="search" placeholder="Buscar..." (keyup)="search($event)" (search)="clearSearch($event)">
+                    <button type="button" class="btn btn-primary" (click)="refreshDato()"><i class="fa fa-refresh"></i></button>
                 </div>
                 <div class="table-content">
                     <table class="table flex-table">
