@@ -1032,8 +1032,6 @@ export class UsuariosComponent implements AfterViewInit {
       }
     }
 
-    // console.log(this.model.varUsuario);
-
     this.usuario.updatePersonal(this.model.varPersona).subscribe(data => {
       let response: any = this.api.ProcesarRespuesta(data);
       if (response.tipo == 0) {
