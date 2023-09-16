@@ -278,7 +278,6 @@ export class ListasDinamicasComponent implements OnInit {
     this.selectModal = false;
 
     if (inputform == 'lista-valor') {
-      console.log(data);
       this.model.varListaDetalle.lista_padre_id = data.lista_dinamica_id;
       this.model.varListaDetalle.nombre_valor = data.lista_dinamica;
     }
