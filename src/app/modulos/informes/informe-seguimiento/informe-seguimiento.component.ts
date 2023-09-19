@@ -214,7 +214,7 @@ export class InformeSeguimientoComponent implements OnInit {
         response.result.forEach((x: any) => {
           x.responsable_id = x.usuario_id;
           x.responsable = x.nombre_completo;
-          x.item = x.Name;
+          x.item = x.nombre_completo;
         });
         this.lstFuncionarios = response.result;
       }
@@ -462,15 +462,9 @@ export class InformeSeguimientoComponent implements OnInit {
 
       let dato = this.lstHallazgo.filter((x: any) => x.inspeccion_id == data.inspeccion_id)[0];
       if (dato != undefined) {
-        setTimeout(() => {
-          // this.model.varSeguimiento.hallazgo_id = dato.hallazgo_id;
-          // this.model.varSeguimiento.codificacion = dato.codificacion;
-          this.model.varSeguimiento.tema_catalogacion_id = dato.tema_catalogacion_id;
-          this.model.varSeguimiento.codigo_tema = (dato.tipo_hallazgo_cod == 'AR' || dato.tipo_hallazgo_cod == 'OR') ? "N/A" : dato.codigo_tema;
-          this.model.varSeguimiento.tema_catalogacion = (dato.tipo_hallazgo_cod == 'AR' || dato.tipo_hallazgo_cod == 'OR') ? "N/A" : dato.tema_catalogacion;
-
-          // this.getAnotacionCausa(dato.hallazgo_id);
-        }, 10);
+        this.model.varSeguimiento.tema_catalogacion_id = dato.tema_catalogacion_id;
+        this.model.varSeguimiento.codigo_tema = (dato.tipo_hallazgo_cod == 'AR' || dato.tipo_hallazgo_cod == 'OR') ? "N/A" : dato.codigo_tema;
+        this.model.varSeguimiento.tema_catalogacion = (dato.tipo_hallazgo_cod == 'AR' || dato.tipo_hallazgo_cod == 'OR') ? "N/A" : dato.tema_catalogacion;
       }
       else {
         this.model.varSeguimiento.tema_catalogacion_id = null;
@@ -479,12 +473,12 @@ export class InformeSeguimientoComponent implements OnInit {
       }
     }
 
-    if (inputform == 'codigo-tema') {
-      this.selectCodigoTemaModal = false;
-      this.model.varSeguimiento.tema_catalogacion_id = data.tema_catalogacion_id;
-      this.model.varSeguimiento.codigo_tema = data.codigo_tema;
-      this.model.varSeguimiento.tema_catalogacion = data.tema_catalogacion;
-    }
+    // if (inputform == 'codigo-tema') {
+    //   this.selectCodigoTemaModal = false;
+    //   this.model.varSeguimiento.tema_catalogacion_id = data.tema_catalogacion_id;
+    //   this.model.varSeguimiento.codigo_tema = data.codigo_tema;
+    //   this.model.varSeguimiento.tema_catalogacion = data.tema_catalogacion;
+    // }
 
     if (inputform == 'hallazgo') {
       this.selectHallazgoModal = false;

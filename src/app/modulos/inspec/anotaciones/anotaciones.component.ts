@@ -315,6 +315,7 @@ export class AnotacionesComponent implements OnInit {
         response.result.forEach((x: any) => {
           x.NuevoRegistro = false;
           x.EliminarRegistro = true;
+          x.dependencia = x.unidad + ' / ' + x.dependencia;
         });
         this.model.varCorreccion = response.result;
       }
@@ -328,6 +329,7 @@ export class AnotacionesComponent implements OnInit {
         response.result.forEach((x: any) => {
           x.NuevoRegistro = false;
           x.EliminarRegistro = true;
+          x.dependencia = x.unidad + ' / ' + x.dependencia;
         });
         this.model.varMejoramiento = response.result;
       }
@@ -341,6 +343,7 @@ export class AnotacionesComponent implements OnInit {
         response.result.forEach((x: any) => {
           x.NuevoRegistro = false;
           x.EliminarRegistro = true;
+          x.dependencia = x.unidad + ' / ' + x.dependencia;
         });
         this.model.varOrden = response.result;
       }
@@ -409,11 +412,23 @@ export class AnotacionesComponent implements OnInit {
     this.getAnotacionCorreccion(data.hallazgo_id);
     this.getAnotacionMejoramiento(data.hallazgo_id);
     this.getAnotacionOrden(data.hallazgo_id);
+
+    this.obtenerTipoHallazgo(data.tipo_hallazgo_id);
   }
 
   uploadFile(event: any) {
     this.file = event.target.files[0];
     this.model.varHallazgo.archivo = event.target.files[0].name;
+  }
+
+  obtenerTipoHallazgo(id: any) {
+    if (id == 0) this.tipo = '-';
+    else if (id == 746) this.tipo = 'AR';
+    else if (id == 747) this.tipo = 'IN';
+    else if (id == 748) this.tipo = 'IR';
+    else if (id == 749) this.tipo = 'EI';
+    else if (id == 750) this.tipo = 'RE';
+    else if (id == 751) this.tipo = 'OR';
   }
 
   changeTipoHallazgo(id: any, t: any = 0) {
@@ -551,7 +566,7 @@ export class AnotacionesComponent implements OnInit {
       this.selectUnidadModal = false;
       this.model.varCorreccion[this.indexform].responsable_id = data.dependencia_id;
       this.model.varCorreccion[this.indexform].unidad = data.unidad;
-      this.model.varCorreccion[this.indexform].dependencia = data.unidad + ' /'  + data.dependencia;
+      this.model.varCorreccion[this.indexform].dependencia = data.unidad + ' / '  + data.dependencia;
     }
 
     if (inputform == 'dependencias2') {
@@ -649,6 +664,7 @@ export class AnotacionesComponent implements OnInit {
           text: response.mensaje,
           allowOutsideClick: false,
           showConfirmButton: true,
+          confirmButtonText: 'Aceptar',
           icon: 'success'
         }).then((result: any) => {
           this.modal = false;
@@ -718,6 +734,7 @@ export class AnotacionesComponent implements OnInit {
           text: response.mensaje,
           allowOutsideClick: false,
           showConfirmButton: true,
+          confirmButtonText: 'Aceptar',
           icon: 'success'
         }).then((result: any) => {
           this.modal = false;

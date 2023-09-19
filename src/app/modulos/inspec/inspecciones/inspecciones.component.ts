@@ -569,6 +569,7 @@ export class InspeccionesComponent implements OnInit {
           x.EliminarRegistro = true;
         });
         this.model.lstObservador = response.result;
+        console.log(this.model.lstObservador);
       }
     });
   }

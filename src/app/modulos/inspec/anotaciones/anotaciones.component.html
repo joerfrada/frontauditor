@@ -31,7 +31,7 @@
                         <td>{{ item.fecha }}</td>
                         <td>{{ item.tipo_hallazgo }}</td>
                         <td class="buttons">
-                            <ng-container *ngIf="item.tipo_hallazgo_cod == 'IN' || item.tipo_hallazgo_cod == 'IR' || item.tipo_hallazgo_cod == 'EI' || item.tipo_hallazgo_codo == 'RE'">
+                            <ng-container *ngIf="item.tipo_hallazgo_cod == 'IN' || item.tipo_hallazgo_cod == 'IR' || item.tipo_hallazgo_cod == 'EI' || item.tipo_hallazgo_cod == 'RE'">
                                 <button type="button" class="btn btn-info" (click)="openCausa(item)"><i class="fa fa-cogs"></i></button>
                             </ng-container>
                         </td>
