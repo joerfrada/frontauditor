@@ -452,39 +452,23 @@ export class InformeSeguimientoComponent implements OnInit {
       this.model.varSeguimiento.inspeccion_id = data.inspeccion_id;
       this.model.varSeguimiento.codigo_inspeccion = data.codigo;
       this.model.varSeguimiento.nombre_inspeccion = data.nombre_inspeccion;
-      // this.model.varSeguimiento.responsable_id = data.inspector_lider_id == 0 ? 0 : data.inspector_lider_id;
-      // this.model.varSeguimiento.responsable = data.inspector_lider_id == 0 ? "N/A" : data.inspector_lider;
 
       this.lstHallazgo = this.lstHallazgoTemp.filter((x: any) => x.inspeccion_id == data.inspeccion_id);
       this.model.varSeguimiento.codificacion = '';
       this.model.varSeguimiento.causa = '';
       this.model.varSeguimiento.actividad = '';
-
-      let dato = this.lstHallazgo.filter((x: any) => x.inspeccion_id == data.inspeccion_id)[0];
-      if (dato != undefined) {
-        this.model.varSeguimiento.tema_catalogacion_id = dato.tema_catalogacion_id;
-        this.model.varSeguimiento.codigo_tema = (dato.tipo_hallazgo_cod == 'AR' || dato.tipo_hallazgo_cod == 'OR') ? "N/A" : dato.codigo_tema;
-        this.model.varSeguimiento.tema_catalogacion = (dato.tipo_hallazgo_cod == 'AR' || dato.tipo_hallazgo_cod == 'OR') ? "N/A" : dato.tema_catalogacion;
-      }
-      else {
-        this.model.varSeguimiento.tema_catalogacion_id = null;
-        this.model.varSeguimiento.codigo_tema = "N/A";
-        this.model.varSeguimiento.tema_catalogacion = "N/A";
-      }
     }
-
-    // if (inputform == 'codigo-tema') {
-    //   this.selectCodigoTemaModal = false;
-    //   this.model.varSeguimiento.tema_catalogacion_id = data.tema_catalogacion_id;
-    //   this.model.varSeguimiento.codigo_tema = data.codigo_tema;
-    //   this.model.varSeguimiento.tema_catalogacion = data.tema_catalogacion;
-    // }
 
     if (inputform == 'hallazgo') {
       this.selectHallazgoModal = false;
       this.model.varSeguimiento.hallazgo_id = data.hallazgo_id;
       this.model.varSeguimiento.codificacion = data.codificacion;
       this.tipoHallazgo_codigo = data.tipo_hallazgo_cod;
+
+      let dato = this.lstHallazgo.filter((x: any) => x.tipo_hallazgo_cod == data.tipo_hallazgo_cod)[0]
+      this.model.varSeguimiento.tema_catalogacion_id = dato.tema_catalogacion_id;
+      this.model.varSeguimiento.codigo_tema = dato.codigo_tema;
+      this.model.varSeguimiento.tema_catalogacion = dato.tema_catalogacion;
 
       if (data.tipo_hallazgo_cod == 'AR' || data.tipo_hallazgo_cod == 'OR') {
         this.model.varSeguimiento.hallazgo_causa_raiz_id = null;
@@ -749,7 +733,10 @@ export class InformeSeguimientoComponent implements OnInit {
               x.usuario = this.currentUser.usuario;
 
               if (x.NuevoRegistro == true) {
-                this.seguim.createEventos(x).subscribe(data => {});
+                this.seguim.createEventos(x).subscribe(data1 => {});
+              }
+              else {
+                this.seguim.updateEventos(x).subscribe(data1 => {});
               }
             });
           }

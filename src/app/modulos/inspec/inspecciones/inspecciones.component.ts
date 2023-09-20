@@ -599,7 +599,7 @@ export class InspeccionesComponent implements OnInit {
   }
 
   addCriterio() {
-    this.model.varCriterios.push({ insp_criterio_id: 0, inspeccion_id: 0, criterio_id: 0, criterio: "", NuevoRegistro: true, EliminarRegistro: false });
+    this.model.varCriterios.push({ insp_criterio_id: 0, inspeccion_id: 0, criterio_id: 0, criterio: "", usuario: this.currentUser.usuario, NuevoRegistro: true, EliminarRegistro: false });
   }
 
   deleteCriterio(index: any) {
@@ -633,7 +633,7 @@ export class InspeccionesComponent implements OnInit {
   }
 
   addParticular() {
-    this.model.lstParticular.push({ criterio_particular_id: 0, inspeccion_id: 0, criterio_id: 0, criterio: "", proceso_id: 0, procesos: "", NuevoRegistro: true, EliminarRegistro: false });
+    this.model.lstParticular.push({ criterio_particular_id: 0, inspeccion_id: 0, criterio_id: 0, criterio: "", proceso_id: 0, procesos: "", usuario: this.currentUser.usuario, NuevoRegistro: true, EliminarRegistro: false });
   }
 
   deleteParticular(index: any) {
@@ -667,7 +667,7 @@ export class InspeccionesComponent implements OnInit {
   }
 
   addInspector() {
-    this.model.lstInspector.push({ equipo_inspector_id: 0, inspeccion_id: 0, proceso_id: 0, procesos: "", grado_id: 0, grado: "", NuevoRegistro: true, EliminarRegistro: false });
+    this.model.lstInspector.push({ equipo_inspector_id: 0, inspeccion_id: 0, proceso_id: 0, procesos: "", grado_id: 0, grado: "", usuario: this.currentUser.usuario, NuevoRegistro: true, EliminarRegistro: false });
   }
 
   deleteInspector(index: any) {
@@ -701,7 +701,7 @@ export class InspeccionesComponent implements OnInit {
   }
 
   addTecnico() {
-    this.model.lstTecnicos.push({ equipo_tecnico_id: 0, inspeccion_id: 0, proceso_id: 0, procesos: "", grado_id: 0, grado: "", NuevoRegistro: true, EliminarRegistro: false });
+    this.model.lstTecnicos.push({ equipo_tecnico_id: 0, inspeccion_id: 0, proceso_id: 0, procesos: "", grado_id: 0, grado: "", usuario: this.currentUser.usuario, NuevoRegistro: true, EliminarRegistro: false });
   }
 
   deleteTecnico(index: any) {
@@ -735,7 +735,7 @@ export class InspeccionesComponent implements OnInit {
   }
 
   addObservador() {
-    this.model.lstObservador.push({ observador_id: 0, inspeccion_id: 0, usuario_id: 0, observador: "", NuevoRegistro: true, EliminarRegistro: false });
+    this.model.lstObservador.push({ observador_id: 0, inspeccion_id: 0, usuario_id: 0, observador: "", usuario: this.currentUser.usuario, NuevoRegistro: true, EliminarRegistro: false });
   }
 
   deleteObservador(index: any) {
@@ -900,7 +900,7 @@ export class InspeccionesComponent implements OnInit {
   dataform(inputform: any, data: any) {
     if (inputform == 'unidad') {
       this.selectUnidadModal = false;
-      this.model.varInspeccion.unidad_id = data.unidad_id;
+      this.model.varInspeccion.unidad_id = data.dependencia_id;
       this.model.varInspeccion.unidad = data.unidad;
       this.model.varInspeccion.dependencia = data.dependencia;
     }

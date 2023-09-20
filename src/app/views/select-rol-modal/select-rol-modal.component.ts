@@ -13,7 +13,7 @@ export class SelectRolModalComponent implements OnInit {
   @Input() show?: Boolean;
   @Input() array?: any;
   @Input() arrayTemp?: any;
-  @Input() size?: string = 'modal-lg';
+  @Input() size?: string = 'modal-lg1';
   @Output() close = new EventEmitter<Boolean>();
   @Output() output = new EventEmitter<any>();
 

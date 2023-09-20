@@ -56,7 +56,7 @@
             <div class="row">
                 <div class="input-group">
                     <label>UMA <span class="form-required">(*)</span></label>
-                    <input type="text" class="form-control" (click)="saveUnidad()" [(ngModel)]="model.varInspeccion.unidad" [disabled]="model.IsLectura">
+                    <input type="text" class="form-control" placeholder="Seleccionar..." (click)="saveUnidad()" [(ngModel)]="model.varInspeccion.unidad" [disabled]="model.IsLectura">
                 </div>
                 <div class="input-group">
                     <label>Dependencia</label>
@@ -159,7 +159,7 @@
                         <tbody class="scroll">
                             <tr *ngFor="let item of model.lstParticular; let i = index">
                                 <td><input type="text" class="form-control" placeholder="Seleccionar..." title="{{ item.criterio }}" [(ngModel)]="item.criterio" (click)="saveCriteriosParticular(i)" [disabled]="model.IsLectura"></td>
-                                <td><input type="text" class="form-control" placeholder="Seleccionar..." title="{{ item.proceso }}" [(ngModel)]="item.procesos" (click)="saveProcesosParticular(i)" [disabled]="model.IsLectura"></td>
+                                <td><input type="text" class="form-control" placeholder="Seleccionar..." title="{{ item.procesos }}" [(ngModel)]="item.procesos" (click)="saveProcesosParticular(i)" [disabled]="model.IsLectura"></td>
                                 <td *ngIf="model.IsLectura == false">
                                     <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="model.lstParticular[i].NuevoRegistro" (click)="deleteParticular(i)"></i>
                                     <i class="fa fa-1m5x fa-trash pointer noselect" style="color: red !important;" *ngIf="model.lstParticular[i].EliminarRegistro" (click)="eliminarParticular(item, i)"></i>

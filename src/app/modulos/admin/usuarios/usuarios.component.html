@@ -22,12 +22,12 @@
                 <tbody class="scroll">
                     <tr *ngFor="let item of varhistorial; let i = index">
                         <!-- <td>{{ item.Grado }}</td> -->
-                        <td>{{ item.Nombres }}</td>
-                        <td>{{ item.Apellidos }}</td>
-                        <td>{{ item.Email }}</td>
+                        <td>{{ item.nombres }}</td>
+                        <td>{{ item.apellidos }}</td>
+                        <td>{{ item.email }}</td>
                         <td>
-                            <i class="fa fa-1m5x fa-check-circle" *ngIf="item.Active == 1"></i>
-                            <i class="fa fa-1m5x fa-times-circle" *ngIf="item.Active == 0"></i>
+                            <i class="fa fa-1m5x fa-check-circle" *ngIf="item.activo == 1"></i>
+                            <i class="fa fa-1m5x fa-times-circle" *ngIf="item.activo == 0"></i>
                         </td>
                         <td class="buttons" *ngIf="permiso.consultar == 1">
                             <button type="button" class="btn btn-secondary" (click)="openDetalle(item)"><i class="fa fa-eye"></i> Personal</button>
@@ -64,27 +64,6 @@
                     </div>
                 </div>
             </ng-container>
-            <!-- <div class="row">
-                <div class="col" style="padding: 10px; align-items: center;" [ngStyle]="{'width': model.isEdit == false ? '50%' : '100%'}">
-                    <canvas #myCanvas style="width: 200px; height: 200px; padding-bottom: 10px; object-fit: contain;"></canvas>
-                    <ng-container *ngIf="model.IsLectura == false">
-                        <button type="button" class="btn btn-info" (click)="fileUpload.click()">Subir imagen</button>
-                        <input type="file" #fileUpload (change)="changeFileImage($event)">
-                    </ng-container>
-                </div>
-                <div class="col" style="width: 50%;" *ngIf="model.isEdit == false">
-                    <div class="title-row">Credenciales</div>
-                    <div class="line-col"></div>
-                    <div class="input-group">
-                        <label>Contraseña:</label>
-                        <input type="password" class="form-control form-control-sm" placeholder="Ingrese su contraseña" [(ngModel)]="model.varUsuario.password" [disabled]="isDisabled">
-                    </div>
-                    <div class="input-group">
-                        <label>Verificar Contraseña</label>
-                        <input type="password" class="form-control form-control-sm" placeholder="Repite su contraseña" [(ngModel)]="model.varUsuario.passwordMatch" [disabled]="isDisabled">
-                    </div>
-                </div>
-            </div> -->
             <div class="title-row">Información Usuario</div>
             <div class="line-col"></div>
             <div class="row">
@@ -98,300 +77,26 @@
                 </div>
                 <div class="input-group">
                     <label>Activo:</label>
-                    <input type="checkbox" checked="checked" [(ngModel)]="model.varPersona.active" [disabled]="model.IsLectura">
+                    <input type="checkbox" checked="checked" [(ngModel)]="model.varPersona.activo" [disabled]="model.IsLectura">
                 </div>
             </div>
             <div class="row">
                 <div class="input-group">
                     <label>Tipo de Documento:</label>
-                    <select class="form-select form-select-sm" [(ngModel)]="model.varPersona.idtipoident" [disabled]="model.IsLectura">
+                    <select class="form-select form-select-sm" [(ngModel)]="model.varPersona.tipo_documento_id" [disabled]="model.IsLectura">
                         <option value="0">Seleccionar</option>
-                        <option *ngFor="let item of lstTipoDoc" value="{{ item.IdTipoDoc }}">{{ item.NombreTipoDoc }}</option>
+                        <option *ngFor="let item of lstTipoDoc" value="{{ item.tipo_documento_id }}">{{ item.tipo_documento }}</option>
                     </select>
                 </div>
                 <div class="input-group">
                     <label>Número de Documento:</label>
-                    <input type="text" class="form-control form-control-sm" [(ngModel)]="model.varPersona.cedula" [disabled]="model.IsLectura">
+                    <input type="text" class="form-control form-control-sm" [(ngModel)]="model.varPersona.num_identificacion" [disabled]="model.IsLectura">
                 </div>
                 <div class="input-group">
                     <label>Email Institucional:</label>
                     <input type="text" class="form-control form-control-sm" [(ngModel)]="model.varPersona.email" [disabled]="model.IsLectura">
                 </div>
-                <!-- <div class="input-group">
-                    <label>Lugar de Expedición:</label>
-                    <input type="text" class="form-control form-control-sm" [(ngModel)]="model.varPersona.lugarexpedicion" [disabled]="model.IsLectura">
-                </div>
-                <div class="input-group">
-                    <label>Lugar de Nacimiento:</label>
-                    <input type="text" class="form-control form-control-sm" [(ngModel)]="model.varPersona.lugarnacim" [disabled]="model.IsLectura">
-                </div>
-                <div class="input-group">
-                    <label>Fecha de Nacimiento:</label>
-                    <input type="date" class="form-control form-control-sm" id="FechaNacim" [(ngModel)]="model.varPersona.fechanacim" (change)="changeFechaNacim($event)" [disabled]="model.IsLectura">
-                </div>
-                <div class="input-group">
-                    <label>Edad:</label>
-                    <input type="text" class="form-control form-control-sm" [(ngModel)]="model.varPersona.edad" readonly>
-                </div> -->
-            </div>
-            <!-- <div class="row">
-                <div class="input-group">
-                    <label>Email Institucional:</label>
-                    <input type="text" class="form-control form-control-sm" [(ngModel)]="model.varPersona.email" [disabled]="model.IsLectura">
-                </div>
-                <div class="input-group">
-                    <label>Email Personal:</label>
-                    <input type="text" class="form-control form-control-sm" [(ngModel)]="model.varPersona.emailpersonal" [disabled]="model.IsLectura">
-                </div>
-                <div class="input-group">
-                    <label>Tipo Personal:</label>
-                    <select class="form-select form-select-sm" [(ngModel)]="model.varPersona.categoria" [disabled]="model.IsLectura">
-                        <option value="0">Seleccionar</option>
-                        <option *ngFor="let item of lstTipoPersonal" value="{{ item.valor }}">{{ item.valor }}</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Proceso:</label>
-                    <select class="form-select form-select-sm" [(ngModel)]="model.varPersona.idproceso" [disabled]="model.IsLectura">
-                        <option value="0">Seleccionar</option>
-                        <option *ngFor="let item of lstProcesos" value="{{ item.IdProceso }}">{{ item.Proceso }}</option>
-                    </select>
-                </div>
-            </div>
-            <ng-container *ngIf="model.varPersona.categoria == 'Civil'">
-                <div class="title-row">Información Civil</div>
-                <div class="line-col"></div>
-                <div class="row">
-                    <div class="input-group">
-                        <label>Organización:</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="model.varPersona.idempresa" [disabled]="model.IsLectura">
-                            <option value="0">Seleccionar</option>
-                            <option *ngFor="let item of lstEmpresas" value="{{ item.IdEmpresa }}">{{ item.NombreEmpresa }}</option>
-                        </select> 
-                    </div>
-                    <div class="input-group">
-                        <label>Dependencia/Facultad:</label>
-                        <input type="text" class="form-control form-control-sm" [(ngModel)]="model.varPersona.dependeciafacultad" [disabled]="model.IsLectura">
-                    </div>
-                    <div class="input-group">
-                        <label>Profesión/Carrera:</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="model.varPersona.idcarreraprofesion" [disabled]="model.IsLectura">
-                            <option value="0">Seleccionar</option>
-                            <option *ngFor="let item of lstCarrerasPro" value="{{ item.IdCarreraProfesion }}">{{ item.CarreraProfesion }}</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label>Escolaridad:</label>
-                        <input type="text" class="form-control form-control-sm" [(ngModel)]="model.varPersona.escolaridad" [disabled]="model.IsLectura">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="input-group">
-                        <label>Cargo:</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="model.varPersona.idcargo" [disabled]="model.IsLectura">
-                            <option value="0">Seleccionar</option>
-                            <option *ngFor="let item of lstCargos" value="{{ item.IdCargo }}">{{ item.Cargo }}</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label>Nivel Competencia SECAD:</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="model.varPersona.idnivelcompetencia" [disabled]="model.IsLectura">
-                            <option value="0">Seleccionar</option>
-                            <option *ngFor="let item of lstNivelComp" value="{{ item.IdNivelCompetencia }}">{{ item.Denominacion }}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="input-group">
-                        <label>Experiencia:</label>
-                        <textarea class="form-control" [(ngModel)]="model.varPersona.experiencia" [disabled]="model.IsLectura"></textarea>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="input-group">
-                        <label>Fecha Incorporación SECAD:</label>
-                        <input type="date" class="form-control form-control-sm" [(ngModel)]="model.varPersona.fechaingreso" [disabled]="model.IsLectura">
-                    </div>
-                    <div class="input-group">
-                        <label>Area SECAD:</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="model.varPersona.idareaexperiencia" [disabled]="model.IsLectura">
-                            <option value="0">Seleccionar</option>
-                            <option *ngFor="let item of lstAreas" value="{{ item.IdAreaExperiencia }}">{{ item.AreaExperiencian }}</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label>Supervisor SECAD:</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="model.varPersona.idsupervisor" [disabled]="model.IsLectura">
-                            <option value="0">Seleccionar</option>
-                            <option *ngFor="let item of lstPersonas" value="{{ item.IdPersonal }}">{{ item.Nombres }}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="input-group">
-                        <label>Celular:</label>
-                        <input type="text" class="form-control form-control-sm" [(ngModel)]="model.varPersona.celular" [disabled]="model.IsLectura">
-                    </div>
-                    <div class="input-group">
-                        <label>Fijo:</label>
-                        <input type="text" class="form-control form-control-sm" [(ngModel)]="model.varPersona.fijo" [disabled]="model.IsLectura">
-                    </div>
-                    <div class="input-group">
-                        <label>Oficina:</label>
-                        <input type="text" class="form-control form-control-sm" [(ngModel)]="model.varPersona.oficina" [disabled]="model.IsLectura">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="input-group">
-                        <label>País:</label>
-                        <input type="text" class="form-control form-control-sm" [(ngModel)]="model.varPersona.paisresidencia" [disabled]="model.IsLectura">
-                    </div>
-                    <div class="input-group">
-                        <label>Fecha Término:</label>
-                        <input type="date" class="form-control form-control-sm" [(ngModel)]="model.varPersona.fechatermino" [disabled]="model.IsLectura">
-                    </div>
-                    <div class="input-group">
-                        <label>Estado Civil:</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="model.varPersona.estadocivil" [disabled]="model.IsLectura">
-                            <option value="0">Seleccionar</option>
-                            <option value="Soltero">Soltero</option>
-                            <option value="Casado">Casado</option>
-                            <option value="Union Libre">Union Libre</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="input-group">
-                        <label>Dirección Residencia:</label>
-                        <input type="text" class="form-control form-control-sm" [(ngModel)]="model.varPersona.direccionresi" [disabled]="model.IsLectura">
-                    </div>
-                    <div class="input-group">
-                        <label>Barrio:</label>
-                        <input type="text" class="form-control form-control-sm" [(ngModel)]="model.varPersona.barrio" [disabled]="model.IsLectura">
-                    </div>
-                </div>
-            </ng-container>
-            <ng-container *ngIf="model.varPersona.categoria == 'Militar'">
-                <div class="title-row">Información Militar</div>
-                <div class="line-col"></div>
-                <div class="row">
-                    <div class="input-group">
-                        <label>Grado:</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="model.varPersona.idgrado" (change)="changeGrado(model.varPersona.idgrado)" [disabled]="model.IsLectura">
-                            <option value="0">Seleccionar</option>
-                            <option *ngFor="let item of lstGrados" value="{{ item.IdGrado }}">{{ item.NombreGrado }}</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label>Código Militar:</label>
-                        <input type="text" class="form-control form-control-sm" [(ngModel)]="model.varPersona.codigomilitar" [disabled]="model.IsLectura">
-                    </div>
-                    <div class="input-group">
-                        <label>No. Folio de Vida:</label>
-                        <input type="text" class="form-control form-control-sm" [(ngModel)]="model.varPersona.nfolio" [disabled]="model.IsLectura">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="input-group">
-                        <label>Fuerza:</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="model.varPersona.idfuerza" [disabled]="model.IsLectura">
-                            <option value="0">Seleccionar</option>
-                            <option *ngFor="let item of lstFuerzas" value="{{ item.IdFuerza }}">{{ item.NombreFuerza }}</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label>Cuerpo:</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="model.varPersona.idcuerpo" [disabled]="model.IsLectura">
-                            <option value="0">Seleccionar</option>
-                            <option *ngFor="let item of lstCuerpos" value="{{ item.IdCuerpo }}">{{ item.NombreCuerpo }}</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label>Especialidad Primaria:</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="model.varPersona.idespecialidad1" [disabled]="model.IsLectura">
-                            <option value="0">Seleccionar</option>
-                            <option *ngFor="let item of lstEspecialidades" value="{{ item.IdEspecialidad }}">{{ item.NombreEspecialidad }}</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label>Especialidad Secundaria:</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="model.varPersona.idespecialidad2" [disabled]="model.IsLectura">
-                            <option value="0">Seleccionar</option>
-                            <option *ngFor="let item of lstEspecialidades" value="{{ item.IdEspecialidad }}">{{ item.NombreEspecialidad }}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="input-group">
-                        <label>Fecha Incorporación:</label>
-                        <input type="date" class="form-control" [(ngModel)]="model.varPersona.fechaincorpacion" [disabled]="model.IsLectura">
-                    </div>
-                    <div class="input-group">
-                        <label>Fecha Último Ascenso:</label>
-                        <input type="date" class="form-control" [(ngModel)]="model.varPersona.fechaasense" [disabled]="model.IsLectura">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="input-group">
-                        <label>Unidad:</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="model.varPersona.idunidad" [disabled]="model.IsLectura">
-                            <option value="0">Seleccionar</option>
-                            <option *ngFor="let item of lstUnidades" value="{{ item.IdUnidad }}">{{ item.NombreUnidad }}</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label>Grupo / Jefatura:</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="model.varPersona.idgrupo" [disabled]="model.IsLectura">
-                            <option value="0">Seleccionar</option>
-                            <option *ngFor="let item of lstGrupos" value="{{ item.IdGrupo }}">{{ item.NombreGrupo }}</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label>Dependencia / Taller:</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="model.varPersona.idtaller" [disabled]="model.IsLectura">
-                            <option value="0">Seleccionar</option>
-                            <option *ngFor="let item of lstTalleres" value="{{ item.IdTaller }}">{{ item.NombreTaller }}</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label>Escuadrón:</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="model.varPersona.idescuadron" [disabled]="model.IsLectura">
-                            <option value="0">Seleccionar</option>
-                            <option *ngFor="let item of lstEscuadrones" value="{{ item.IdEscuadron }}">{{ item.NombreEscuadron }}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="input-group">
-                        <label>Profesión</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="model.varPersona.idcarreraprofesionmil" [disabled]="model.IsLectura">
-                            <option value="0">Seleccionar</option>
-                            <option *ngFor="let item of lstCarrerasPro" value="{{ item.IdCarreraProfesion }}">{{ item.CarreraProfesion }}</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label>Cargo:</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="model.varPersona.idcargomil" [disabled]="model.IsLectura">
-                            <option value="0">Seleccionar</option>
-                            <option *ngFor="let item of lstCargos" value="{{ item.IdCargo }}">{{ item.Cargo }}</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label>Especialidad Certificación:</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="model.varPersona.idespecialidadcertificacionmil" [disabled]="model.IsLectura">
-                            <option value="0">Seleccionar</option>
-                            <option *ngFor="let item of lstEspecialidadCert" value="{{ item.IdEspecialidadCertificacion }}">{{ item.Especialidad }}</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label>Nivel de competencia:</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="model.varPersona.idnivelcompetenciamil" [disabled]="model.IsLectura">
-                            <option value="0">Seleccionar</option>
-                            <option *ngFor="let item of lstNivelComp" value="{{ item.IdNivelCompetencia }}">{{ item.Denominacion }}</option>
-                        </select>
-                    </div>
-                </div>
-            </ng-container>-->
+            </div>            
         </div>
     </div>
     <div role="footer">
@@ -403,7 +108,7 @@
     </div>
 </app-modal>
 
-<app-modal [title]="model.title" [show]="rolModal" [size]="'modal-lg'" (close)="closeRolModal($event)">
+<app-modal [title]="model.title" [show]="rolModal" [size]="'modal-lg1'" (close)="closeRolModal($event)">
     <div role="body">
         <div class="inner-col">
             <div class="table-content">
@@ -423,10 +128,10 @@
                                 <input type="text" placeholder="Selecciona..." [(ngModel)]="model.varRol[i].rol" (click)="saveRolPrivilegio(i)" [disabled]="model.IsLectura">
                             </td>
                             <td>
-                                <input disabled type="text" [(ngModel)]="model.varRol[i].modulo" [disabled]="model.IsLectura">
+                                <input disabled type="text" [(ngModel)]="model.varRol[i].modulo" disabled>
                             </td>
                             <td>
-                                <input disabled type="text" [(ngModel)]="model.varRol[i].nombre_pantalla" [disabled]="model.IsLectura">
+                                <input disabled type="text" [(ngModel)]="model.varRol[i].nombre_pantalla" disabled>
                             </td>
                             <td>
                                 <div class="table-checkbox-component" *ngIf="model.IsLectura == false">
