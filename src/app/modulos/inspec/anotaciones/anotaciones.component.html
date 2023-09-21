@@ -167,7 +167,7 @@
                                 <td><input type="text" class="form-control" placeholder="Seleccionar..." [(ngModel)]="item.dependencia" (click)="saveUnidad(i, 1)" [disabled]="model.IsLectura"></td>
                                 <td *ngIf="model.IsLectura == false">
                                     <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="model.varCorreccion[i].NuevoRegistro" (click)="deleteCorreccion(i)"></i>
-                                    <i class="fa fa-1m5x fa-trash pointer noselect" style="color: red !important;" *ngIf="model.varCorreccion[i].EliminarRegistro"></i>
+                                    <i class="fa fa-1m5x fa-trash pointer noselect" style="color: red !important;" *ngIf="model.varCorreccion[i].EliminarRegistro" (click)="eliminarAnotacionCorreccion(i, item)"></i>
                                 </td>
                             </tr>
                             <tr class="add_row_full" *ngIf="model.IsLectura == false">
@@ -199,7 +199,7 @@
                                 <td><input type="text" class="form-control" placeholder="Seleccionar..." [(ngModel)]="item.dependencia" (click)="saveUnidad(i, 2)" [disabled]="model.IsLectura"></td>
                                 <td *ngIf="model.IsLectura == false">
                                     <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="model.varMejoramiento[i].NuevoRegistro" (click)="deleteMejoramiento(i)"></i>
-                                    <i class="fa fa-1m5x fa-trash pointer noselect" style="color: red !important;" *ngIf="model.varMejoramiento[i].EliminarRegistro"></i>
+                                    <i class="fa fa-1m5x fa-trash pointer noselect" style="color: red !important;" *ngIf="model.varMejoramiento[i].EliminarRegistro" (click)="eliminarAnotacionMejoramiento(i, item)"></i>
                                 </td>
                             </tr>
                             <tr class="add_row_full" *ngIf="model.IsLectura == false">
@@ -231,7 +231,7 @@
                                 <td><input type="text" class="form-control" placeholder="Seleccionar..." [(ngModel)]="item.dependencia" (click)="saveUnidad(i, 3)" [disabled]="model.IsLectura"></td>
                                 <td *ngIf="model.IsLectura == false">
                                     <i class="fa fa-1m5x fa-times-circle pointer noselect" style="color: black !important;" *ngIf="model.varOrden[i].NuevoRegistro" (click)="deleteOrden(i)"></i>
-                                    <i class="fa fa-1m5x fa-trash pointer noselect" style="color: red !important;" *ngIf="model.varOrden[i].EliminarRegistro"></i>
+                                    <i class="fa fa-1m5x fa-trash pointer noselect" style="color: red !important;" *ngIf="model.varOrden[i].EliminarRegistro" (click)="eliminarAnotacionOrden(i, item)"></i>
                                 </td>
                             </tr>
                             <tr class="add_row_full" *ngIf="model.IsLectura == false">

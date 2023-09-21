@@ -27,13 +27,16 @@ export class AnotacionService {
   private apiGetAnotacionArchivo = this.api.getBaseUrl + "inspec/anotacion/getAnotacionArchivo";
   private apiGetAnotacionCorreccion = this.api.getBaseUrl + "inspec/anotacion/getAnotacionCorreccion";
   private apiCreateAnotacionCorreccion = this.api.getBaseUrl + "inspec/anotacion/crearAnotacionCorreccion";
-  private apiUpdateAnotacionCorrecion = this.api.getBaseUrl + "inspec/anotacion/actualizarAnotacionCorreccion";
+  private apiUpdateAnotacionCorreccion = this.api.getBaseUrl + "inspec/anotacion/actualizarAnotacionCorreccion";
+  private apiDeleteAnotacionCorreccion = this.api.getBaseUrl + "inspec/anotacion/eliminarAnotacionCorreccion";
   private apiGetAnotacionMejoramiento = this.api.getBaseUrl + "inspec/anotacion/getAnotacionMejoramiento";
   private apiCreateAnotacionMejoramiento = this.api.getBaseUrl + "inspec/anotacion/crearAnotacionMejoramiento";
   private apiUpdateAnotacionMejoramiento = this.api.getBaseUrl + "inspec/anotacion/actualizarAnotacionMejoramiento";
+  private apiDeleteAnotacionMejoramiento = this.api.getBaseUrl + "inspec/anotacion/eliminarAnotacionMejoramiento";
   private apiGetAnotacionOrden = this.api.getBaseUrl + "inspec/anotacion/getAnotacionOrden";
   private apiCreateAnotacionOrden = this.api.getBaseUrl + "inspec/anotacion/crearAnotacionOrden";
   private apiUpdateAnotacionOrden = this.api.getBaseUrl + "inspec/anotacion/actualizarAnotacionOrden";
+  private apiDeleteAnotacionOrden = this.api.getBaseUrl + "inspec/anotacion/eliminarAnotacionOrden";
   private apiGetAnotacionCausaRaiz = this.api.getBaseUrl + "inspec/anotacion/getAnotacionCausaRaiz";
   private apiCreateAnotacionCausaRaiz = this.api.getBaseUrl + "inspec/anotacion/crearAnotacionCausaRaiz";
   private apiUpdateAnotacionCausaRaiz = this.api.getBaseUrl + "inspec/anotacion/actualizarAnotacionCausaRaiz";
@@ -136,7 +139,12 @@ export class AnotacionService {
   }
 
   updateAnotacionCorreccion(data: any): Observable<any> {
-    return this.http.post<any>(this.apiUpdateAnotacionCorrecion, JSON.stringify(data), this.api.getHttpOptions('g'))
+    return this.http.post<any>(this.apiUpdateAnotacionCorreccion, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  deleteAnotacionCorreccion(data: any): Observable<any> {
+    return this.http.post<any>(this.apiDeleteAnotacionCorreccion, JSON.stringify(data), this.api.getHttpOptions('g'))
     .pipe(retry(1), catchError(this.api.errorHandle));
   }
 
@@ -155,6 +163,11 @@ export class AnotacionService {
     .pipe(retry(1), catchError(this.api.errorHandle));
   }
 
+  deleteAnotacionMejoramiento(data: any): Observable<any> {
+    return this.http.post<any>(this.apiDeleteAnotacionMejoramiento, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
   getAnotacionOrden(data: any): Observable<any> {
     return this.http.post<any>(this.apiGetAnotacionOrden, JSON.stringify(data), this.api.getHttpOptions('g'))
     .pipe(retry(1), catchError(this.api.errorHandle));
@@ -167,6 +180,11 @@ export class AnotacionService {
 
   updateAnotacionOrden(data: any): Observable<any> {
     return this.http.post<any>(this.apiUpdateAnotacionOrden, JSON.stringify(data), this.api.getHttpOptions('g'))
+    .pipe(retry(1), catchError(this.api.errorHandle));
+  }
+
+  deleteAnotacionOrden(data: any): Observable<any> {
+    return this.http.post<any>(this.apiDeleteAnotacionOrden, JSON.stringify(data), this.api.getHttpOptions('g'))
     .pipe(retry(1), catchError(this.api.errorHandle));
   }
 

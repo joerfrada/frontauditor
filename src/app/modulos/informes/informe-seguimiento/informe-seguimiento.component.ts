@@ -36,7 +36,7 @@ export class Model {
     codigo_tema: "",
     tema_catalogacion: "",
     archivo: "",
-    responsable_id: "",
+    responsable_id: 0,
     responsable: "",
     porcentaje: 0,
     usuario: ""
@@ -543,6 +543,18 @@ export class InformeSeguimientoComponent implements OnInit {
       error = true;
       error_msg += '* Fecha Seguimiento<br/>';
     }
+    if (this.lstEventos.length > 0) {
+      for (let i = 0; i < this.lstEventos.length; i++) {
+        if (this.lstEventos[i].fecha_evento == null) {
+          error = true;
+          error_msg += '* Ingresa una fecha en ' + (i + 1) + 'ª fila (Eventos)<br />';
+        }
+        if (this.lstEventos[i].descripcion == "") {
+          error = true;
+          error_msg += '* Ingresa una descripción en ' + (i + 1) + 'ª fila (Eventos)<br />';
+        }
+      }
+    }
     // if (this.model.varSeguimiento.porcentaje == 0) {
     //   error = true;
     //   error_msg += '* Avance Físico de Ejecución<br/>';
@@ -680,10 +692,6 @@ export class InformeSeguimientoComponent implements OnInit {
       error = true;
       error_msg = '* Inspección<br/>';
     }
-    if (this.model.varSeguimiento.fecha_concepto == null) {
-      error = true;
-      error_msg += '* Fecha Concepto Efectividad<br/>';
-    }
     if (this.model.varSeguimiento.hallazgo_id == 0) {
       error = true;
       error_msg += '* Código Hallazgo<br/>';
@@ -703,6 +711,18 @@ export class InformeSeguimientoComponent implements OnInit {
     if (this.model.varSeguimiento.fecha_seguimiento == null) {
       error = true;
       error_msg += '* Fecha Seguimiento<br/>';
+    }
+    if (this.lstEventos.length > 0) {
+      for (let i = 0; i < this.lstEventos.length; i++) {
+        if (this.lstEventos[i].fecha_evento == null) {
+          error = true;
+          error_msg += '* Ingresa una fecha en ' + (i + 1) + 'ª fila (Eventos)<br />';
+        }
+        if (this.lstEventos[i].descripcion == "") {
+          error = true;
+          error_msg += '* Ingresa una descripción en ' + (i + 1) + 'ª fila (Eventos)<br />';
+        }
+      }
     }
     // if (this.model.varSeguimiento.porcentaje == 0) {
     //   error = true;

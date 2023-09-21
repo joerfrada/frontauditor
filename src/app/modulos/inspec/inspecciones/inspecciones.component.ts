@@ -289,9 +289,7 @@ export class InspeccionesComponent implements OnInit {
       let response: any = this.api.ProcesarRespuesta(data);
       if (response.tipo == 0) {
         response.result.forEach((x: any) => {
-          x.criterio_id = x.lista_dinamica_id;
-          x.criterio = x.lista_dinamica;
-          x.item1 = x.lista_dinamica;
+          x.item1 = x.criterio;
           x.item2 = null;
           x.item3 = null;
         });
@@ -722,7 +720,7 @@ export class InspeccionesComponent implements OnInit {
     }).then(((result: any) => {
       if (result.dismiss != "cancel") {
         let json = {
-          equipo_tecnico_id: data.equipo_tecnico_id
+          experto_tecnico_id: data.experto_tecnico_id
         }
         this.inspeccion.deleteInspeccionTecnico(json).subscribe((data:any) => {
           let response: any = this.api.ProcesarRespuesta(data);
@@ -900,7 +898,7 @@ export class InspeccionesComponent implements OnInit {
   dataform(inputform: any, data: any) {
     if (inputform == 'unidad') {
       this.selectUnidadModal = false;
-      this.model.varInspeccion.unidad_id = data.dependencia_id;
+      this.model.varInspeccion.unidad_id = data.dependencia_id == null ? data.unidad_id : data.dependencia_id;
       this.model.varInspeccion.unidad = data.unidad;
       this.model.varInspeccion.dependencia = data.dependencia;
     }
@@ -1063,13 +1061,65 @@ export class InspeccionesComponent implements OnInit {
       error = true;
       error_msg += '* En forma general<br />';
     }
+    if (this.model.varCriterios.length > 0) {
+      for (let i = 0; i < this.model.varCriterios.length; i++) {
+        if (this.model.varCriterios[i].criterio_id == 0) {
+          error = true;
+          error_msg += '* Seleccione un criterio en ' + (i + 1) + 'ª fila (En forma general)<br />';
+        }
+      }
+    }
     if (this.model.lstParticular.length == 0) {
       error = true;
       error_msg += '* En forma particular<br />';
     }
+    if (this.model.lstParticular.length > 0) {
+      for (let i = 0; i < this.model.lstParticular.length; i++) {
+        if (this.model.lstParticular[i].criterio_id == 0) {
+          error = true;
+          error_msg += '* Seleccione un criterio en ' + (i + 1) + 'ª fila (En forma particular)<br />';
+        }
+        if (this.model.lstParticular[i].proceso_id == 0) {
+          error = true;
+          error_msg += '* Seleccione un proceso - subproceso en ' + (i + 1) + 'ª fila (En forma particular)<br />';
+        }
+      }
+    }
     if (this.model.lstInspector.length == 0) {
       error = true;
       error_msg += '* Equipos Inspector<br />';
+    }
+    if (this.model.lstInspector.length > 0) {
+      for (let i = 0; i < this.model.lstInspector.length; i++) {
+        if (this.model.lstInspector[i].proceso_id == 0) {
+          error = true;
+          error_msg += '* Seleccione un proceso - subproceso en ' + (i + 1) + 'ª fila (Equipos Inspector)<br />';
+        }
+        if (this.model.lstInspector[i].grado_id == 0) {
+          error = true;
+          error_msg += '* Seleccione un grado en ' + (i + 1) + 'ª fila (Equipos Inspector)<br />';
+        }
+      }
+    }
+    if (this.model.lstTecnicos.length > 0) {
+      for (let i = 0; i < this.model.lstTecnicos.length; i++) {
+        if (this.model.lstTecnicos[i].proceso_id == 0) {
+          error = true;
+          error_msg += '* Seleccione un proceso - subproceso en ' + (i + 1) + 'ª fila (Expertos Técnicos)<br />';
+        }
+        if (this.model.lstTecnicos[i].grado_id == 0) {
+          error = true;
+          error_msg += '* Seleccione un grado en ' + (i + 1) + 'ª fila (Expertos Técnicos)<br />';
+        }
+      }
+    }
+    if (this.model.lstObservador.length > 0) {
+      for (let i = 0; i < this.model.lstObservador; i++) {
+        if (this.model.lstObservador[i].observador_id == 0) {
+          error = true;
+          error_msg += '* Seleccione un observador en ' + (i + 1) + 'ª fila (Observador)<br />';
+        }
+      }
     }
     if (this.model.varInspeccion.fecha_inicio == null) {
       error = true;
@@ -1228,13 +1278,65 @@ export class InspeccionesComponent implements OnInit {
       error = true;
       error_msg += '* En forma general<br />';
     }
+    if (this.model.varCriterios.length > 0) {
+      for (let i = 0; i < this.model.varCriterios.length; i++) {
+        if (this.model.varCriterios[i].criterio_id == 0) {
+          error = true;
+          error_msg += '* Seleccione un criterio en ' + (i + 1) + 'ª fila (En forma general)<br />';
+        }
+      }
+    }
     if (this.model.lstParticular.length == 0) {
       error = true;
       error_msg += '* En forma particular<br />';
     }
+    if (this.model.lstParticular.length > 0) {
+      for (let i = 0; i < this.model.lstParticular.length; i++) {
+        if (this.model.lstParticular[i].criterio_id == 0) {
+          error = true;
+          error_msg += '* Seleccione un criterio en ' + (i + 1) + 'ª fila (En forma particular)<br />';
+        }
+        if (this.model.lstParticular[i].proceso_id == 0) {
+          error = true;
+          error_msg += '* Seleccione un proceso - subproceso en ' + (i + 1) + 'ª fila (En forma particular)<br />';
+        }
+      }
+    }
     if (this.model.lstInspector.length == 0) {
       error = true;
       error_msg += '* Equipos Inspector<br />';
+    }
+    if (this.model.lstInspector.length > 0) {
+      for (let i = 0; i < this.model.lstInspector.length; i++) {
+        if (this.model.lstInspector[i].proceso_id == 0) {
+          error = true;
+          error_msg += '* Seleccione un proceso - subproceso en ' + (i + 1) + 'ª fila (Equipos Inspector)<br />';
+        }
+        if (this.model.lstInspector[i].grado_id == 0) {
+          error = true;
+          error_msg += '* Seleccione un grado en ' + (i + 1) + 'ª fila (Equipos Inspector)<br />';
+        }
+      }
+    }
+    if (this.model.lstTecnicos.length > 0) {
+      for (let i = 0; i < this.model.lstTecnicos.length; i++) {
+        if (this.model.lstTecnicos[i].proceso_id == 0) {
+          error = true;
+          error_msg += '* Seleccione un proceso - subproceso en ' + (i + 1) + 'ª fila (Expertos Técnicos)<br />';
+        }
+        if (this.model.lstTecnicos[i].grado_id == 0) {
+          error = true;
+          error_msg += '* Seleccione un grado en ' + (i + 1) + 'ª fila (Expertos Técnicos)<br />';
+        }
+      }
+    }
+    if (this.model.lstObservador.length > 0) {
+      for (let i = 0; i < this.model.lstObservador; i++) {
+        if (this.model.lstObservador[i].observador_id == 0) {
+          error = true;
+          error_msg += '* Seleccione un observador en ' + (i + 1) + 'ª fila (Observador)<br />';
+        }
+      }
     }
     if (this.model.varInspeccion.fecha_inicio == null) {
       error = true;

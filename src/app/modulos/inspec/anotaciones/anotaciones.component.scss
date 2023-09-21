@@ -2,3 +2,9 @@ a {
     text-decoration: none;
     color: white;
 }
+
+::ng-deep {
+    .swal2-popup {
+        width: 45em !important;
+    }
+}

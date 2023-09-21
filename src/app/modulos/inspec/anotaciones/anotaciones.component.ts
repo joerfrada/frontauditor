@@ -140,7 +140,7 @@ export class AnotacionesComponent implements OnInit {
     else {
       this.varhistorial = this.varhistorialTemp.filter((item: any) => {
         if (item.nombre_inspeccion.toString().toLowerCase().indexOf(filtro) !== -1 ||
-            item.codificacion_anota.toString().toLowerCase().indexOf(filtro) !== -1) {
+            item.codificacion.toString().toLowerCase().indexOf(filtro) !== -1) {
             return true;
         }
         return false;
@@ -359,7 +359,6 @@ export class AnotacionesComponent implements OnInit {
     });
   }
 
-
   editAnotacion(data: any) {
     this.modal = true;
     this.model.title = 'Actualizar Hallazgo';
@@ -446,6 +445,9 @@ export class AnotacionesComponent implements OnInit {
     else if (t == 1) {
       let data = this.model.varHallazgo;
       this.codigo = data.codigo;
+      this.model.varCorreccion = [];
+      this.model.varMejoramiento = [];
+      this.model.varOrden = [];
       this.anotacion.getConsecutivoHallazgo({ inspeccion_id: data.inspeccion_id, tipo_hallazgo_cod: this.tipo }).subscribe(data1 => {
         let response: any = this.api.ProcesarRespuesta(data1);
         if (response.tipo == 0) {
@@ -458,7 +460,7 @@ export class AnotacionesComponent implements OnInit {
   }
 
   addCorreccion() {
-    this.model.varCorreccion.push({ correcion_id:0, hallazgo_id: 0, responsable_id: 0, responsable: "", NuevoRegistro: true, EliminarRegistro: false });
+    this.model.varCorreccion.push({ correccion_id:0, hallazgo_id: 0, responsable_id: 0, responsable: "", NuevoRegistro: true, EliminarRegistro: false });
   }
 
   deleteCorreccion(index: any) {
@@ -564,35 +566,35 @@ export class AnotacionesComponent implements OnInit {
 
     if (inputform == 'dependencias1') {
       this.selectUnidadModal = false;
-      this.model.varCorreccion[this.indexform].responsable_id = data.dependencia_id;
+      this.model.varCorreccion[this.indexform].responsable_id = data.dependencia_id == null ? data.unidad_id : data.dependencia_id;
       this.model.varCorreccion[this.indexform].unidad = data.unidad;
       this.model.varCorreccion[this.indexform].dependencia = data.unidad + ' / '  + data.dependencia;
     }
 
     if (inputform == 'dependencias2') {
       this.selectUnidadModal = false;
-      this.model.varMejoramiento[this.indexform].responsable_id = data.dependencia_id;
+      this.model.varMejoramiento[this.indexform].responsable_id = data.dependencia_id == null ? data.unidad_id : data.dependencia_id;
       this.model.varMejoramiento[this.indexform].unidad = data.unidad;
       this.model.varMejoramiento[this.indexform].dependencia = data.unidad + ' / '  + data.dependencia;
     }
 
     if (inputform == 'dependencias3') {
       this.selectUnidadModal = false;
-      this.model.varOrden[this.indexform].responsable_id = data.dependencia_id;
+      this.model.varOrden[this.indexform].responsable_id = data.dependencia_id == null ? data.unidad_id : data.dependencia_id;
       this.model.varOrden[this.indexform].unidad = data.unidad;
       this.model.varOrden[this.indexform].dependencia = data.unidad + ' / '  + data.dependencia;
     }
 
     if (inputform == 'dependencias-actividad') {
       this.selectUnidadActividadModal = false;
-      this.model.lstActividad[this.indexform].responsable_id = data.dependencia_id;
+      this.model.lstActividad[this.indexform].responsable_id = data.dependencia_id == null ? data.unidad_id : data.dependencia_id;
       this.model.lstActividad[this.indexform].unidad = data.unidad;
       this.model.lstActividad[this.indexform].dependencia = data.unidad + ' / '  + data.dependencia;
     }
 
     if (inputform == 'funcionarios') {
       this.selectUserModal = false;
-      this.model.lstActividad[this.indexform].responsable_id = data.usuario_idid;
+      this.model.lstActividad[this.indexform].responsable_id = data.usuario_id;
       this.model.lstActividad[this.indexform].responsable = data.nombre_completo;
     }
 
@@ -614,134 +616,306 @@ export class AnotacionesComponent implements OnInit {
   }
 
   crearAnotacion() {
+    let error = false;
+    let error_msg = "";
+
     this.model.varHallazgo.tipo_hallazgo_id = Number(this.model.varHallazgo.tipo_hallazgo_id);
     this.model.varHallazgo.usuario = this.currentUser.usuario;
 
-    var formData: any = new FormData();
-    formData.append('modelo', JSON.stringify(this.model.varHallazgo));
-    formData.append('archivo', this.file);
-
-    this.anotacion.createAnotacion(formData).subscribe(data => {
-      let response: any = this.api.ProcesarRespuesta(data);
-      if (response.tipo == 0) {
-        let id = response.id;
-
-        if (this.model.varCorreccion.length > 0) {
-          this.model.varCorreccion.forEach((x: any) => {
-            x.hallazgo_id = id;
-            x.usuario = this.currentUser.usuario;
-
-            if (x.NuevoRegistro == true) {
-              this.anotacion.createAnotacionCorreccion(x).subscribe(data => {});
-            }
-          });
-        }
-
-        if (this.model.varMejoramiento.length > 0) {
-          this.model.varMejoramiento.forEach((x: any) => {
-            x.hallazgo_id = id;
-            x.usuario = this.currentUser.usuario;
-
-            if (x.NuevoRegistro == true) {
-              this.anotacion.createAnotacionMejoramiento(x).subscribe(data => {});
-            }
-          });
-        }
-
-        if (this.model.varOrden.length > 0) {
-          this.model.varOrden.forEach((x: any) => {
-            x.hallazgo_id = id;
-            x.usuario = this.currentUser.usuario;
-
-            if (x.NuevoRegistro == true) {
-              this.anotacion.createAnotacionOrden(x).subscribe(data => {});
-            }
-          });
-        }
-
-        Swal.fire({
-          title: 'Crear Hallazgo',
-          text: response.mensaje,
-          allowOutsideClick: false,
-          showConfirmButton: true,
-          confirmButtonText: 'Aceptar',
-          icon: 'success'
-        }).then((result: any) => {
-          this.modal = false;
-          this.reload();
-        })
+    if (this.model.varHallazgo.inspeccion_id == 0) {
+      error = true;
+      error_msg = '* Inspección<br/>';
+    }
+    if (this.model.varHallazgo.tipo_hallazgo_id == 0) {
+      error = true;
+      error_msg += '* Tipo de hallazgo<br/>';
+    }
+    if (this.model.varHallazgo.criterio_id == 0) {
+      error = true;
+      error_msg += '* Criterio que se incumple<br/>';
+    }
+    if (this.model.varHallazgo.descripcion_evidencia == "") {
+      error = true;
+      error_msg += '* Descripción del hallazgo<br/>';
+    }
+    if (this.tipo == 'IN' || this.tipo == 'IR' || this.tipo == 'EI') {
+      if (this.model.varCorreccion.length == 0) {
+        error = true;
+        error_msg += '* Responsable Corrección<br/>';
       }
-    });
+      if (this.model.varCorreccion.length > 0) {
+        for (let i = 0; i < this.model.varCorreccion.length; i++) {
+          if (this.model.varCorreccion[i].responsable_id == 0) {
+            error = true;
+            error_msg += '* Selecciona un responsable en ' + (i + 1) + 'ª fila (Responsable Corrección)<br />'
+          }
+        }
+      }
+      if (this.model.varMejoramiento.length == 0) {
+        error = true;
+        error_msg += '* Responsable Plan de Mejoramiento<br/>';
+      }
+      if (this.model.varMejoramiento.length > 0) {
+        for (let i = 0; i < this.model.varMejoramiento.length; i++) {
+          if (this.model.varMejoramiento[i].responsable_id == 0) {
+            error = true;
+            error_msg += '* Selecciona un responsable en ' + (i + 1) + 'ª fila (Responsable Plan de Mejoramiento)<br />'
+          }
+        }
+      }
+    }
+    else if (this.tipo == 'RE') {
+      if (this.model.varMejoramiento.length == 0) {
+        error = true;
+        error_msg += '* Responsable Plan de Mejoramiento<br/>';
+      }
+      if (this.model.varMejoramiento.length > 0) {
+        for (let i = 0; i < this.model.varMejoramiento.length; i++) {
+          if (this.model.varMejoramiento[i].responsable_id == 0) {
+            error = true;
+            error_msg += '* Selecciona un responsable en ' + (i + 1) + 'ª fila (Responsable Plan de Mejoramiento)<br />'
+          }
+        }
+      } 
+    }
+    else if (this.tipo == 'OR') {
+      if (this.model.varOrden.length == 0) {
+        error = true;
+        error_msg += '* Responsable Orden<br/>';
+      }
+      if (this.model.varOrden.length > 0) {
+        for (let i = 0; i < this.model.varOrden.length; i++) {
+          if (this.model.varOrden[i].responsable_id == 0) {
+            error = true;
+            error_msg += '* Selecciona un responsable en ' + (i + 1) + 'ª fila (Responsable Orden)<br />'
+          }
+        }
+      }
+    }
+
+    if (error == true) {
+      Swal.fire({
+        title: 'Error Hallazgos',
+        html: '<div class="align-left"><b>Requiere llenar los campos:</b><br />' + error_msg + '</div>',
+        allowOutsideClick: false,
+        showConfirmButton: true,
+        confirmButtonText: 'Aceptar',
+        icon: 'error'
+      })
+    }
+    else {
+      var formData: any = new FormData();
+      formData.append('modelo', JSON.stringify(this.model.varHallazgo));
+      formData.append('archivo', this.file);
+
+      this.anotacion.createAnotacion(formData).subscribe(data => {
+        let response: any = this.api.ProcesarRespuesta(data);
+        if (response.tipo == 0) {
+          let id = response.id;
+
+          if (this.model.varCorreccion.length > 0) {
+            this.model.varCorreccion.forEach((x: any) => {
+              x.hallazgo_id = id;
+              x.usuario = this.currentUser.usuario;
+
+              if (x.NuevoRegistro == true) {
+                this.anotacion.createAnotacionCorreccion(x).subscribe(data => {});
+              }
+            });
+          }
+
+          if (this.model.varMejoramiento.length > 0) {
+            this.model.varMejoramiento.forEach((x: any) => {
+              x.hallazgo_id = id;
+              x.usuario = this.currentUser.usuario;
+
+              if (x.NuevoRegistro == true) {
+                this.anotacion.createAnotacionMejoramiento(x).subscribe(data => {});
+              }
+            });
+          }
+
+          if (this.model.varOrden.length > 0) {
+            this.model.varOrden.forEach((x: any) => {
+              x.hallazgo_id = id;
+              x.usuario = this.currentUser.usuario;
+
+              if (x.NuevoRegistro == true) {
+                this.anotacion.createAnotacionOrden(x).subscribe(data => {});
+              }
+            });
+          }
+
+          Swal.fire({
+            title: 'Crear Hallazgo',
+            text: response.mensaje,
+            allowOutsideClick: false,
+            showConfirmButton: true,
+            confirmButtonText: 'Aceptar',
+            icon: 'success'
+          }).then((result: any) => {
+            this.modal = false;
+            this.reload();
+          })
+        }
+      });
+    }
   }
 
   actualizarAnotacion() {
+    let error = false;
+    let error_msg = "";
+
     this.model.varHallazgo.tipo_hallazgo_id = Number(this.model.varHallazgo.tipo_hallazgo_id);
     this.model.varHallazgo.usuario = this.currentUser.usuario;
 
-    var formData: any = new FormData();
-    formData.append('modelo', JSON.stringify(this.model.varHallazgo));
-    formData.append('archivo', this.file);
-
-    this.anotacion.updateAnotacion(formData).subscribe(data => {
-      let response: any = this.api.ProcesarRespuesta(data);
-      let id = this.model.varHallazgo.hallazgo_id;
-
-      if (response.tipo == 0) {
-        if (this.model.varCorreccion.length > 0) {
-          this.model.varCorreccion.forEach((x: any) => {
-            x.hallazgo_id = id;
-            x.usuario = this.currentUser.usuario;
-
-            if (x.NuevoRegistro == true) {
-              this.anotacion.createAnotacionCorreccion(x).subscribe(data => {});
-            }
-            else {
-              this.anotacion.updateAnotacionCorreccion(x).subscribe(data => {});
-            }
-          });
-        }
-
-        if (this.model.varMejoramiento.length > 0) {
-          this.model.varMejoramiento.forEach((x: any) => {
-            x.hallazgo_id = id;
-            x.usuario = this.currentUser.usuario;
-
-            if (x.NuevoRegistro == true) {
-              this.anotacion.createAnotacionMejoramiento(x).subscribe(data => {});
-            }
-            else {
-              this.anotacion.updateAnotacionMejoramiento(x).subscribe(data => {});
-            }
-          });
-        }
-
-        if (this.model.varOrden.length > 0) {
-          this.model.varOrden.forEach((x: any) => {
-            x.hallazgo_id = id;
-            x.usuario = this.currentUser.usuario;
-
-            if (x.NuevoRegistro == true) {
-              this.anotacion.createAnotacionOrden(x).subscribe(data => {});
-            }
-            else {
-              this.anotacion.updateAnotacionOrden(x).subscribe(data => {});
-            }
-          });
-        }
-
-        Swal.fire({
-          title: 'Actualizar Hallazgo',
-          text: response.mensaje,
-          allowOutsideClick: false,
-          showConfirmButton: true,
-          confirmButtonText: 'Aceptar',
-          icon: 'success'
-        }).then((result: any) => {
-          this.modal = false;
-          this.reload();
-        })
+    if (this.model.varHallazgo.inspeccion_id == 0) {
+      error = true;
+      error_msg = '* Inspección<br/>';
+    }
+    if (this.model.varHallazgo.tipo_hallazgo_id == 0) {
+      error = true;
+      error_msg += '* Tipo de hallazgo<br/>';
+    }
+    if (this.model.varHallazgo.criterio_id == 0) {
+      error = true;
+      error_msg += '* Criterio que se incumple<br/>';
+    }
+    if (this.model.varHallazgo.descripcion_evidencia == "") {
+      error = true;
+      error_msg += '* Descripción del hallazgo<br/>';
+    }
+    if (this.tipo == 'IN' || this.tipo == 'IR' || this.tipo == 'EI') {
+      if (this.model.varCorreccion.length == 0) {
+        error = true;
+        error_msg += '* Responsable Corrección<br/>';
       }
-    });
+      if (this.model.varCorreccion.length > 0) {
+        for (let i = 0; i < this.model.varCorreccion.length; i++) {
+          if (this.model.varCorreccion[i].responsable_id == 0) {
+            error = true;
+            error_msg += '* Selecciona un responsable en ' + (i + 1) + 'ª fila (Responsable Corrección)<br />'
+          }
+        }
+      }
+      if (this.model.varMejoramiento.length == 0) {
+        error = true;
+        error_msg += '* Responsable Mejoramiento<br/>';
+      }
+      if (this.model.varMejoramiento.length > 0) {
+        for (let i = 0; i < this.model.varMejoramiento.length; i++) {
+          if (this.model.varMejoramiento[i].responsable_id == 0) {
+            error = true;
+            error_msg += '* Selecciona un responsable en ' + (i + 1) + 'ª fila (Responsable Mejoramiento)<br />'
+          }
+        }
+      }
+    }
+    else if (this.tipo == 'RE') {
+      if (this.model.varMejoramiento.length == 0) {
+        error = true;
+        error_msg += '* Responsable Mejoramiento<br/>';
+      }
+      if (this.model.varMejoramiento.length > 0) {
+        for (let i = 0; i < this.model.varMejoramiento.length; i++) {
+          if (this.model.varMejoramiento[i].responsable_id == 0) {
+            error = true;
+            error_msg += '* Selecciona un responsable en ' + (i + 1) + 'ª fila (Responsable Mejoramiento)<br />'
+          }
+        }
+      } 
+    }
+    else if (this.tipo == 'OR') {
+      if (this.model.varOrden.length == 0) {
+        error = true;
+        error_msg += '* Responsable Orden<br/>';
+      }
+      if (this.model.varOrden.length > 0) {
+        for (let i = 0; i < this.model.varOrden.length; i++) {
+          if (this.model.varOrden[i].responsable_id == 0) {
+            error = true;
+            error_msg += '* Selecciona un responsable en ' + (i + 1) + 'ª fila (Responsable Orden)<br />'
+          }
+        }
+      }
+    }
+
+    if (error == true) {
+      Swal.fire({
+        title: 'Error Hallazgos',
+        html: '<div class="align-left"><b>Requiere llenar los campos:</b><br />' + error_msg + '</div>',
+        allowOutsideClick: false,
+        showConfirmButton: true,
+        confirmButtonText: 'Aceptar',
+        icon: 'error'
+      })
+    }
+    else {
+      var formData: any = new FormData();
+      formData.append('modelo', JSON.stringify(this.model.varHallazgo));
+      formData.append('archivo', this.file);
+
+      this.anotacion.updateAnotacion(formData).subscribe(data => {
+        let response: any = this.api.ProcesarRespuesta(data);
+        let id = this.model.varHallazgo.hallazgo_id;
+
+        if (response.tipo == 0) {
+          if (this.model.varCorreccion.length > 0) {
+            this.model.varCorreccion.forEach((x: any) => {
+              x.hallazgo_id = id;
+              x.usuario = this.currentUser.usuario;
+
+              if (x.NuevoRegistro == true) {
+                this.anotacion.createAnotacionCorreccion(x).subscribe(data => {});
+              }
+              else {
+                this.anotacion.updateAnotacionCorreccion(x).subscribe(data => {});
+              }
+            });
+          }
+
+          if (this.model.varMejoramiento.length > 0) {
+            this.model.varMejoramiento.forEach((x: any) => {
+              x.hallazgo_id = id;
+              x.usuario = this.currentUser.usuario;
+
+              if (x.NuevoRegistro == true) {
+                this.anotacion.createAnotacionMejoramiento(x).subscribe(data => {});
+              }
+              else {
+                this.anotacion.updateAnotacionMejoramiento(x).subscribe(data => {});
+              }
+            });
+          }
+
+          if (this.model.varOrden.length > 0) {
+            this.model.varOrden.forEach((x: any) => {
+              x.hallazgo_id = id;
+              x.usuario = this.currentUser.usuario;
+
+              if (x.NuevoRegistro == true) {
+                this.anotacion.createAnotacionOrden(x).subscribe(data => {});
+              }
+              else {
+                this.anotacion.updateAnotacionOrden(x).subscribe(data => {});
+              }
+            });
+          }
+
+          Swal.fire({
+            title: 'Actualizar Hallazgo',
+            text: response.mensaje,
+            allowOutsideClick: false,
+            showConfirmButton: true,
+            confirmButtonText: 'Aceptar',
+            icon: 'success'
+          }).then((result: any) => {
+            this.modal = false;
+            this.reload();
+          })
+        }
+      });
+    }
   }
 
   getAnotacionCausaRaizInd(id: any) {
@@ -843,24 +1017,28 @@ export class AnotacionesComponent implements OnInit {
   }
 
   crearCausa() {
+    let id = this.model.hallazgo_id;
     if (this.model.lstCausa.length > 0) {
       this.model.lstCausa.forEach((x: any) => {
-        x.hallazgo_id = this.model.hallazgo_id;
+        x.hallazgo_id = id;
         x.usuario = this.currentUser.usuario;
         
         if (x.NuevoRegistro == true) {
           this.anotacion.createAnotacionCausaRaiz(x).subscribe(data => {});
         }
-      });
-
-      this.getAnotacionCausaRaizInd(this.model.hallazgo_id);
+      });      
     }
+    setTimeout(() => {
+      this.getAnotacionCausaRaizInd(id);  
+    }, 10);
+    
   }
 
   actualizarCausa() {
+    let id = this.model.hallazgo_id;
     if (this.model.lstCausa.length > 0) {
       this.model.lstCausa.forEach((x: any) => {
-        x.hallazgo_id = this.model.hallazgo_id;
+        x.hallazgo_id = id;
         x.usuario = this.currentUser.usuario;
         
         if (x.NuevoRegistro == true) {
@@ -869,19 +1047,20 @@ export class AnotacionesComponent implements OnInit {
         else {
           this.anotacion.updateAnotacionCausaRaiz(x).subscribe(data => {});
         }
-      });
-
-      Swal.fire({
-        title: 'Actualizar Causa del incumplimiento',
-        text: 'Ha actualizado exitosamente',
-        allowOutsideClick: false,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-        icon: 'success'
-      }).then((result: any) => {
-        this.getAnotacionCausaRaizInd(this.model.hallazgo_id);
-      })
+      });      
     }
+    Swal.fire({
+      title: 'Actualizar Causa del incumplimiento',
+      text: 'Ha actualizado exitosamente',
+      allowOutsideClick: false,
+      showConfirmButton: true,
+      confirmButtonText: 'Aceptar',
+      icon: 'success'
+    }).then((result: any) => {
+      setTimeout(() => {
+        this.getAnotacionCausaRaizInd(id);  
+      }, 10);      
+    })
   }
 
   openActividadDescripcion(dato: any, index: any) {
@@ -931,6 +1110,75 @@ export class AnotacionesComponent implements OnInit {
             this.getAnotacionActividadInd(this.model.hallazgo_causa_raiz_id);
           })
         }
+      }
+    });
+  }
+
+  eliminarAnotacionCorreccion(index: any, dato: any) {
+    Swal.fire({
+      title: 'Eliminar Responsable Corrección',
+      text: '¿Estás seguro que desea eliminar el registro?',
+      allowOutsideClick: false,
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar',
+      cancelButtonColor: "#ed1c24",
+      icon: 'question'
+    }).then((result: any) => {
+      if (result.dismiss != "cancel") {
+        this.anotacion.deleteAnotacionCorreccion({ correccion_id: dato.correccion_id }).subscribe(data => {
+          let response: any = this.api.ProcesarRespuesta(data);
+          if (response.tipo == 0) {
+            this.model.varCorreccion.splice(index, 1);
+          }
+        });
+      }
+    });
+  }
+
+  eliminarAnotacionMejoramiento(index: any, dato: any) {
+    Swal.fire({
+      title: 'Eliminar Responsable Plan de Mejoramiento',
+      text: '¿Estás seguro que desea eliminar el registro?',
+      allowOutsideClick: false,
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar',
+      cancelButtonColor: "#ed1c24",
+      icon: 'question'
+    }).then((result: any) => {
+      if (result.dismiss != "cancel") {
+        this.anotacion.deleteAnotacionMejoramiento({ mejoramiento_id: dato.mejoramiento_id }).subscribe(data => {
+          let response: any = this.api.ProcesarRespuesta(data);
+          if (response.tipo == 0) {
+            this.model.varMejoramiento.splice(index, 1);
+          }
+        });
+      }
+    });
+  }
+
+  eliminarAnotacionOrden(index: any, dato: any) {
+    Swal.fire({
+      title: 'Eliminar Responsable Orden',
+      text: '¿Estás seguro que desea eliminar el registro?',
+      allowOutsideClick: false,
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar',
+      cancelButtonColor: "#ed1c24",
+      icon: 'question'
+    }).then((result: any) => {
+      if (result.dismiss != "cancel") {
+        this.anotacion.deleteAnotacionOrden({ orden_id: dato.orden_id }).subscribe(data => {
+          let response: any = this.api.ProcesarRespuesta(data);
+          if (response.tipo == 0) {
+            this.model.varOrden.splice(index, 1);
+          }
+        });
       }
     });
   }
