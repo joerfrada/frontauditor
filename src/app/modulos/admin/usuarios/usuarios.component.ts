@@ -19,7 +19,6 @@ export class Model {
   varUsuario: any = {
     usuario_id: 0,
     personal_id: 0,
-    empresa_id: 0,
     nombre_completo: "",
     email: "",
     activo: true,
@@ -35,7 +34,7 @@ export class Model {
     tipo_documento_id: 0,
     num_identificacion: '',    
     email: '',    
-    empresa_id: 0,
+    empresa_id: null,
     activo: true,
     usuario_id: "",
     usuario: "",

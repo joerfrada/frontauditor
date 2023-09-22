@@ -28,6 +28,7 @@ import { InformePlanInspeccionComponent } from '../modulos/informes/informe-plan
 import { SelectCodigoModalComponent } from '../views/select-codigo-modal/select-codigo-modal.component';
 import { SelectUnidadModalComponent } from '../views/select-unidad-modal/select-unidad-modal.component';
 import { InformeSeguimientoComponent } from '../modulos/informes/informe-seguimiento/informe-seguimiento.component';
+import { SamlComponent } from '../saml/saml.component';
 
 
 @NgModule({
@@ -54,7 +55,8 @@ import { InformeSeguimientoComponent } from '../modulos/informes/informe-seguimi
     InformePlanInspeccionComponent,
     SelectCodigoModalComponent,
     SelectUnidadModalComponent,
-    InformeSeguimientoComponent
+    InformeSeguimientoComponent,
+    SamlComponent
   ],
   imports: [
     CommonModule,

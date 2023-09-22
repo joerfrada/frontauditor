@@ -42,11 +42,12 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    this.login.logout().subscribe(data => {});
+    // this.login.logout().subscribe(data => {});
     setTimeout(() => {
-      localStorage.clear();
-      this.router.navigate(['/']);    
-    }, 100);    
+      localStorage.clear();      
+      // this.router.navigate(['/']);
+      location.href = 'https://auditorigefa.fac.mil.co/apiauditor/logout';
+    }, 10);
   }
 
   toggleDropdown() {

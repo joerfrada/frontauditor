@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { PlatformComponent } from './platform.component';
-import { LoginComponent } from '../auth/login/login.component';
+// import { LoginComponent } from '../auth/login/login.component';
+import { SamlComponent } from '../saml/saml.component';
 import { RecoverComponent } from '../email/recover/recover.component';
 import { ResetComponent } from '../email/reset/reset.component';
 import { HomeComponent } from '../modulos/home/home.component';
@@ -17,7 +18,9 @@ import { InformeSeguimientoComponent } from '../modulos/informes/informe-seguimi
 
 
 const routes: Routes = [
-  { path: '', component: LoginComponent },
+  // { path: '', component: LoginComponent },
+  { path: 'saml', component: SamlComponent },
+  { path: '',   redirectTo: '/saml', pathMatch: 'full' },
   { path: 'recover', component: RecoverComponent },
   { path: 'reset', component: ResetComponent },
   { path: 'auditor', component: PlatformComponent, children: [
