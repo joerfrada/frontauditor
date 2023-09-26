@@ -132,15 +132,15 @@ export class ApiService {
     }
     if (request != undefined && request.tipo == -1 && request.codigo == 2) {
       Swal.fire({
-        title: 'ADVERTENCIA',
+        title: 'ERROR',
         icon: 'error',
         text: request.mensaje,
         confirmButtonText: 'Aceptar'
       }).then((result: any) => {
         setTimeout(() => {
           localStorage.clear();
-          window.location.href = '/';
-        }, 500);
+          location.href = 'https://auditorigefa.fac.mil.co/apiauditor/logout';
+        }, 10);
       });
     }
 
