@@ -158,7 +158,7 @@ export class UsuariosComponent implements AfterViewInit {
       this.varhistorial = this.varhistorialTemp.filter((item: any) => {
         if (item.nombres.toString().toLowerCase().indexOf(filtro) !== -1 ||
             item.apellidos.toString().toLowerCase().indexOf(filtro) !== -1 ||
-            item.email.toString().toLowerCase().indexOf(filtro) !== -1) {
+            item.usuario.toString().toLowerCase().indexOf(filtro) !== -1) {
             return true;
         }
         return false;
