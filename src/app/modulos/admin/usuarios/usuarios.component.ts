@@ -247,7 +247,7 @@ export class UsuariosComponent implements AfterViewInit {
   }
 
   editPersonal(data: any) {
-    this.model.title = 'Actualizar usuario - ' + data.nombres + ' ' + data.apellidos;
+    this.model.title = 'Actualizar usuario - ' + data.usuario;
     this.userModal = true;
     this.model.isEdit = true;
     this.model.IsLectura = false;
@@ -275,63 +275,24 @@ export class UsuariosComponent implements AfterViewInit {
   }
 
   openDetalle(data: any) {
-    this.model.title = 'Personal Detalle - ' + data.Nombres + ' ' + data.Apellidos;
+    this.model.title = 'Personal Detalle - ' + data.usuario;
     this.userModal = true;
     this.isDisabled = true;
     this.model.isEdit = true;
     this.model.IsLectura = true;
 
-    this.model.varPersona.idpersonal = data.IdPersonal;
-    this.model.varPersona.nombres = data.Nombres;
-    this.model.varPersona.apellidos = data.Apellidos;
-    this.model.varPersona.idtipodoc = data.IdTipoDoc == null ? 0 : data.IdTipoDoc;
-    this.model.varPersona.cedula = data.Cedula;
-    this.model.varPersona.lugarexpedicion = data.Lugarexpedicion;
-    this.model.varPersona.lugarnacim = data.LugarNacim;
-    this.model.varPersona.foto = data.Foto;
-    this.model.varPersona.fechanacim = data.FechaNacim;
-    this.model.varPersona.edad = data.Edad;
-    this.model.varPersona.email = data.Email;
-    this.model.varPersona.emailpersonal = data.EmailPersonal;
-    this.model.varPersona.categoria = data.Categoria == null ? 0 : data.Categoria;
-    this.model.varPersona.idproceso = data.IdProceso == null ? 0 : data.IdProceso;
-    this.model.varPersona.active = data.Active;
-    this.model.varPersona.idempresa = data.IdEmresa == null ? 0 : data.IdEmpresa;
-    this.model.varPersona.dependeciafacultad = data.DependeciaFacultad;
-    this.model.varPersona.idcarreraprofesion = data.IdCarreraProfesion == null ? 0 : data.IdCarreraProfesion;
-    this.model.varPersona.escolaridad = data.Escolaridad;
-    this.model.varPersona.idcargo = data.IdCargo == null ? 0 : data.IdCargo;
-    this.model.varPersona.idnivelcompetencia = data.IdNivelCompetencia == null ? 0 : data.IdNivelCompetencia;
-    this.model.varPersona.experiencia = data.Experiencia;
-    this.model.varPersona.fechaingreso = data.Fechaingreso;
-    this.model.varPersona.idareaexperiencia = data.IdAreaExperiencia == null ? 0 : data.IdAreaExperiencia;
-    this.model.varPersona.idsupervisor = data.IdSupervisor == null ? 0 : data.IdSupervisor;
-    this.model.varPersona.celular = data.Celular;
-    this.model.varPersona.fijo = data.Fijo;
-    this.model.varPersona.oficina = data.Oficina;
-    this.model.varPersona.paisresidencia = data.PaisResidencia;
-    this.model.varPersona.fechatermino = data.FechaTermino;
-    this.model.varPersona.estadocivil = data.EstadoCivil == null ? 0 : data.EstadoCivil;
-    this.model.varPersona.direccionresi = data.DireccionResi;
-    this.model.varPersona.barrio = data.Barrio;
-    this.model.varPersona.idgrado = data.IdGrado == null ? 0 : data.IdGrado;
-    this.model.varPersona.codigomilitar = data.CodMilitar;
-    this.model.varPersona.nfolio = data.NoFolioVida;
-    this.model.varPersona.idfuerza = data.IdFuerza == null ? 0 : data.IdFuerza;
-    this.model.varPersona.idcuerpo = data.IdCuerpo == null ? 0 : data.IdCuerpo;
-    this.model.varPersona.idespecialidad1 = data.IdEspecialidad1 == null ? 0 : data.IdEspecialidad1;
-    this.model.varPersona.idespecialidad2 = data.IdEspecialidad2 == null ? 0 : data.IdEspecialidad2;
-    this.model.varPersona.fechaincorpacion = data.FechaIncorporacion == null ? new Date() : data.FechaIncorporacion;
-    this.model.varPersona.fechaasense = data.FechaAsense == null ? new Date() : data.FechaAsense;
-    this.model.varPersona.idunidad = data.IdUnidad == null ? 0 : data.IdUnidad;
-    this.model.varPersona.idgrupo = data.IdGrupo == null ? 0 : data.IdGrupo;
-    this.model.varPersona.idtaller = data.IdTaller == null ? 0 : data.IdTaller;
-    this.model.varPersona.idespecialidadcertificacion = data.IdEspecialidadCertificacion == null ? 0 : data.IdEspecialidadCertificacion;
-    this.model.varPersona.idescuadron = data.IdEscuadron == null ? 0 : data.IdEscuadron;
-    this.model.varPersona.idcarreraprofesionmil = this.model.varPersona.idcarreraprofesion;
-    this.model.varPersona.idcargomil = this.model.varPersona.idcargo;
-    this.model.varPersona.idespecialidadcertificacionmil = this.model.varPersona.idespecialidadcertificacion;
-    this.model.varPersona.idnivelcompetenciamil = this.model.varPersona.idnivelcompetencia;
+    this.model.varPersona.personal_id = data.personal_id;
+    this.model.varPersona.nombres = data.nombres;
+    this.model.varPersona.apellidos = data.apellidos;
+    this.model.varPersona.tipo_documento_id = data.tipo_documento_id == null ? 0 : data.tipo_documento_id;
+    this.model.varPersona.num_identificacion = data.num_identificacion;    
+    this.model.varPersona.email = data.email;    
+    this.model.varPersona.activo = data.activo == 1 ? true : false;
+    this.model.varPersona.idempresa = data.empresa_id == null ? 0 : data.empresa_id;
+    this.model.varPersona.usuario_id = data.usuario_id;
+    this.model.varPersona.usuario = this.currentUser.usuario;
+    this.model.varUsuario.usuario_id = data.usuario_id;
+    this.model.varUsuario.personal_id = data.personal_id;
 
     // if (data.existe_img == 1) {
     //   let foto = this.api.url_image + data.Foto;
@@ -576,24 +537,24 @@ export class UsuariosComponent implements AfterViewInit {
     this.model.varUsuario.email = this.model.varPersona.email;
     this.model.varUsuario.usuario = this.currentUser.usuario;
 
-    if (this.model.varUsuario.password != "") {
-      if (this.model.varUsuario.password != this.model.varUsuario.passwordMatch) {
-        Swal.fire({
-          title: 'ERROR',
-          text: 'Las contraseñas no coinciden',
-          allowOutsideClick: false,
-          showConfirmButton: true,
-          confirmButtonText: 'Aceptar',
-          icon: 'error'
-        }).then((result: any) => {
-          this.model.varUsuario.password = "";
-          this.model.varUsuario.passwordMatch = "";
-        })
-      }
-      else {
-        this.perfil.updateChangePassword(this.model.varUsuario).subscribe(data => {});
-      }
-    }
+    // if (this.model.varUsuario.password != "") {
+    //   if (this.model.varUsuario.password != this.model.varUsuario.passwordMatch) {
+    //     Swal.fire({
+    //       title: 'ERROR',
+    //       text: 'Las contraseñas no coinciden',
+    //       allowOutsideClick: false,
+    //       showConfirmButton: true,
+    //       confirmButtonText: 'Aceptar',
+    //       icon: 'error'
+    //     }).then((result: any) => {
+    //       this.model.varUsuario.password = "";
+    //       this.model.varUsuario.passwordMatch = "";
+    //     })
+    //   }
+    //   else {
+    //     this.perfil.updateChangePassword(this.model.varUsuario).subscribe(data => {});
+    //   }
+    // }
 
     this.usuario.updatePersonal(this.model.varPersona).subscribe(data => {
       let response: any = this.api.ProcesarRespuesta(data);

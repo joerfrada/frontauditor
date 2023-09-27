@@ -1,7 +1,7 @@
 <card [items]="'Administración,Usuarios'">
-    <div role="button" class="card-button">
+    <!-- <div role="button" class="card-button">
         <button type="button" class="btn btn-primary" (click)="openCrearModal()" *ngIf="permiso.crear == 1"><i class="fa fa-plus"></i></button>
-    </div>
+    </div> -->
     <div role="body">
         <div class="filter-content">
             <input type="search" placeholder="Buscar..." (keyup)="search($event)" (search)="clearSearch($event)">
@@ -24,7 +24,7 @@
                         <!-- <td>{{ item.Grado }}</td> -->
                         <td>{{ item.nombres }}</td>
                         <td>{{ item.apellidos }}</td>
-                        <td>{{ item.email }}</td>
+                        <td>{{ item.usuario }}</td>
                         <td>
                             <i class="fa fa-1m5x fa-check-circle" *ngIf="item.activo == 1"></i>
                             <i class="fa fa-1m5x fa-times-circle" *ngIf="item.activo == 0"></i>
@@ -50,7 +50,7 @@
 <app-modal [title]="model.title" [show]="userModal" [size]="'modal-lg1 modal-h65'" [scroll]="'modal-scroll'" (close)="closeCrearModal($event)">
     <div role="body">
         <div class="form-body">
-            <ng-container *ngIf="model.IsLectura == false">
+            <!-- <ng-container *ngIf="model.IsLectura == false">
                 <div class="title-row">Credenciales</div>
                 <div class="line-col"></div>
                 <div class="row">
@@ -63,7 +63,7 @@
                         <input type="password" class="form-control form-control-sm" placeholder="Repite su contraseña" [(ngModel)]="model.varUsuario.passwordMatch">
                     </div>
                 </div>
-            </ng-container>
+            </ng-container> -->
             <div class="title-row">Información Usuario</div>
             <div class="line-col"></div>
             <div class="row">
@@ -102,7 +102,7 @@
     <div role="footer">
         <button type="button" class="btn btn-danger" (click)="closeCrearModal(false)">Cerrar</button>
         <ng-container *ngIf="model.IsLectura == false">
-            <button type="button" class="btn btn-primary" (click)="savePersonal()" *ngIf="model.isEdit == false">Guardar</button>
+            <!-- <button type="button" class="btn btn-primary" (click)="savePersonal()" *ngIf="model.isEdit == false">Guardar</button> -->
             <button type="button" class="btn btn-primary" (click)="updatePersonal()" *ngIf="model.isEdit == true">Actualizar</button>
         </ng-container>
     </div>
